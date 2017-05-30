@@ -17,4 +17,11 @@ module.exports = (app) => {
   app.post("/users/authenticate", usersController.authenticate);
   
   app.get('/search/users/', usersController.searchUser);
+  app.get('/search/documents/', documentsController.searchDocument);
+
+  app.post("/documents", documentsController.createDocument);
+  app.get('/documents', documentsController.getDocuments);
+  app.get('/documents/:id', documentsController.getDocument);
+  app.put('/documents/:id', documentsController.updateDocument);
+  app.delete('/documents/:id', documentsController.deleteDocument);
 };
