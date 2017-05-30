@@ -9,6 +9,9 @@ const port = parseInt(process.env.PORT, 10) || 8000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+// Require our routes into the application.
+require('./server/routes')(app);
+
 app.listen(port, () => {
   console.log(`Started up at port port ${port}`);
 });
