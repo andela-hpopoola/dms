@@ -3,10 +3,6 @@ const documentsController = require('../controllers').documents;
 const rolesController = require('../controllers').roles;
 
 module.exports = (app) => {
-  app.get('/', (req, res) => {
-    res.json({ status: 'DMS API' });
-  });
-
   app.post('/users', usersController.createUser);
   app.get('/users', usersController.getUsers);
   app.get('/users/:id', usersController.getUser);

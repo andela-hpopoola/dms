@@ -12,8 +12,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require our routes into the application.
 require('./server/routes')(app);
 
+app.use(express.static('client/public'));
+
+app.get('/', (req, res) => {
+  res.sendFile('./client/public/index.html');
+});
+
 app.listen(port, () => {
-  console.log(`Started up at port port ${port}`);
+  console.log(`Started up at port port ${port}`); // eslint-disable-line
 });
 
 module.exports = app;
