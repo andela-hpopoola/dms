@@ -1,8 +1,9 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
 
-module.exports = function(sequelize, DataTypes) {
-  const Users = sequelize.define("Users", {
+const salt = bcrypt.genSaltSync();
+
+module.exports = (sequelize, DataTypes) => {
+  const Users = sequelize.define('Users', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -13,8 +14,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "The name field cannot be empty"
+          msg: 'The name field cannot be empty'
         }
+      },
+      set(name) {
+        this.setDataValue('name', name.trim());
       }
     },
     password: {
@@ -22,51 +26,43 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "The password field cannot be empty"
+          msg: 'The password field cannot be empty'
         }
+      },
+      set(password) {
+        const encryptedPassword = bcrypt.hashSync(password, salt);
+        this.setDataValue('password', encryptedPassword);
       }
-    },
-    token: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: 'token'
     },
     roleId: {
       type: DataTypes.INTEGER,
       defaultValue: 1,
       validate: {
         isInt: {
-          msg: "Invalid Role"
+          msg: 'Invalid Role'
         }
       }
     },
     email: {
       type: DataTypes.STRING,
       unique: {
-        msg: "Email exists in db"
+        msg: 'Email exists in db'
       },
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "The email field cannot be empty"
+          msg: 'The email field cannot be empty'
         },
         isEmail: {
-          msg: "Invalid email address"
+          msg: 'Invalid email address'
         }
       }
     }
   }, {
     hooks: {
-      beforeCreate: user => {
-        const salt = bcrypt.genSaltSync();
-        user.password = bcrypt.hashSync(user.password, salt);
-        user.name = user.name.trim();
-        const payload = { email: user.email };
-        user.token = jwt.sign(payload, 'secret');
-      }
     },
     classMethods: {
-      associate: function(models) {
+      associate(models) {
         Users.belongsTo(models.Roles, {
           foreignKey: 'roleId'
         });
@@ -74,9 +70,8 @@ module.exports = function(sequelize, DataTypes) {
           foreignKey: 'userId'
         });
       },
-      isPassword: (encodedPassword, password) => {
-        return bcrypt.compareSync(password, encodedPassword);
-      },
+      isPassword: (encodedPassword, password) =>
+        bcrypt.compareSync(password, encodedPassword)
     }
   });
   return Users;

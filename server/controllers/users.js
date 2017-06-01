@@ -1,54 +1,77 @@
+const jwt = require('jsonwebtoken');
 const Users = require('../models').Users;
 const Documents = require('../models').Documents;
-const jwt = require("jsonwebtoken");
+
+const DEFAULT_LIMIT = 10;
+const DEFAULT_OFFSET = 0;
 
 module.exports = {
   createUser(req, res) {
     return Users
       .create(req.body)
       .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
   getUsers(req, res) {
-    const limit = req.query.limit || 10;
-    const offset = req.query.offset || 0;
+    const limit = req.query.limit || DEFAULT_LIMIT;
+    const offset = req.query.offset || DEFAULT_OFFSET;
     return Users
       .findAll({ offset, limit })
       .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
   getUser(req, res) {
     return Users
-      .findById(req.params.id, {
-        attributes: ["id", "name", "email"]
+      .findById(req.params.id)
+      .then((user) => {
+        if (user) res.json(user);
+        else res.status(404).json({ msg: 'User not Found' });
       })
-      .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
   updateUser(req, res) {
+    const id = req.params.id;
     return Users
-      .update(req.body, { where : { id: req.params.id }})
-      .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .findOne({ where: { id } }).then((user) => {
+        if (user) {
+          user
+            .update(req.body)
+            .then(() => res.json({ msg: 'User Updated' }))
+            .catch((error) => {
+              res.status(412).json({ msg: error.message });
+            });
+        } else {
+          res.status(404).json({ msg: 'User not found' });
+        }
+      }).catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
   deleteUser(req, res) {
+    const id = req.params.id;
     return Users
-      .destroy({where: {id: req.params.id} })
-      .then(result => res.sendStatus(204))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .findOne({ where: { id } }).then((user) => {
+        if (user) {
+          return user
+            .destroy()
+            .then(() => res.status(202).json({ msg: 'User Deleted' }))
+            .catch((error) => {
+              res.status(412).json({ msg: error.message });
+            });
+        }
+        res.status(404).json({ msg: 'User not found' });
+      }).catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
@@ -56,7 +79,7 @@ module.exports = {
     const query = req.query.q;
     return Users
       .findAll({
-        where: { 
+        where: {
           $or: [
             {
               email: {
@@ -72,8 +95,8 @@ module.exports = {
         }
       })
       .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 
@@ -81,49 +104,52 @@ module.exports = {
     if (req.body.email && req.body.password) {
       const email = req.body.email;
       const password = req.body.password;
-      Users.findOne({where: {email: email}})
-        .then(user => {
+      Users.findOne({ where: { email } })
+        .then((user) => {
           if (Users.isPassword(user.password, password)) {
-            res.header('x-auth',user.token).json({
+            const payload = { email: user.email };
+            user.token = jwt.sign(payload, 'secret');
+            res.header('x-auth', user.token).json({
               email: user.email,
               token: user.token
             });
           } else {
-            res.sendStatus(401);
+            res.status(401).json({ msg: 'Unauthorized' });
           }
         })
-        .catch(error => res.sendStatus(401));
+        .catch(error => res.status(401).json({ msg: error.message }));
     } else {
-      res.sendStatus(401);
+      res.status(401).json({ msg: 'User not found' });
     }
   },
 
-  authenticate(req,res) {
+  authenticate(req, res) {
     const token = req.header('x-auth');
+    let decoded = { };
     try {
       decoded = jwt.verify(token, 'secret');
     } catch (e) {
-      res.json({ msg: "Invalid Token"});
+      res.json({ msg: 'Invalid Token' });
     }
     return Users
-      .findOne({ where: { token }})
+      .findOne({ where: { email: decoded.email } })
       .then((user) => {
         if (!user) {
-          res.json({ msg: "User not found in db"});
+          res.json({ msg: 'User not found in db' });
         }
         res.json(user);
-      }).catch(e => res.send("No Token was found"));
+      }).catch(() => res.send('No Token was found'));
   },
 
   getDocuments(req, res) {
     return Users
       .find({
-        where: { id: 1 }, 
-        include: [{ model: Documents, as: 'Documents'}]
+        where: { id: req.params.id },
+        include: [{ model: Documents, as: 'Documents' }]
       })
       .then(result => res.json(result))
-      .catch(error => {
-        res.status(412).json({msg: error.message});
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
       });
   },
 };

@@ -1,6 +1,5 @@
-'use strict';
-module.exports = function(sequelize, DataTypes) {
-  var Documents = sequelize.define('Documents', {
+module.exports = (sequelize, DataTypes) => {
+  const Documents = sequelize.define('Documents', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -11,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         isInt: {
-          msg: "Invalid User"
+          msg: 'Invalid User'
         }
       }
     },
@@ -20,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "The title field cannot be empty"
+          msg: 'The title field cannot be empty'
         }
       }
     },
@@ -29,7 +28,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "The content field cannot be empty"
+          msg: 'The content field cannot be empty'
         }
       }
     },
@@ -38,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: 1,
       validate: {
         isInt: {
-          msg: "Invalid Access"
+          msg: 'Invalid Access'
         }
       }
     },
@@ -46,13 +45,13 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       validate: {
         isDate: {
-          msg: "Only valid dates are allowed"
+          msg: 'Only valid dates are allowed'
         }
       }
     }
   }, {
     classMethods: {
-      associate: function(models) {
+      associate: (models) => {
         // associations can be defined here
         Documents.belongsTo(models.Users, {
           foreignKey: 'userId'
