@@ -89,6 +89,7 @@ export function signup(user) {
     api.post('/users', user).then((result) => {
       if (result.status === 200) {
         dispatch(login(user));
+        toastr.success('Your Account has been successfully created');
       } else {
         toastr.error(result.data.msg);
       }
