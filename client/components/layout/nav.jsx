@@ -22,9 +22,9 @@ const Nav = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#!">
+                <Link to="signup">
                   <i className="material-icons right">view_module</i>
-                  Link with Right Icon
+                  Signup
                 </Link>
               </li>
             </ul>

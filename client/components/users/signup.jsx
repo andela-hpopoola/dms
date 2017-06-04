@@ -2,25 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { login } from './../../actions/userActions';
+import { signup } from './../../actions/userActions';
 
 
 /**
- * @class Login
- * @desc Class to display the Login Page
+ * @class Signup
+ * @desc Class to display the Signup Page
  * @extends React.Component
  */
-class Login extends Component {
+class Signup extends Component {
 
   /**
-   * @desc Set the Initial conditions for showing the Login Page
-   * @param {object} props - The property of the Login Page
+   * @desc Set the Initial conditions for showing the Signup Page
+   * @param {object} props - The property of the Signup Page
    * @constructor
    */
   constructor(props) {
     super(props);
 
-    this.authenticateUser = this.authenticateUser.bind(this);
+    this.createUser = this.createUser.bind(this);
   }
 
   /**
@@ -28,16 +28,17 @@ class Login extends Component {
    * @param {object} event - form event
    * @return {any} redirects user to dashboard or show error
    */
-  authenticateUser(event) {
+  createUser(event) {
     event.preventDefault();
+    const name = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
-    this.props.actions.login({ email, password });
+    this.props.actions.signup({ name, email, password });
   }
 
   /**
-   * @desc Displays the Login Page
-   * @return {any} The Login form
+   * @desc Displays the Signup Page
+   * @return {any} The Signup form
    */
   render() {
     return (
@@ -45,9 +46,23 @@ class Login extends Component {
         <div className="row">
           <div className="card col s12">
             <div className="card-content">
-              <span className="card-title">Login</span><br />
+              <span className="card-title">Signup</span><br />
               <div className="row">
-                <form className="col s12" onSubmit={this.authenticateUser}>
+                <form className="col s12" onSubmit={this.createUser}>
+
+                  {/* Name */}
+                  <div className="row">
+                    <div className="input-field col s12">
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        className="validate"
+                        required="required"
+                      />
+                      <label htmlFor="name">Name</label>
+                    </div>
+                  </div>
 
                   {/* Email */}
                   <div className="row">
@@ -83,7 +98,7 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxCallsInProgress ? '...' : 'Submit'}
+                    {this.props.ajaxCallsInProgress ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -99,19 +114,19 @@ class Login extends Component {
 }
 
 /**
- * Set the PropTypes for Login
+ * Set the PropTypes for Signup
  */
-Login.propTypes = {
+Signup.propTypes = {
   ajaxCallsInProgress: PropTypes.bool,
   actions: PropTypes.shape({
-    login: PropTypes.func,
+    signup: PropTypes.func,
   }),
 };
 
 /**
- * Sets default values for Login Prototype
+ * Sets default values for Signup Prototype
  */
-Login.defaultProps = {
+Signup.defaultProps = {
   ajaxCallsInProgress: false,
   actions: {}
 };
@@ -136,9 +151,9 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ login }, dispatch)
+    actions: bindActionCreators({ signup }, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
