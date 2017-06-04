@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Sidebar from './../layout/Sidebar';
+import DocumentList from './../documents/DocumentList';
 
 /**
  * @class Dashboard
@@ -29,7 +31,15 @@ class Dashboard extends Component {
     const { user } = this.props;
     return (
       <div className="container">
-        <h1>Welcome to the Dashboard {user.name} ({user.email})</h1>
+        <div className="row">
+          <div className="col l4">
+            <Sidebar />
+          </div>
+          <div className="col l8">
+            <h1>Welcome to the Dashboard {user.name} ({user.email})</h1>
+            <DocumentList documents={user.documents} />
+          </div>
+        </div>
       </div>
     );
   }

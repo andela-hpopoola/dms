@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Route, Router, IndexRoute, browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import Dashboard from './common/dashboard';
-import Main from './common/main';
-import Login from './users/login';
-import Logout from './users/logout';
-import Signup from './users/signup';
+import Dashboard from './common/Dashboard';
+import Main from './common/Main';
+import Login from './users/Login';
+import Logout from './users/Logout';
+import Signup from './users/Signup';
 import * as auth from './../utils/auth';
 import { unauthorized } from './../actions/authActions';
 

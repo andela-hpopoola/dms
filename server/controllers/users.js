@@ -125,8 +125,10 @@ module.exports = {
     if (req.body.email && req.body.password) {
       const email = req.body.email;
       const password = req.body.password;
-      Users.findOne({ where: { email } })
-        .then((user) => {
+      Users.findOne({ 
+        where: { email },
+        include: [{ model: Documents, as: 'Documents' }]
+      }).then((user) => {
           if (!user) {
             res.status(401).json({ msg: 'Invalid email or password' });
           }
@@ -137,7 +139,8 @@ module.exports = {
               name: user.name,
               email: user.email,
               token: user.token,
-              role: user.roleId
+              role: user.roleId,
+              documents: user.Documents
             });
           } else {
             res.status(401).json({ msg: 'Invalid email or password' });
@@ -153,7 +156,10 @@ module.exports = {
     const token = req.header('x-auth');
     const decoded = jwt.verify(token, 'secret');
     const email = decoded.email;
-    Users.findOne({ where: { email } })
+    Users.findOne({
+      where: { email },
+      include: [{ model: Documents, as: 'Documents' }]
+    })
       .then((user) => {
         if (!user) {
           res.status(401).json({ msg: 'Invalid email' });
@@ -162,7 +168,8 @@ module.exports = {
           name: user.name,
           email: user.email,
           token,
-          role: user.roleId
+          role: user.roleId,
+          documents: user.Documents
         });
       })
       .catch(error => res.status(404).json({ msg: error.message }));

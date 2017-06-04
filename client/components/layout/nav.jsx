@@ -24,8 +24,9 @@ const notloggedInList = (
 );
 
 /**
- * @class Nav
+ * Nav
  * @desc Page Navigation
+ * @param {object} props default properties
  * @returns {jsx} the page navigation
  */
 const Nav = (props) => {
