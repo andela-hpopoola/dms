@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as authActions from '../actions/authActions';
+import * as authActions from './../../actions/authActions';
 
 
 /**

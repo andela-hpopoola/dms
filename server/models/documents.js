@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     title: {
       type: DataTypes.STRING,
+      unique: {
+        msg: 'Document exists'
+      },
       allowNull: false,
       validate: {
         notEmpty: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Nav from './nav';
+import Nav from './../layout/nav';
 
 /**
  * @desc Set the PropTypes for Main

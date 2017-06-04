@@ -11,7 +11,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
       },
       content: {
         type: Sequelize.TEXT

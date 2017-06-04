@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 
 /**
@@ -16,16 +16,16 @@ const Nav = () => {
             <a href="#!" className="brand-logo">DMS</a>
             <ul className="right">
               <li>
-                <a href="#!">
+                <Link to="#!">
                   <i className="material-icons left">search</i>
                   Link with Left Icon
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#!">
+                <Link to="#!">
                   <i className="material-icons right">view_module</i>
                   Link with Right Icon
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
