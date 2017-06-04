@@ -1,6 +1,6 @@
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
-import loginSuccess from './authActions';
+import { deauthenticateUser, authenticateUser } from './authActions';
 import api from './../utils/api';
 import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
@@ -18,6 +18,17 @@ export function setCurrentUser(user) {
   };
 }
 
+/**
+ * Logout Current User
+ * @desc Logs out the current user
+ * @returns {object} action
+ */
+export function logoutCurrentUser() {
+  return {
+    type: types.LOGOUT_CURRENT_USER,
+  };
+}
+
 
 /**
  * login
@@ -31,7 +42,7 @@ export function login(user) {
     api.post('/users/login', user).then((result) => {
       if (result.status === 200) {
         dispatch(setCurrentUser(result.data));
-        dispatch(loginSuccess(result.data.token));
+        dispatch(authenticateUser(result.data.token));
         browserHistory.push('/dashboard');
       } else {
         toastr.error(result.data.msg);
@@ -47,6 +58,21 @@ export function login(user) {
       }
       dispatch(ajaxCallEnd());
     });
+  };
+}
+
+
+/**
+ * logout
+ * @desc logs a user out
+ * @returns {object} action
+ */
+export function logout() {
+  return (dispatch) => {
+    dispatch(logoutCurrentUser());
+    dispatch(deauthenticateUser());
+    browserHistory.push('/');
+    toastr.info('You have successfully signed out');
   };
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 /**
@@ -6,33 +6,38 @@ import { Link } from 'react-router';
  * @desc Page Navigation
  * @returns {jsx} the page navigation
  */
-const Nav = () => {
-
-  return (
-    <div className="navbar-fixed">
-      <nav>
-        <div className="nav-wrapper">
-          <div className="container">
-            <a href="#!" className="brand-logo">DMS</a>
-            <ul className="right">
-              <li>
-                <Link to="#!">
-                  <i className="material-icons left">search</i>
-                  Link with Left Icon
-                </Link>
-              </li>
-              <li>
-                <Link to="signup">
-                  <i className="material-icons right">view_module</i>
-                  Signup
-                </Link>
-              </li>
-            </ul>
+class Nav extends Component{
+  /**
+   * @desc Renders the Top Navigation
+   * @return {string} Navigation
+   */
+  render() {
+    return (
+      <div className="navbar-fixed">
+        <nav>
+          <div className="nav-wrapper">
+            <div className="container">
+              <a href="#!" className="brand-logo">DMS</a>
+              <ul className="right">
+                <li>
+                  <Link to="signup">
+                    <i className="material-icons right">view_module</i>
+                    Signup
+                  </Link>
+                </li>
+                <li>
+                  <Link to="logout">
+                    <i className="material-icons right">view_module</i>
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </nav>
-    </div>
-  );
+        </nav>
+      </div>
+    );
+  }
 }
 
 export default Nav;

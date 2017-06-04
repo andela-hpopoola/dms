@@ -1,5 +1,5 @@
 import * as types from '../actions/actionTypes';
-import { setToken } from '../utils/auth';
+import * as auth from '../utils/auth';
 
 /**
  * Authentication  Reducer
@@ -8,13 +8,14 @@ import { setToken } from '../utils/auth';
  * @param {function} action the action to check
  * @returns {any} any
  */
-export default function auth(state = false, action) {
+export default function authenticate(state = false, action) {
   switch (action.type) {
-    case types.LOGIN_SUCCESS:
-      setToken(action.token);
+    case types.AUTHENTICATE_USER:
+      auth.setToken(action.token);
       return true;
 
-    case types.LOGIN_ERROR:
+    case types.DEAUTHENTICATE_USER:
+      auth.removeToken();
       return false;
 
     default:
