@@ -5,6 +5,7 @@ const roles = require('../controllers').roles;
 module.exports = (app) => {
   app.post('/users', users.create);
   app.post('/users/login', users.login);
+  app.get('/users/login/token', users.authenticate, users.loginByToken);
   app.get('/users', users.authenticate, users.getAll);
   app.get('/users/:id', users.authenticate, users.getOne);
   app.put('/users/:id', users.authenticate, users.update);

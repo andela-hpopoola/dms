@@ -24,10 +24,10 @@ class Logout extends Component {
   }
 
   /**
-   * @desc Invoked immediately after a component is mounted
+   * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
-  componentDidMount() {
+  componentWillMount() {
     this.logoutUser();
   }
 

@@ -63,6 +63,31 @@ export function login(user) {
 
 
 /**
+ * login by Token
+ * @desc Logs a user into the application
+ * @param {object} token saved token in LocalStorage
+ * @returns {object} action
+ */
+export function loginByToken(token) {
+  return (dispatch) => {
+    api.get('/users/login/token', token).then((result) => {
+      if (result.status === 200) {
+        dispatch(setCurrentUser(result.data));
+        dispatch(authenticateUser(result.data.token));
+        browserHistory.push('/dashboard');
+        toastr.success('Authomatically logged in');
+      } else {
+        dispatch(deauthenticateUser());
+      }
+    }).catch((error) => {
+      dispatch(deauthenticateUser());
+      toastr.error(error);
+    });
+  };
+}
+
+
+/**
  * logout
  * @desc logs a user out
  * @returns {object} action
