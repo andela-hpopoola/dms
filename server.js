@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 
 // Set up the express app
@@ -14,8 +15,8 @@ require('./server/routes')(app);
 
 app.use(express.static('client/public'));
 
-app.get('/', (req, res) => {
-  res.sendFile('./client/public/index.html');
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/public/index.html'));
 });
 
 app.listen(port, () => {

@@ -1,30 +1,27 @@
-const usersController = require('../controllers').users;
-const documentsController = require('../controllers').documents;
-const rolesController = require('../controllers').roles;
+const users = require('../controllers').users;
+const documents = require('../controllers').documents;
+const roles = require('../controllers').roles;
 
 module.exports = (app) => {
-  app.post('/users', usersController.createUser);
-  app.get('/users', usersController.getUsers);
-  app.get('/users/:id', usersController.getUser);
-  app.put('/users/:id', usersController.updateUser);
-  app.delete('/users/:id', usersController.deleteUser);
-  app.get('/users/:id/documents', usersController.getDocuments);
+  app.post('/users', users.create);
+  app.post('/users/login', users.login);
+  app.get('/users', users.authenticate, users.getAll);
+  app.get('/users/:id', users.authenticate, users.getOne);
+  app.put('/users/:id', users.authenticate, users.update);
+  app.delete('/users/:id', users.authenticate, users.delete);
+  app.get('/users/:id/documents', users.authenticate, users.getDocuments);
+  app.get('/search/users/', users.authenticate, users.search);
 
-  app.post('/users/login', usersController.login);
-  app.post('/users/authenticate', usersController.authenticate);
+  app.post('/documents', users.authenticate, documents.create);
+  app.get('/documents', users.authenticate, documents.getAll);
+  app.get('/documents/:id', users.authenticate, documents.getOne);
+  app.put('/documents/:id', users.authenticate, documents.update);
+  app.delete('/documents/:id', users.authenticate, documents.delete);
+  app.get('/search/documents/', users.authenticate, documents.search);
 
-  app.get('/search/users/', usersController.searchUser);
-  app.get('/search/documents/', documentsController.searchDocument);
-
-  app.post('/documents', documentsController.createDocument);
-  app.get('/documents', documentsController.getDocuments);
-  app.get('/documents/:id', documentsController.getDocument);
-  app.put('/documents/:id', documentsController.updateDocument);
-  app.delete('/documents/:id', documentsController.deleteDocument);
-
-  app.post('/roles', rolesController.createRole);
-  app.get('/roles', rolesController.getRoles);
-  app.get('/roles/:id', rolesController.getRole);
-  app.put('/roles/:id', rolesController.updateRole);
-  app.delete('/roles/:id', rolesController.deleteRole);
+  app.post('/roles', users.authenticate, roles.create);
+  app.get('/roles', users.authenticate, roles.getAll);
+  app.get('/roles/:id', users.authenticate, roles.getOne);
+  app.put('/roles/:id', users.authenticate, roles.update);
+  app.delete('/roles/:id', users.authenticate, roles.delete);
 };

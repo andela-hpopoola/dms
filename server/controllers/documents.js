@@ -1,12 +1,15 @@
 const Documents = require('../models').Documents;
 
+const DEFAULT_LIMIT = 20;
+const DEFAULT_OFFSET = 0;
+
 module.exports = {
-  createDocument(req, res) {
+  create(req, res) {
     return Documents
       .findOne({
         where: {
           title: req.body.title,
-          userId: req.body.userId,
+          documentId: req.body.documentId,
         }
       }).then((result) => {
         if (result) {
@@ -14,7 +17,13 @@ module.exports = {
             .json({ msg: 'Document exists' });
         }
         Documents.create(req.body)
-          .then(output => res.json(output))
+          .then((document) => {
+            if (document) {
+              res.json(document);
+            } else {
+              res.status(412).json({ msg: 'Document cannot be created' });
+            }
+          })
           .catch((error) => {
             res.status(412).json({ msg: error.message });
           });
@@ -23,30 +32,39 @@ module.exports = {
       });
   },
 
-  getDocuments(req, res) {
-    const limit = req.query.limit || 10;
-    const offset = req.query.offset || 0;
+  getAll(req, res) {
+    const limit = req.query.limit || DEFAULT_LIMIT;
+    const offset = req.query.offset || DEFAULT_OFFSET;
     return Documents
       .findAll({ offset, limit })
-      .then(result => res.json(result))
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
-  },
-
-  getDocument(req, res) {
-    return Documents
-      .findById(req.params.id)
-      .then((document) => {
-        if (document) res.json(document);
-        else res.status(404).json({ msg: 'Document not found' });
+      .then((documents) => {
+        if (documents) {
+          res.json(documents);
+        } else {
+          res.status(412).json({ msg: 'No document found' });
+        }
       })
       .catch((error) => {
         res.status(412).json({ msg: error.message });
       });
   },
 
-  updateDocument(req, res) {
+  getOne(req, res) {
+    return Documents
+      .findById(req.params.id)
+      .then((document) => {
+        if (document) {
+          res.json(document);
+        } else {
+          res.status(404).json({ msg: 'Document not Found' });
+        }
+      })
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
+      });
+  },
+
+  update(req, res) {
     const id = req.params.id;
     return Documents
       .findOne({ where: { id } }).then((document) => {
@@ -65,7 +83,7 @@ module.exports = {
       });
   },
 
-  deleteDocument(req, res) {
+  delete(req, res) {
     const id = req.params.id;
     return Documents
       .findOne({ where: { id } }).then((document) => {
@@ -83,7 +101,7 @@ module.exports = {
       });
   },
 
-  searchDocument(req, res) {
+  search(req, res) {
     const query = req.query.q;
     return Documents
       .findAll({
@@ -93,7 +111,13 @@ module.exports = {
           }
         }
       })
-      .then(result => res.json(result))
+      .then((documents) => {
+        if (documents) {
+          res.json(documents);
+        } else {
+          res.status(404).json({ msg: 'No document found' });
+        }
+      })
       .catch((error) => {
         res.status(412).json({ msg: error.message });
       });

@@ -1,7 +1,7 @@
 const Roles = require('../models').Roles;
 
 module.exports = {
-  createRole(req, res) {
+  create(req, res) {
     return Roles
       .findOne({
         where: {
@@ -13,7 +13,13 @@ module.exports = {
             .json({ msg: 'Role exists' });
         }
         Roles.create(req.body)
-          .then(output => res.json(output))
+          .then((role) => {
+            if (role) {
+              res.json(role);
+            } else {
+              res.status(412).json({ msg: 'Role cannot be created' });
+            }
+          })
           .catch((error) => {
             res.status(412).json({ msg: error.message });
           });
@@ -22,28 +28,37 @@ module.exports = {
       });
   },
 
-  getRoles(req, res) {
+  getAll(req, res) {
     return Roles
       .findAll()
-      .then(result => res.json(result))
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
-  },
-
-  getRole(req, res) {
-    return Roles
-      .findById(req.params.id)
-      .then((role) => {
-        if (role) res.json(role);
-        else res.status(404).json({ msg: 'Role not found' });
+      .then((roles) => {
+        if (roles) {
+          res.json(roles);
+        } else {
+          res.status(404).json({ msg: 'No role found' });
+        }
       })
       .catch((error) => {
         res.status(412).json({ msg: error.message });
       });
   },
 
-  updateRole(req, res) {
+  getOne(req, res) {
+    return Roles
+      .findById(req.params.id)
+      .then((role) => {
+        if (role) {
+          res.json(role);
+        } else {
+          res.status(404).json({ msg: 'Role not Found' });
+        }
+      })
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
+      });
+  },
+
+  update(req, res) {
     const id = req.params.id;
     return Roles
       .findOne({ where: { id } }).then((role) => {
@@ -61,7 +76,7 @@ module.exports = {
       });
   },
 
-  deleteRole(req, res) {
+  delete(req, res) {
     const id = req.params.id;
     return Roles
       .findOne({ where: { id } }).then((role) => {
