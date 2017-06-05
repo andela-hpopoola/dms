@@ -7,6 +7,6 @@ export default {
   user: null,
   role: [],
   ajaxCallsInProgress: false,
-  isLoggedIn: false,
+  auth: false,
   errorMessage: ''
 };

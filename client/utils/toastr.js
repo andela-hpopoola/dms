@@ -16,3 +16,13 @@ export const error = (message = '') => {
 export const success = (message = '') => {
   showToast('success', message, '');
 };
+
+// show info message
+export const info = (message = '') => {
+  showToast('info', message, '');
+};
+
+// show warning message
+export const warning = (message = '') => {
+  showToast('warning', message, '');
+};

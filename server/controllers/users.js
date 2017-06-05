@@ -149,22 +149,41 @@ module.exports = {
     }
   },
 
+  loginByToken(req, res) {
+    const token = req.header('x-auth');
+    const decoded = jwt.verify(token, 'secret');
+    const email = decoded.email;
+    Users.findOne({ where: { email } })
+      .then((user) => {
+        if (!user) {
+          res.status(401).json({ msg: 'Invalid email' });
+        }
+        res.header('x-auth', token).json({
+          name: user.name,
+          email: user.email,
+          token,
+          role: user.roleId
+        });
+      })
+      .catch(error => res.status(404).json({ msg: error.message }));
+  },
+
   authenticate(req, res, next) {
     const token = req.header('x-auth');
     let decoded = { };
     try {
       decoded = jwt.verify(token, 'secret');
     } catch (e) {
-      res.json({ msg: 'Invalid Token' });
+      res.status(401).json({ msg: 'Invalid Token' });
     }
     return Users
       .findOne({ where: { email: decoded.email } })
       .then((user) => {
         if (!user) {
-          res.json({ msg: 'User not found' });
+          res.status(404).json({ msg: 'User not found' });
         }
         next();
-      }).catch(() => res.send('No Token was found'));
+      }).catch(() => res.status(404).json('No Token was found'));
   },
 
   getDocuments(req, res) {

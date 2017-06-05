@@ -10,7 +10,10 @@ import * as types from '../actions/actionTypes';
 export default function user(state = {}, action) {
   switch (action.type) {
     case types.SET_CURRENT_USER:
-      return Object.assign({}, ...state, action.user);
+      return Object.assign({}, state, action.user);
+
+    case types.LOGOUT_CURRENT_USER:
+      return Object.assign({}, state, {});
 
     default:
       return state;

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { login } from './../../actions/userActions';
-
+import { login, loginByToken } from './../../actions/userActions';
+import * as auth from './../../utils/auth';
 
 /**
  * @class Login
@@ -21,6 +21,18 @@ class Login extends Component {
     super(props);
 
     this.authenticateUser = this.authenticateUser.bind(this);
+  }
+
+
+  /**
+   * @desc Invoked before a component is mounted
+   * @return {void} returns nothing
+   */
+  componentWillMount() {
+    console.log(auth.getToken());
+    if (auth.getToken()) {
+      this.props.actions.loginByToken(auth.getToken());
+    }
   }
 
   /**
@@ -136,7 +148,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ login }, dispatch)
+    actions: bindActionCreators({ login, loginByToken }, dispatch)
   };
 }
 
