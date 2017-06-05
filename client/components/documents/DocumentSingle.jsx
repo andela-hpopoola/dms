@@ -14,10 +14,14 @@ const DocumentSingle = ({ document }) => {
       <div className="card white darken-1 document__card">
         <div className="card-content">
           <span className="card-title">{document.title}</span>
-          <p>{ document.content }</p>
+          <div>{ document.content }</div>
         </div>
         <div className="card-action">
-          <Link to="#">Read Document</Link>
+          <Link to="#">Read</Link>
+          <div className="right">
+            <Link to="#">Delete</Link>
+            <Link to="#">Edit</Link>
+          </div>
         </div>
       </div>
     </div>

@@ -9,12 +9,12 @@ module.exports = {
       .findOne({
         where: {
           title: req.body.title,
-          documentId: req.body.documentId,
+          userId: req.body.userId,
         }
       }).then((result) => {
         if (result) {
           return res.status(409)
-            .json({ msg: 'Document exists' });
+            .json({ msg: 'Document name exists' });
         }
         Documents.create(req.body)
           .then((document) => {

@@ -11,17 +11,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       title: {
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.STRING
       },
       content: {
         type: Sequelize.TEXT
       },
       access: {
         type: Sequelize.INTEGER
-      },
-      publishedAt: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,

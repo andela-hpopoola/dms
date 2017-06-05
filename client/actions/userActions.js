@@ -75,8 +75,8 @@ export function loginByToken(token) {
         dispatch(setCurrentUser(result.data));
         dispatch(authenticateUser(result.data.token));
         browserHistory.push('/dashboard');
-        toastr.success('Authomatically logged in');
-      } else {
+        // toastr.success('Authomatically logged in');
+      } else { 
         dispatch(deauthenticateUser());
       }
     }).catch((error) => {
@@ -129,5 +129,18 @@ export function signup(user) {
       }
       dispatch(ajaxCallEnd());
     });
+  };
+}
+
+/**
+ * addNewDocument
+ * @desc adds a new document to users list of document
+ * @param {object} document details
+ * @returns {object} action
+ */
+export function addNewDocument(document) {
+  return {
+    type: types.ADD_NEW_DOCUMENT,
+    document
   };
 }

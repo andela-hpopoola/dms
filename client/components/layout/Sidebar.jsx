@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router';
 /**
  * @desc Set the PropTypes for Main
  * @param {object} props - default properties
@@ -11,7 +11,7 @@ const Sidebar = () => (
     <li className="collection-item"><div><a href="#">My Documents</a></div></li>
     <li className="collection-item"><div><a href="#">Public Documents</a></div></li>
     <li className="collection-item"><div><a href="#">View Documents</a></div></li>
-    <li className="collection-item"><div><a href="#">New Document</a></div></li>
+    <li className="collection-item"><div><Link to="/new-document">New Document</Link></div></li>
   </ul>
 );
 

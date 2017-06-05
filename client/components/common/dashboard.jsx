@@ -53,7 +53,7 @@ Dashboard.propTypes = {
     name: PropTypes.string,
     token: PropTypes.string,
     email: PropTypes.string,
-    documents: PropTypes.object
+    documents: PropTypes.array,
   })
 };
 

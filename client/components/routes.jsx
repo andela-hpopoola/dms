@@ -8,6 +8,7 @@ import Main from './common/Main';
 import Login from './users/Login';
 import Logout from './users/Logout';
 import Signup from './users/Signup';
+import NewDocument from './documents/NewDocument';
 import * as auth from './../utils/auth';
 import { unauthorized } from './../actions/authActions';
 
@@ -62,6 +63,10 @@ class Routes extends Component {
           <Route
             path="signup"
             component={Signup}
+          />
+          <Route
+            path="new-document"
+            component={NewDocument}
           />
           <Route
             path="logout"

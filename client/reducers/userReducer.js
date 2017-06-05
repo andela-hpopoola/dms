@@ -15,6 +15,15 @@ export default function user(state = {}, action) {
     case types.LOGOUT_CURRENT_USER:
       return Object.assign({}, state, {});
 
+    case types.ADD_NEW_DOCUMENT:
+      return Object.assign({}, state,
+        {
+          documents: state.documents.concat(
+            [action.document]
+          )
+        }
+      );
+
     default:
       return state;
   }

@@ -136,10 +136,11 @@ module.exports = {
             const payload = { email: user.email };
             user.token = jwt.sign(payload, 'secret');
             res.header('x-auth', user.token).json({
+              id: user.id,
               name: user.name,
               email: user.email,
               token: user.token,
-              role: user.roleId,
+              roleId: user.roleId,
               documents: user.Documents
             });
           } else {
@@ -165,10 +166,11 @@ module.exports = {
           res.status(401).json({ msg: 'Invalid email' });
         }
         res.header('x-auth', token).json({
+          id: user.id,
           name: user.name,
           email: user.email,
           token,
-          role: user.roleId,
+          roleId: user.roleId,
           documents: user.Documents
         });
       })
