@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const salt = bcrypt.genSaltSync();
 
@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       unique: {
-        msg: 'Email exists in db'
+        msg: 'Email exists'
       },
       allowNull: false,
       validate: {

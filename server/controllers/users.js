@@ -149,7 +149,7 @@ module.exports = {
     }
   },
 
-  authenticate(req, res) {
+  authenticate(req, res, next) {
     const token = req.header('x-auth');
     let decoded = { };
     try {
@@ -163,7 +163,7 @@ module.exports = {
         if (!user) {
           res.json({ msg: 'User not found' });
         }
-        res.json(user);
+        next();
       }).catch(() => res.send('No Token was found'));
   },
 

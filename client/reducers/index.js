@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 import auth from './authReducer';
 import user from './userReducer';
-import errorMessage from './errorReducer';
 import ajaxCallsInProgress from './ajaxStatusReducer';
 
 /**
@@ -11,7 +10,6 @@ import ajaxCallsInProgress from './ajaxStatusReducer';
 const rootReducer = combineReducers({
   auth,
   user,
-  errorMessage,
   ajaxCallsInProgress
 });
 
