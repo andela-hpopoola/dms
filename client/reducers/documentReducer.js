@@ -1,5 +1,3 @@
-import * as types from '../actions/actionTypes';
-
 /**
  * Users Reducer
  * @desc Handles Authentication Action

@@ -1,5 +1,4 @@
 import { browserHistory } from 'react-router';
-import * as types from './actionTypes';
 import { addNewDocument } from './userActions';
 import api from './../utils/api';
 import * as toastr from '../utils/toastr';
@@ -11,8 +10,7 @@ import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
  * @param {object} document details
  * @returns {object} action
  */
-export function createDocument(document) {
-  console.log(document, 'document');
+export default function createDocument(document) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
     api.post('/documents', document).then((result) => {

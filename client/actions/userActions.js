@@ -76,7 +76,7 @@ export function loginByToken(token) {
         dispatch(authenticateUser(result.data.token));
         browserHistory.push('/dashboard');
         // toastr.success('Authomatically logged in');
-      } else { 
+      } else {
         dispatch(deauthenticateUser());
       }
     }).catch((error) => {

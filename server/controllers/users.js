@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models').Users;
 const Documents = require('../models').Documents;
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
+
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
@@ -125,29 +127,29 @@ module.exports = {
     if (req.body.email && req.body.password) {
       const email = req.body.email;
       const password = req.body.password;
-      Users.findOne({ 
+      Users.findOne({
         where: { email },
         include: [{ model: Documents, as: 'Documents' }]
       }).then((user) => {
-          if (!user) {
-            res.status(401).json({ msg: 'Invalid email or password' });
-          }
-          if (Users.isPassword(user.password, password)) {
-            const payload = { email: user.email };
-            user.token = jwt.sign(payload, 'secret');
-            res.header('x-auth', user.token).json({
-              id: user.id,
-              name: user.name,
-              email: user.email,
-              token: user.token,
-              roleId: user.roleId,
-              documents: user.Documents
-            });
-          } else {
-            res.status(401).json({ msg: 'Invalid email or password' });
-          }
-        })
-        .catch(error => res.status(401).json({ msg: error.message }));
+        if (!user) {
+          res.status(401).json({ msg: 'Invalid email or password' });
+        }
+        if (Users.isPassword(user.password, password)) {
+          const payload = { email: user.email };
+          user.token = jwt.sign(payload, JWT_SECRET_KEY);
+          res.header('x-auth', user.token).json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            token: user.token,
+            roleId: user.roleId,
+            documents: user.Documents
+          });
+        } else {
+          res.status(401).json({ msg: 'Invalid email or password' });
+        }
+      })
+      .catch(error => res.status(401).json({ msg: error.message }));
     } else {
       res.status(401).json({ msg: 'Enter your registered email and password' });
     }
@@ -155,7 +157,7 @@ module.exports = {
 
   loginByToken(req, res) {
     const token = req.header('x-auth');
-    const decoded = jwt.verify(token, 'secret');
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
     const email = decoded.email;
     Users.findOne({
       where: { email },
@@ -181,7 +183,7 @@ module.exports = {
     const token = req.header('x-auth');
     let decoded = { };
     try {
-      decoded = jwt.verify(token, 'secret');
+      decoded = jwt.verify(token, JWT_SECRET_KEY);
     } catch (e) {
       res.status(401).json({ msg: 'Invalid Token' });
     }

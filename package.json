@@ -4,7 +4,7 @@
   "description": "DMS is a full stack document management system, complete with roles and privileges.",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test nyc mocha --compilers js:babel-core/register ./**/*.spec.jsx",
+    "test": "NODE_ENV=test nyc mocha --compilers js:babel-core/register ./**/*.spec.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "test-watch": "nodemon --exec 'npm test'",
     "start": "nodemon --exec 'node server'"
@@ -71,6 +71,7 @@
     "bcrypt": "^1.0.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "dotenv-webpack": "^1.4.5",
     "express": "^4.15.3",
     "jquery": "^2.2.1",
