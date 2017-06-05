@@ -9,6 +9,7 @@ import { Link } from 'react-router';
  * @returns {jsx} the formatted document
  */
 const DocumentSingle = ({ document }) => {
+  const documentLink = `/view-document/${document.id}`;
   return (
     <div className="col l6">
       <div className="card white darken-1 document__card">
@@ -17,7 +18,7 @@ const DocumentSingle = ({ document }) => {
           <div>{ document.content }</div>
         </div>
         <div className="card-action">
-          <Link to="#">Read</Link>
+          <Link to={documentLink}>Read</Link>
           <div className="right">
             <Link to="#">Delete</Link>
             <Link to="#">Edit</Link>

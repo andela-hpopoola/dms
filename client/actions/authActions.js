@@ -1,5 +1,6 @@
 import * as types from './actionTypes';
 import * as toastr from '../utils/toastr';
+import * as auth from '../utils/auth';
 
 /**
  * authenticateUser
@@ -8,6 +9,7 @@ import * as toastr from '../utils/toastr';
  * @returns {object} action
  */
 export function authenticateUser(token) {
+  auth.setToken(token);
   return {
     type: types.AUTHENTICATE_USER,
     token
@@ -16,10 +18,11 @@ export function authenticateUser(token) {
 
 /**
  * deauthenticateUser
- * @desc Sets user authentication to false
+ * @desc Deletes token and Sets user authentication to false
  * @returns {object} action
  */
 export function deauthenticateUser() {
+  auth.removeToken();
   return {
     type: types.DEAUTHENTICATE_USER
   };

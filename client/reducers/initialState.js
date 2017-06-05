@@ -3,10 +3,13 @@
  * @desc Gives a preview of the states defined in the application
  */
 export default {
-  documents: [],
+  documents: {
+    all: [],
+    current: {}
+  },
   user: null,
   role: [],
-  ajaxCallsInProgress: false,
+  ajaxStatus: false,
   auth: false,
   errorMessage: ''
 };

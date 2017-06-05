@@ -98,7 +98,7 @@ class Signup extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxCallsInProgress ? 'Submitting...' : 'Submit'}
+                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -117,7 +117,7 @@ class Signup extends Component {
  * Set the PropTypes for Signup
  */
 Signup.propTypes = {
-  ajaxCallsInProgress: PropTypes.bool,
+  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     signup: PropTypes.func,
   }),
@@ -127,7 +127,7 @@ Signup.propTypes = {
  * Sets default values for Signup Prototype
  */
 Signup.defaultProps = {
-  ajaxCallsInProgress: false,
+  ajaxStatus: false,
   actions: {}
 };
 
@@ -139,7 +139,7 @@ Signup.defaultProps = {
 function mapStateToProps(state) {
   return {
     errorMessage: state.errorMessage,
-    ajaxCallsInProgress: state.ajaxCallsInProgress
+    ajaxStatus: state.ajaxStatus
   };
 }
 

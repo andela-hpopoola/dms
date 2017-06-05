@@ -13,29 +13,10 @@ import { logout } from './../../actions/userActions';
 class Logout extends Component {
 
   /**
-   * @desc Set the Initial conditions for showing the Logout Page
-   * @param {object} props - The property of the Logout Page
-   * @constructor
-   */
-  constructor(props) {
-    super(props);
-
-    this.logoutUser = this.logoutUser.bind(this);
-  }
-
-  /**
    * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
   componentWillMount() {
-    this.logoutUser();
-  }
-
-  /**
-   * @desc redirects user to logout page
-   * @return {any} redirects user to index page
-   */
-  logoutUser() {
     this.props.actions.logout();
   }
 

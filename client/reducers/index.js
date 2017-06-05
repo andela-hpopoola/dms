@@ -1,7 +1,8 @@
 import { combineReducers } from 'redux';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
-import ajaxCallsInProgressReducer from './ajaxStatusReducer';
+import documentReducer from './documentReducer';
+import ajaxStatusReducer from './ajaxStatusReducer';
 
 /**
  * Root Reducer
@@ -10,7 +11,8 @@ import ajaxCallsInProgressReducer from './ajaxStatusReducer';
 const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
-  ajaxCallsInProgress: ajaxCallsInProgressReducer,
+  documents: documentReducer,
+  ajaxStatus: ajaxStatusReducer,
 });
 
 export default rootReducer;

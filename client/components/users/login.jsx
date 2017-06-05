@@ -29,7 +29,6 @@ class Login extends Component {
    * @return {void} returns nothing
    */
   componentWillMount() {
-    console.log(auth.getToken());
     if (auth.getToken()) {
       this.props.actions.loginByToken(auth.getToken());
     }
@@ -95,7 +94,7 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxCallsInProgress ? '...' : 'Submit'}
+                    {this.props.ajaxStatus ? '...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -114,9 +113,10 @@ class Login extends Component {
  * Set the PropTypes for Login
  */
 Login.propTypes = {
-  ajaxCallsInProgress: PropTypes.bool,
+  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     login: PropTypes.func,
+    loginByToken: PropTypes.func,
   }),
 };
 
@@ -124,7 +124,7 @@ Login.propTypes = {
  * Sets default values for Login Prototype
  */
 Login.defaultProps = {
-  ajaxCallsInProgress: false,
+  ajaxStatus: false,
   actions: {}
 };
 
@@ -136,7 +136,7 @@ Login.defaultProps = {
 function mapStateToProps(state) {
   return {
     errorMessage: state.errorMessage,
-    ajaxCallsInProgress: state.ajaxCallsInProgress
+    ajaxStatus: state.ajaxStatus
   };
 }
 

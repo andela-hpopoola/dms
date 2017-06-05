@@ -34,7 +34,6 @@ class NewDocument extends Component {
     const content = event.target.content.value;
     const access = event.target.access.value;
     const userId = this.props.userId;
-    console.log({ title, content, access });
     this.props.actions.createDocument({ title, content, access, userId });
   }
 
@@ -105,7 +104,7 @@ class NewDocument extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxCallsInProgress ? 'Submitting...' : 'Submit'}
+                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -126,7 +125,7 @@ class NewDocument extends Component {
 NewDocument.propTypes = {
   roleId: PropTypes.number,
   userId: PropTypes.number,
-  ajaxCallsInProgress: PropTypes.bool,
+  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     createDocument: PropTypes.func,
   }),
@@ -136,7 +135,7 @@ NewDocument.propTypes = {
  * Sets default values for NewDocument Prototype
  */
 NewDocument.defaultProps = {
-  ajaxCallsInProgress: false,
+  ajaxStatus: false,
   actions: {},
   roleId: 0,
   userId: 0,
@@ -149,7 +148,7 @@ NewDocument.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
-    ajaxCallsInProgress: state.ajaxCallsInProgress,
+    ajaxStatus: state.ajaxStatus,
     roleId: state.user.roleId
   };
 }
