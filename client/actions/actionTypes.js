@@ -1,0 +1,5 @@
+export const AJAX_CALL_START = 'AJAX_CALL_START';
+export const AJAX_CALL_END = 'AJAX_CALL_END';
+
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';

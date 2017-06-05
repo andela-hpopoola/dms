@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 
 // Set up the express app
@@ -12,8 +13,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Require our routes into the application.
 require('./server/routes')(app);
 
+app.use(express.static('client/public'));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/public/index.html'));
+});
+
 app.listen(port, () => {
-  console.log(`Started up at port port ${port}`);
+  console.log(`Started up at port port ${port}`); // eslint-disable-line
 });
 
 module.exports = app;
