@@ -149,7 +149,8 @@ NewDocument.defaultProps = {
 function mapStateToProps(state) {
   return {
     ajaxStatus: state.ajaxStatus,
-    roleId: state.user.roleId
+    roleId: state.user.roleId,
+    userId: state.user.id
   };
 }
 

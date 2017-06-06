@@ -27,12 +27,10 @@ export default function user(state = initialState.user, action) {
         }
       );
 
-    case types.UPDATE_EXISTING_DOCUMENT:
+    case types.UPDATE_EXISTING_DOCUMENT: {
       const filteredDocuments = state.documents.filter(
         document => document.id !== action.updatedDocument.id
       );
-      console.log([action.updatedDocument, ...filteredDocuments]);
-      console.log(action.updatedDocument, 'document');
       return Object.assign(
         {},
         state,
@@ -40,6 +38,20 @@ export default function user(state = initialState.user, action) {
           documents: [action.updatedDocument, ...filteredDocuments]
         },
       );
+    }
+
+    case types.DELETE_EXISTING_DOCUMENT: {
+      const filteredDocuments = state.documents.filter(
+        document => document.id !== parseInt(action.id, 10)
+      );
+      return Object.assign(
+        {},
+        state,
+        {
+          documents: filteredDocuments
+        },
+      );
+    }
 
     default:
       return state;

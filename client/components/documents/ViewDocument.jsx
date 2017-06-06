@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getDocument } from './../../actions/documentActions';
+import sweetAlert from 'sweetalert';
+import { getDocument, deleteDocument } from './../../actions/documentActions';
 
 
 /**
@@ -13,12 +14,49 @@ import { getDocument } from './../../actions/documentActions';
 class ViewDocument extends Component {
 
   /**
+   * @desc Set the Initial conditions for showing the EditDocument Page
+   * @param {object} props - The property of the EditDocument Page
+   * @constructor
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      openAlert: false
+    };
+
+    this.delete = this.delete.bind(this);
+    this.deleteAlert = this.deleteAlert.bind(this);
+  }
+  /**
    * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
   componentWillMount() {
     this.props.actions.getDocument(this.props.params.id);
   }
+
+  /**
+   * @desc Displays the ViewDocument Page
+   * @return {any} The ViewDocument form
+   */
+   deleteAlert(event) {
+     sweetAlert({
+       title: 'Delete Document',
+       text: 'You are about to delete this document',
+       type: 'error',
+       showCancelButton: true,
+       closeOnConfirm: true,
+       confirmButtonText: 'Yes, delete it!',
+       confirmButtonColor: '#ec6c62'
+     }, this.delete);
+   }
+
+   delete(isConfirm) {
+     if (isConfirm) {
+       this.props.actions.deleteDocument(this.props.params.id);
+     }
+   }
 
   /**
    * @desc Displays the ViewDocument Page
@@ -32,6 +70,13 @@ class ViewDocument extends Component {
           <div className="card col s12">
             <div className="card-content">
               <span className="card-title">ViewDocument</span><br />
+              <a
+                onClick={this.deleteAlert}
+                className="waves-effect waves-light btn right"
+              >
+                <i className="material-icons left">cloud</i>
+                Delete
+              </a>
               <div className="row">
                 <div className="col s12">
                   <h4>{currentDocument.title}</h4>
@@ -52,6 +97,7 @@ class ViewDocument extends Component {
 ViewDocument.propTypes = {
   actions: PropTypes.shape({
     getDocument: PropTypes.func,
+    deleteDocument: PropTypes.func,
   }),
   currentDocument: PropTypes.shape({
     id: PropTypes.number,
@@ -96,7 +142,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ getDocument }, dispatch)
+    actions: bindActionCreators({ getDocument, deleteDocument }, dispatch)
   };
 }
 

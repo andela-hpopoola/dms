@@ -1,6 +1,6 @@
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
-import { addNewDocument, updateExistingDocument } from './userActions';
+import { addNewDocument, updateExistingDocument, deleteExistingDocument } from './userActions';
 import api from './../utils/api';
 import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
@@ -76,11 +76,11 @@ export function getDocument(id) {
 /**
  * Get Document
  * @desc View an existing document
- * @param {object} document - document details
+ * @param {object} updatedDocument - updated document details
+ * @param {object} currentDocument - current document details
  * @returns {object} action
  */
 export function updateDocument(updatedDocument, currentDocument) {
-  console.log(updatedDocument, currentDocument.id, 'document');
   return (dispatch) => {
     const id = currentDocument.id;
     api.put(`/documents/${id}`, updatedDocument).then(() => {
@@ -88,6 +88,30 @@ export function updateDocument(updatedDocument, currentDocument) {
       dispatch(updateExistingDocument(updatedDocument));
       browserHistory.push('/dashboard');
       toastr.success('Document updated successfully');
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+    });
+  };
+}
+
+/**
+ * Delete Document
+ * @desc Deletes an existing document
+ * @param {number} id - document id
+ * @returns {object} action
+ */
+export function deleteDocument(id) {
+  return (dispatch) => {
+    api.delete(`/documents/${id}`).then(() => {
+      dispatch(deleteExistingDocument(id));
+      browserHistory.push('/dashboard');
+      toastr.success('Document deleted successfully');
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code

@@ -11,7 +11,6 @@ import { Link } from 'react-router';
 const DocumentSingle = ({ document }) => {
   const viewDocumentLink = `/view-document/${document.id}`;
   const editDocumentLink = `/edit-document/${document.id}`;
-  const deleteDocumentLink = `/delete-document/${document.id}`;
   return (
     <div className="col l6">
       <div className="card white darken-1 document__card">
@@ -23,7 +22,6 @@ const DocumentSingle = ({ document }) => {
           <Link to={viewDocumentLink}>Read</Link>
           <div className="right">
             <Link to={editDocumentLink}>Edit</Link>
-            <Link to={deleteDocumentLink}>Delete</Link>
           </div>
         </div>
       </div>

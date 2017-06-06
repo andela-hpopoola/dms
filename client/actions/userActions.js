@@ -152,9 +152,21 @@ export function addNewDocument(document) {
  * @returns {object} action
  */
 export function updateExistingDocument(updatedDocument) {
-  console.log(updatedDocument, 'updatedDocument');
   return {
     type: types.UPDATE_EXISTING_DOCUMENT,
     updatedDocument
+  };
+}
+
+/**
+ * Delete Existing Document
+ * @desc Delete a Single Document
+ * @param {number} id - the deleted Document
+ * @returns {object} action
+ */
+export function deleteExistingDocument(id) {
+  return {
+    type: types.DELETE_EXISTING_DOCUMENT,
+    id
   };
 }
