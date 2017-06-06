@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { viewDocument } from './../../actions/documentActions';
+import { getDocument } from './../../actions/documentActions';
 
 
 /**
@@ -17,7 +17,7 @@ class ViewDocument extends Component {
    * @return {void} returns nothing
    */
   componentWillMount() {
-    this.props.actions.viewDocument(this.props.params.id);
+    this.props.actions.getDocument(this.props.params.id);
   }
 
   /**
@@ -42,7 +42,6 @@ class ViewDocument extends Component {
           </div>
         </div>
       </div>
-
     );
   }
 }
@@ -52,7 +51,7 @@ class ViewDocument extends Component {
  */
 ViewDocument.propTypes = {
   actions: PropTypes.shape({
-    viewDocument: PropTypes.func,
+    getDocument: PropTypes.func,
   }),
   currentDocument: PropTypes.shape({
     id: PropTypes.number,
@@ -64,7 +63,7 @@ ViewDocument.propTypes = {
     updatedAt: PropTypes.string,
   }),
   params: PropTypes.shape({
-    id: PropTypes.object,
+    id: PropTypes.string,
   })
 };
 
@@ -97,7 +96,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ viewDocument }, dispatch)
+    actions: bindActionCreators({ getDocument }, dispatch)
   };
 }
 

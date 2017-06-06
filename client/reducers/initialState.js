@@ -7,7 +7,9 @@ export default {
     all: [],
     current: {}
   },
-  user: null,
+  user: {
+    documents: []
+  },
   role: [],
   ajaxStatus: false,
   auth: false,

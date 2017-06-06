@@ -27,6 +27,20 @@ export default function user(state = initialState.user, action) {
         }
       );
 
+    case types.UPDATE_EXISTING_DOCUMENT:
+      const filteredDocuments = state.documents.filter(
+        document => document.id !== action.updatedDocument.id
+      );
+      console.log([action.updatedDocument, ...filteredDocuments]);
+      console.log(action.updatedDocument, 'document');
+      return Object.assign(
+        {},
+        state,
+        {
+          documents: [action.updatedDocument, ...filteredDocuments]
+        },
+      );
+
     default:
       return state;
   }

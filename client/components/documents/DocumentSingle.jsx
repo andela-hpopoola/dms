@@ -9,7 +9,9 @@ import { Link } from 'react-router';
  * @returns {jsx} the formatted document
  */
 const DocumentSingle = ({ document }) => {
-  const documentLink = `/view-document/${document.id}`;
+  const viewDocumentLink = `/view-document/${document.id}`;
+  const editDocumentLink = `/edit-document/${document.id}`;
+  const deleteDocumentLink = `/delete-document/${document.id}`;
   return (
     <div className="col l6">
       <div className="card white darken-1 document__card">
@@ -18,10 +20,10 @@ const DocumentSingle = ({ document }) => {
           <div>{ document.content }</div>
         </div>
         <div className="card-action">
-          <Link to={documentLink}>Read</Link>
+          <Link to={viewDocumentLink}>Read</Link>
           <div className="right">
-            <Link to="#">Delete</Link>
-            <Link to="#">Edit</Link>
+            <Link to={editDocumentLink}>Edit</Link>
+            <Link to={deleteDocumentLink}>Delete</Link>
           </div>
         </div>
       </div>

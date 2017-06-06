@@ -1,6 +1,6 @@
 import { browserHistory } from 'react-router';
 import * as types from './actionTypes';
-import { addNewDocument } from './userActions';
+import { addNewDocument, updateExistingDocument } from './userActions';
 import api from './../utils/api';
 import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
@@ -38,28 +38,56 @@ export function createDocument(document) {
 
 
 /**
- * viewExistingDocument
+ * Get Document Details
  * @desc View a Single Document
  * @param {object} document details
  * @returns {object} action
  */
-export function viewExistingDocument(document) {
+export function getDocumentDetails(document) {
   return {
-    type: types.VIEW_EXISTING_DOCUMENT,
+    type: types.GET_DOCUMENT_DETAILS,
     document
   };
 }
 
+
 /**
- * view Document
+ * Get Document
  * @desc View an existing document
  * @param {number} id document id
  * @returns {object} action
  */
-export function viewDocument(id) {
+export function getDocument(id) {
   return (dispatch) => {
     api.get(`/documents/${id}`).then((result) => {
-      dispatch(viewExistingDocument(result.data));
+      dispatch(getDocumentDetails(result.data));
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+    });
+  };
+}
+
+/**
+ * Get Document
+ * @desc View an existing document
+ * @param {object} document - document details
+ * @returns {object} action
+ */
+export function updateDocument(updatedDocument, currentDocument) {
+  console.log(updatedDocument, currentDocument.id, 'document');
+  return (dispatch) => {
+    const id = currentDocument.id;
+    api.put(`/documents/${id}`, updatedDocument).then(() => {
+      updatedDocument = { ...currentDocument, ...updatedDocument };
+      dispatch(updateExistingDocument(updatedDocument));
+      browserHistory.push('/dashboard');
+      toastr.success('Document updated successfully');
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code

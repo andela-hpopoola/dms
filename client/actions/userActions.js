@@ -144,3 +144,17 @@ export function addNewDocument(document) {
     document
   };
 }
+
+/**
+ * Update Existing Document
+ * @desc Update a Single Document
+ * @param {object} updatedDocument - the updated Document
+ * @returns {object} action
+ */
+export function updateExistingDocument(updatedDocument) {
+  console.log(updatedDocument, 'updatedDocument');
+  return {
+    type: types.UPDATE_EXISTING_DOCUMENT,
+    updatedDocument
+  };
+}

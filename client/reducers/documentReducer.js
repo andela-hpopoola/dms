@@ -10,7 +10,7 @@ import initialState from './initialState';
  */
 export default function document(state = initialState.documents, action) {
   switch (action.type) {
-    case types.VIEW_EXISTING_DOCUMENT:
+    case types.GET_DOCUMENT_DETAILS:
       return Object.assign(
         {},
         state,
