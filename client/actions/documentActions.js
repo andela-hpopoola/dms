@@ -1,8 +1,8 @@
 import { browserHistory } from 'react-router';
+import * as toastr from 'toastr';
 import * as types from './actionTypes';
 import { addNewDocument, updateExistingDocument, deleteExistingDocument } from './userActions';
 import api from './../utils/api';
-import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
 
 /**
@@ -131,7 +131,7 @@ export function deleteDocument(id) {
  * @desc Get all public documents
  * @returns {object} action
  */
-export function getPublicDocument(documents) {
+export function getPublicDocuments(documents) {
   return {
     type: types.GET_PUBLIC_DOCUMENTS,
     documents
@@ -144,11 +144,49 @@ export function getPublicDocument(documents) {
  * @desc Get all public documents
  * @returns {object} action
  */
-export function publicDocumentDispatcher() {
+export function publicDocumentsDispatcher() {
   return (dispatch) => {
     dispatch(ajaxCallStart());
     api.get('/documents').then((result) => {
-      dispatch(getPublicDocument(result.data));
+      dispatch(getPublicDocuments(result.data));
+      dispatch(ajaxCallEnd());
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+      dispatch(ajaxCallEnd());
+    });
+  };
+}
+
+
+/**
+ * Get Role Documents
+ * @param {array} documents - all returned role documents
+ * @desc Get all role documents
+ * @returns {object} action
+ */
+export function getRoleDocuments(documents) {
+  return {
+    type: types.GET_ROLE_DOCUMENTS,
+    documents
+  };
+}
+
+/**
+ * Role Documents Dispatcher
+ * @desc Get all public documents
+ * @returns {object} action
+ */
+export function roleDocumentsDispatcher() {
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    api.get('/documents').then((result) => {
+      dispatch(getRoleDocuments(result.data));
       dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {

@@ -2,10 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import Sidebar from './../layout/Sidebar';
 import { Link } from 'react-router';
 import DocumentList from './../documents/DocumentList';
-import { publicDocumentDispatcher } from './../../actions/documentActions';
+import { publicDocumentsDispatcher, roleDocumentsDispatcher } from './../../actions/documentActions';
 /**
  * @class Dashboard
  * @desc Class to display the dashboard
@@ -24,9 +23,11 @@ class Dashboard extends Component {
       currentDocuments: []
     };
     this.getPublicDocuments = this.getPublicDocuments.bind(this);
+    this.getRoleDocuments = this.getRoleDocuments.bind(this);
     this.getMyDocuments = this.getMyDocuments.bind(this);
 
-    this.props.actions.publicDocumentDispatcher();
+    this.props.actions.publicDocumentsDispatcher();
+    this.props.actions.roleDocumentsDispatcher();
   }
 
 
@@ -40,14 +41,25 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc Invoked before a component is mounted
+   * @desc Get all public documents
    * @return {void} returns nothing
    */
   getPublicDocuments() {
-    console.log(this.props);
-    this.setState({ 
+    this.setState({
       currentDocuments: this.props.publicDocuments,
       documentSource: 'Public Documents'
+    });
+  }
+
+  /**
+   * @desc Get role documents
+   * @return {void} returns nothing
+   */
+  getRoleDocuments() {
+    console.log(this.props);
+    this.setState({
+      currentDocuments: this.props.roleDocuments,
+      documentSource: 'Role Documents'
     });
   }
 
@@ -69,14 +81,39 @@ class Dashboard extends Component {
     const noOfDocuments = documents.length;
 
     return (
-      <div className="container">
+      <div className="main-container">
         <div className="row">
           <div className="col l4">
             <ul className="collection with-header">
               <li className="collection-header"><h4>Menu</h4></li>
-              <li className="collection-item"><div><Link onClick={this.getMyDocuments} href="#!my-documents">My Documents</Link></div></li>
-              <li className="collection-item"><div><a onClick={this.getPublicDocuments} href="#!public-documents">Public Documents</a></div></li>
-              <li className="collection-item"><div><Link to="/new-document">New Document</Link></div></li>
+              <li className="collection-item">
+                <div>
+                  <a onClick={this.getMyDocuments} href="#!my-documents">
+                    My Documents
+                  </a>
+                </div>
+              </li>
+              <li className="collection-item">
+                <div>
+                  <a onClick={this.getPublicDocuments} href="#!public-documents">
+                    Public Documents
+                  </a>
+                </div>
+              </li>
+              <li className="collection-item">
+                <div>
+                  <a onClick={this.getRoleDocuments} href="#!public-documents">
+                    Role Documents
+                  </a>
+                </div>
+              </li>
+              <li className="collection-item">
+                <div>
+                  <Link to="/new-document">
+                    New Document
+                  </Link>
+                </div>
+              </li>
             </ul>
           </div>
           <div className="col l8">
@@ -100,7 +137,9 @@ Dashboard.propTypes = {
     token: PropTypes.string,
     email: PropTypes.string,
     documents: PropTypes.array,
-  })
+  }),
+  publicDocuments: PropTypes.arrayOf(PropTypes.object),
+  roleDocuments: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**
@@ -108,7 +147,9 @@ Dashboard.propTypes = {
  */
 Dashboard.defaultProps = {
   ajaxStatus: false,
-  user: {}
+  user: {},
+  publicDocuments: {},
+  roleDocuments: {},
 };
 
 /**
@@ -120,6 +161,7 @@ function mapStateToProps(state) {
   return {
     user: state.user,
     publicDocuments: state.documents.public,
+    roleDocuments: state.documents.role,
     ajaxStatus: state.ajaxStatus
   };
 }
@@ -132,11 +174,9 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ publicDocumentDispatcher }, dispatch)
+    actions: bindActionCreators({ publicDocumentsDispatcher, roleDocumentsDispatcher }, dispatch)
   };
 }
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 

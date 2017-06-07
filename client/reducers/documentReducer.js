@@ -28,6 +28,15 @@ export default function document(state = initialState.documents, action) {
         }
       );
 
+    case types.GET_ROLE_DOCUMENTS:
+      return Object.assign(
+        {},
+        state,
+        {
+          role: action.documents
+        }
+      );
+
     default:
       return state;
   }

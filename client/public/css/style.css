@@ -1188,3 +1188,6 @@ body.stop-scrolling {
 
 body {
   background-color: #F4F4F4; }
+
+.main-container {
+  padding: 0 60px; }

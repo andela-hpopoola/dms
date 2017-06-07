@@ -94,7 +94,7 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxStatus ? '...' : 'Submit'}
+                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
 

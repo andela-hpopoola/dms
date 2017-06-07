@@ -58,9 +58,7 @@ class EditDocument extends Component {
    */
   render() {
     const { currentDocument } = this.props;
-    const roleId = currentDocument.roleId;
     const access = currentDocument.access;
-    const selectedValue = 'className="disabled" selected="selected"';
     return (
       <div className="container">
         <div className="row">

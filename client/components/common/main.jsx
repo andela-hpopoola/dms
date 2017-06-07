@@ -8,7 +8,7 @@ import Nav from './../layout/Nav';
  * @return {jsx} returns jsx page component
  */
 const Main = props => (
-  <div className="main-container">
+  <div className="main">
     <Nav />
     { props.children }
   </div>

@@ -1,8 +1,8 @@
 import { browserHistory } from 'react-router';
+import * as toastr from 'toastr';
 import * as types from './actionTypes';
 import { deauthenticateUser, authenticateUser } from './authActions';
 import api from './../utils/api';
-import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
 
 /**

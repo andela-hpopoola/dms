@@ -33,9 +33,9 @@ const Nav = (props) => {
   const { userIsLoggedIn } = props;
   return (
     <div className="navbar-fixed">
-      <nav>
-        <div className="nav-wrapper">
-          <div className="container">
+      <nav className="row">
+        <div className="nav-wrapper col s12">
+          <div className="main-container">
             <a href="#!" className="brand-logo">DMS</a>
             <ul className="right">
               { userIsLoggedIn ? loggedInList : notloggedInList }

@@ -6,6 +6,7 @@ export default {
   documents: {
     all: [],
     public: [],
+    role: [],
     current: {}
   },
   user: {
