@@ -5,6 +5,7 @@
 export default {
   documents: {
     all: [],
+    public: [],
     current: {}
   },
   user: {

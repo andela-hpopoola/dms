@@ -123,3 +123,42 @@ export function deleteDocument(id) {
     });
   };
 }
+
+
+/**
+ * Get Public Documents
+ * @param {array} documents - all returned public documents
+ * @desc Get all public documents
+ * @returns {object} action
+ */
+export function getPublicDocument(documents) {
+  return {
+    type: types.GET_PUBLIC_DOCUMENTS,
+    documents
+  };
+}
+
+
+/**
+ * Public Documents Dispatcher
+ * @desc Get all public documents
+ * @returns {object} action
+ */
+export function publicDocumentDispatcher() {
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    api.get('/documents').then((result) => {
+      dispatch(getPublicDocument(result.data));
+      dispatch(ajaxCallEnd());
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+      dispatch(ajaxCallEnd());
+    });
+  };
+}

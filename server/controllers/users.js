@@ -1,95 +1,39 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../models').Users;
 const Documents = require('../models').Documents;
+const model = require('./../utils/model');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
+
 module.exports = {
   create(req, res) {
-    return Users
-      .create(req.body)
-      .then((user) => {
-        if (user) {
-          res.json(user);
-        } else {
-          res.status(412).json({ msg: 'User cannot be created' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.create(req, res, 'User', Users);
   },
+
 
   getAll(req, res) {
     const limit = req.query.limit || DEFAULT_LIMIT;
     const offset = req.query.offset || DEFAULT_OFFSET;
-    return Users
-      .findAll({ offset, limit })
-      .then((users) => {
-        if (users) {
-          res.json(users);
-        } else {
-          res.status(404).json({ msg: 'No user found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.getAll(req, res, 'User', Users, { limit, offset });
   },
 
   getOne(req, res) {
-    return Users
-      .findById(req.params.id)
-      .then((user) => {
-        if (user) {
-          res.json(user);
-        } else {
-          res.status(404).json({ msg: 'User not Found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    const id = req.params.id;
+    return model.findOne(req, res, 'User', Users, { id });
   },
 
   update(req, res) {
     const id = req.params.id;
-    return Users
-      .findOne({ where: { id } }).then((user) => {
-        if (user) {
-          user
-            .update(req.body)
-            .then(() => res.json({ msg: 'User Updated' }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        } else {
-          res.status(404).json({ msg: 'User not found' });
-        }
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.update(req, res, 'User', Users, { id });
   },
 
   delete(req, res) {
     const id = req.params.id;
-    return Users
-      .findOne({ where: { id } }).then((user) => {
-        if (user) {
-          return user
-            .destroy()
-            .then(() => res.status(202).json({ msg: 'User Deleted' }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        }
-        res.status(404).json({ msg: 'User not found' });
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.remove(req, res, 'User', Users, { id });
   },
 
   search(req, res) {

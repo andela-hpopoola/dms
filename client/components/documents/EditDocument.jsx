@@ -83,7 +83,7 @@ class EditDocument extends Component {
                         required="required"
                         onChange={this.updateForm}
                       />
-                      <label htmlFor="title">Title</label>
+                      <label htmlFor="title" className="active">Title</label>
                     </div>
                   </div>
 
@@ -94,12 +94,12 @@ class EditDocument extends Component {
                         id="content"
                         name="content"
                         type="text"
-                        className="materialize-textarea"
+                        className="materialize-textarea active"
                         value={this.state.form.content || currentDocument.content}
                         required="required"
                         onChange={this.updateForm}
                       />
-                      <label htmlFor="content">Content</label>
+                      <label htmlFor="content" className="active">Content</label>
                     </div>
                   </div>
 
@@ -115,11 +115,9 @@ class EditDocument extends Component {
                           Document can be viewed by only me (Private)
                         </option>
                         <option value="-1">
-                           { access === -1 && selectedValue }
                           Document can be viewed by everyone (Public)
                         </option>
                         <option value={this.props.roleId}>
-                          { access === roleId && selectedValue }
                           Document can be viewed by same role (Role)
                         </option>
                       </select>

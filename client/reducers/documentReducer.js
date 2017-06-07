@@ -19,6 +19,15 @@ export default function document(state = initialState.documents, action) {
         }
       );
 
+    case types.GET_PUBLIC_DOCUMENTS:
+      return Object.assign(
+        {},
+        state,
+        {
+          public: action.documents
+        }
+      );
+
     default:
       return state;
   }

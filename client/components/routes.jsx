@@ -10,7 +10,8 @@ import Logout from './users/Logout';
 import Signup from './users/Signup';
 import NewDocument from './documents/NewDocument';
 import ViewDocument from './documents/ViewDocument';
-import editDocument from './documents/editDocument';
+import editDocument from './documents/EditDocument';
+import PublicDocuments from './documents/PublicDocuments';
 import * as auth from './../utils/auth';
 import { unauthorized } from './../actions/authActions';
 
@@ -73,6 +74,10 @@ class Routes extends Component {
           <Route
             path="view-document/:id"
             component={ViewDocument}
+          />
+          <Route
+            path="public-document"
+            component={PublicDocuments}
           />
           <Route
             path="edit-document/:id"
