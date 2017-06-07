@@ -149,7 +149,6 @@ class EditDocument extends Component {
  */
 EditDocument.propTypes = {
   roleId: PropTypes.number,
-  userId: PropTypes.number,
   ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     getDocument: PropTypes.func,
@@ -172,7 +171,6 @@ EditDocument.defaultProps = {
   actions: {},
   currentDocument: {},
   roleId: 0,
-  userId: 0,
   ajaxStatus: false,
 };
 

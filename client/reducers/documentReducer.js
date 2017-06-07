@@ -37,6 +37,20 @@ export default function document(state = initialState.documents, action) {
         }
       );
 
+    case types.SEARCH_FOR_DOCUMENTS: {
+      const filteredDocuments = action.documents.filter(
+        searchDocument => searchDocument.access !== action.documentType
+      );
+      console.log(filteredDocuments, 'filter in reducer');
+      return Object.assign(
+        {},
+        state,
+        {
+          search: [...filteredDocuments]
+        }
+      );
+    }
+
     default:
       return state;
   }

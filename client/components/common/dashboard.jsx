@@ -4,7 +4,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import DocumentList from './../documents/DocumentList';
-import { publicDocumentsDispatcher, roleDocumentsDispatcher } from './../../actions/documentActions';
+import SearchForm from './../common/SearchForm';
+import {
+  publicDocumentsDispatcher,
+  roleDocumentsDispatcher,
+  searchDocumentsDispatcher,
+ } from './../../actions/documentActions';
 /**
  * @class Dashboard
  * @desc Class to display the dashboard
@@ -25,6 +30,7 @@ class Dashboard extends Component {
     this.getPublicDocuments = this.getPublicDocuments.bind(this);
     this.getRoleDocuments = this.getRoleDocuments.bind(this);
     this.getMyDocuments = this.getMyDocuments.bind(this);
+    this.searchForDocuments = this.searchForDocuments.bind(this);
 
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
@@ -56,7 +62,6 @@ class Dashboard extends Component {
    * @return {void} returns nothing
    */
   getRoleDocuments() {
-    console.log(this.props);
     this.setState({
       currentDocuments: this.props.roleDocuments,
       documentSource: 'Role Documents'
@@ -64,15 +69,40 @@ class Dashboard extends Component {
   }
 
   /**
+   * The method is used to search for documents
+   * @param {string} queryText - get the documents to search
+   * @param {string} documentType - get the documents access
+   * @return {object} sets the state based on document
+   */
+  searchForDocuments(query, documentType) {
+    // const queryText = query.toLowerCase();
+    // let { currentDocuments } = this.state;
+    // // if the current document is empty
+    // // get the user document
+    // if (currentDocuments.length === 0) {
+    //   currentDocuments = this.props.user.documents;
+    // }
+    // console.log(currentDocuments, 'currenetDocuments');
+    // const searchResult = currentDocuments.filter(
+    //   document =>
+    //     document.title.toLowerCase().indexOf(queryText) !== -1 ||
+    //       document.content.toLowerCase().indexOf(queryText) !== -1
+    // );
+    // console.log(searchResult, 'searchResult');
+    // this.setState({ currentDocuments: searchResult });
+    console.log(query, documentType, 'query doc type');
+    this.props.actions.searchDocumentsDispatcher(query, documentType);
+    console.log(this.props.searchDocuments);
+  }
+  /**
    * @desc Displays the Dashboard
    * @return {any} The Dashboard Content
    */
   render() {
     const { user } = this.props;
-    console.log(user);
     let documents = this.state.currentDocuments;
     let documentSource = this.state.documentSource;
-    console.log(documents);
+
     if (documents.length === 0) {
       documents = user.documents;
       documentSource = 'Personal Documents';
@@ -119,6 +149,7 @@ class Dashboard extends Component {
           <div className="col l8">
             <h1>Welcome to the Dashboard {user.name} ({user.email})</h1>
             <h3> {noOfDocuments} {documentSource}</h3>
+            <SearchForm onChange={this.searchForDocuments} />
             <DocumentList documents={documents} />
           </div>
         </div>
@@ -131,7 +162,11 @@ class Dashboard extends Component {
  * Set the PropTypes for Dashboard
  */
 Dashboard.propTypes = {
-  ajaxStatus: PropTypes.bool,
+  actions: PropTypes.shape({
+    publicDocumentsDispatcher: PropTypes.func.isRequired,
+    roleDocumentsDispatcher: PropTypes.func.isRequired,
+    searchDocumentsDispatcher: PropTypes.func.isRequired,
+  }),
   user: PropTypes.shape({
     name: PropTypes.string,
     token: PropTypes.string,
@@ -139,17 +174,19 @@ Dashboard.propTypes = {
     documents: PropTypes.array,
   }),
   publicDocuments: PropTypes.arrayOf(PropTypes.object),
-  roleDocuments: PropTypes.arrayOf(PropTypes.object)
+  roleDocuments: PropTypes.arrayOf(PropTypes.object),
+  searchDocuments: PropTypes.arrayOf(PropTypes.object),
 };
 
 /**
  * Sets default values for Dashboard Prototype
  */
 Dashboard.defaultProps = {
-  ajaxStatus: false,
   user: {},
   publicDocuments: {},
   roleDocuments: {},
+  searchDocuments: {},
+  actions: {}
 };
 
 /**
@@ -162,6 +199,7 @@ function mapStateToProps(state) {
     user: state.user,
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
+    searchDocuments: state.documents.search,
     ajaxStatus: state.ajaxStatus
   };
 }
@@ -174,7 +212,11 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ publicDocumentsDispatcher, roleDocumentsDispatcher }, dispatch)
+    actions: bindActionCreators({
+      publicDocumentsDispatcher,
+      roleDocumentsDispatcher,
+      searchDocumentsDispatcher
+    }, dispatch)
   };
 }
 

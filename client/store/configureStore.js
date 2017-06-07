@@ -12,8 +12,8 @@ const composeEnhancers = global.window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || c
  * @param {object} initialState all states in application
  * @returns {any} any
  */
-export default function configureStore(initialState) {
-  return createStore(
+const configureStore = initialState =>
+  createStore(
     rootReducer,
     initialState,
     composeEnhancers(
@@ -23,4 +23,5 @@ export default function configureStore(initialState) {
       )
     )
   );
-}
+
+export default configureStore();

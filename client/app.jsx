@@ -3,14 +3,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import Routes from './components/Routes';
-import configureStore from './store/configureStore';
+import store from './store/configureStore';
 
 // Load Custom CSS
 import './sass/main.scss';
-
-const store = configureStore();
-
-window.store = store;
 
 render(
   <Provider store={store}>

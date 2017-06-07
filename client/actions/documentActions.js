@@ -200,3 +200,47 @@ export function roleDocumentsDispatcher() {
     });
   };
 }
+
+
+/**
+ * Get Role Documents
+ * @param {array} documents - all returned role documents
+ * @param {number} documentsType type of document to search for
+ * @desc Get all role documents
+ * @returns {object} action
+ */
+export function searchForDocuments(documents, documentsType) {
+  console.log(documents, '2nd action');
+  return {
+    type: types.SEARCH_FOR_DOCUMENTS,
+    documents,
+    documentsType
+  };
+}
+
+/**
+ * Search Documents Dispatcher
+ * @param {string} documentTitle the title of the document to search for
+ * @param {number} documentsType type of document to search for
+ * @desc Get all documents
+ * @returns {object} action
+ */
+export function searchDocumentsDispatcher(documentTitle, documentsType) {
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
+      console.log(result.data, 'dispatch');
+      dispatch(searchForDocuments(result.data, documentsType));
+      dispatch(ajaxCallEnd());
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+      dispatch(ajaxCallEnd());
+    });
+  };
+}

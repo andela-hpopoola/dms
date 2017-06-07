@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createDocument } from './../../actions/documentActions';
+import { DOCUMENTS } from './../../../constants';
 
 
 /**
@@ -84,10 +85,10 @@ class NewDocument extends Component {
                     <div className="input-field col s12">
                       <h6><strong>Access</strong></h6>
                       <select name="access" className="browser-default">
-                        <option value="0">
+                        <option value={DOCUMENTS.PRIVATE}>
                           Document can be viewed by only me (Private)
                         </option>
-                        <option value="-1">
+                        <option value={DOCUMENTS.PUBLIC}>
                           Document can be viewed by everyone (Public)
                         </option>
                         <option value={this.props.roleId}>

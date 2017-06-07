@@ -7,6 +7,7 @@ export default {
     all: [],
     public: [],
     role: [],
+    search: [],
     current: {}
   },
   user: {
