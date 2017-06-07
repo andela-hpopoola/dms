@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import ProgressBar from './../../components/common/ProgressBar';
 import { login, loginByToken } from './../../actions/userActions';
 import * as auth from './../../utils/auth';
 
@@ -30,7 +31,7 @@ class Login extends Component {
    */
   componentWillMount() {
     if (auth.getToken()) {
-      this.props.actions.loginByToken(auth.getToken());
+      this.props.actions.loginByToken();
     }
   }
 
@@ -59,6 +60,7 @@ class Login extends Component {
               <span className="card-title">Login</span><br />
               <div className="row">
                 <form className="col s12" onSubmit={this.authenticateUser}>
+                  <ProgressBar />
 
                   {/* Email */}
                   <div className="row">
@@ -97,7 +99,7 @@ class Login extends Component {
                     {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
-
+                  
                 </form>
               </div>
             </div>

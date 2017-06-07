@@ -99,6 +99,10 @@ module.exports = {
     }
   },
 
+  logout(req, res) {
+    res.json({ msg: 'You have successfully logged out' });
+  },
+
   loginByToken(req, res) {
     const token = req.header('x-auth');
     const decoded = jwt.verify(token, JWT_SECRET_KEY);

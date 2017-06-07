@@ -68,9 +68,9 @@ export function login(user) {
  * @param {object} token saved token in LocalStorage
  * @returns {object} action
  */
-export function loginByToken(token) {
+export function loginByToken() {
   return (dispatch) => {
-    api.get('/users/login/token', token).then((result) => {
+    api.get('/users/login/token').then((result) => {
       if (result.status === 200) {
         dispatch(setCurrentUser(result.data));
         dispatch(authenticateUser(result.data.token));
@@ -94,10 +94,14 @@ export function loginByToken(token) {
  */
 export function logout() {
   return (dispatch) => {
-    dispatch(logoutCurrentUser());
-    dispatch(deauthenticateUser());
-    browserHistory.push('/');
-    toastr.info('You have successfully signed out');
+    api.get('/users/logout').then((result) => {
+      dispatch(logoutCurrentUser());
+      dispatch(deauthenticateUser());
+      browserHistory.push('/');
+      toastr.info('You have successfully signed out');
+    }).catch((error) => {
+      toastr.error(error);
+    });
   };
 }
 
