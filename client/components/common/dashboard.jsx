@@ -104,7 +104,7 @@ class Dashboard extends Component {
 
   /**
    * @desc Get all my Documents
-   * @param {integer} filtering for search page
+   * @param {integer} filter - filtering for search page
    * @return {void} returns nothing
    */
   filterSearchDocuments(filter) {

@@ -96,7 +96,7 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    Submitting
+                    Login
                     <i className="material-icons right">send</i>
                   </button>
                 </form>

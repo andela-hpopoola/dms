@@ -56,8 +56,11 @@ class SearchForm extends Component {
             <label htmlFor="search">Search for Documents</label>
           </div>
           <div className="input-field col m4 s4">
-            <select name="documentType" onChange={this.handleFilter}
-            className="browser-default">
+            <select
+              name="documentType"
+              onChange={this.handleFilter}
+              className="browser-default"
+            >
               <option value={DOCUMENTS.ALL}>
                 All Documents
               </option>
@@ -93,6 +96,7 @@ class SearchForm extends Component {
  */
 SearchForm.propTypes = {
   onChange: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
   roleId: PropTypes.number.isRequired,
 };
 

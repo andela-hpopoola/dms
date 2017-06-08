@@ -1,7 +1,6 @@
-const Documents = require('../models').Documents;
-
-const DEFAULT_LIMIT = 20;
-const DEFAULT_OFFSET = 0;
+import { Documents } from '../models';
+import model from './../utils/model';
+import { DEFAULT, DOCUMENTS } from './../../constants';
 
 module.exports = {
   create(req, res) {
@@ -16,110 +15,67 @@ module.exports = {
           return res.status(409)
             .json({ msg: 'Document name exists' });
         }
-        Documents.create(req.body)
-          .then((document) => {
-            if (document) {
-              res.json(document);
-            } else {
-              res.status(412).json({ msg: 'Document cannot be created' });
-            }
-          })
-          .catch((error) => {
-            res.status(412).json({ msg: error.message });
-          });
+        return model.create(req, res, 'Document', Documents);
       }).catch((error) => {
-        res.status(412).json({ msg: error.message });
+        return res.status(412).json({ msg: error.message });
       });
   },
 
   getAll(req, res) {
-    const limit = req.query.limit || DEFAULT_LIMIT;
-    const offset = req.query.offset || DEFAULT_OFFSET;
-    return Documents
-      .findAll({ offset, limit })
-      .then((documents) => {
-        if (documents) {
-          res.json(documents);
-        } else {
-          res.status(412).json({ msg: 'No document found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    const limit = req.query.limit || DEFAULT.LIMIT;
+    const offset = req.query.offset || DEFAULT.OFFSET;
+    const whereQuery = {
+      access: {
+        // Not equal to private documents
+        $ne: DOCUMENTS.PRIVATE
+      }
+    };
+    return model.getAll(req, res, 'Document', Documents, whereQuery, { limit, offset });
   },
 
   getOne(req, res) {
-    return Documents
-      .findById(req.params.id)
-      .then((document) => {
-        if (document) {
-          res.json(document);
-        } else {
-          res.status(404).json({ msg: 'Document not Found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    const id = req.params.id;
+    return model.findOne(req, res, 'Document', Documents, { id });
   },
 
   update(req, res) {
     const id = req.params.id;
-    return Documents
-      .findOne({ where: { id } }).then((document) => {
-        if (document) {
-          document
-            .update(req.body)
-            .then(() => res.json({ msg: 'Document Updated' }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        } else {
-          res.status(404).json({ msg: 'Document not found' });
-        }
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.update(req, res, 'Document', Documents, { id });
   },
 
   delete(req, res) {
     const id = req.params.id;
-    return Documents
-      .findOne({ where: { id } }).then((document) => {
-        if (document) {
-          return document
-            .destroy()
-            .then(output => res.status(204).json({ msg: 'Document Deleted', output }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        }
-        res.status(404).json({ msg: 'Document not found' });
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.remove(req, res, 'Document', Documents, { id });
   },
 
   search(req, res) {
     const query = req.query.q;
+    const userId = res.locals.user.id;
+    const roleId = res.locals.user.roleId;
+    if (query.length <= 2) {
+      return res.status(401).send(
+        { msg: 'Your search term must exceed 2 characters' }
+      );
+    }
     return Documents
       .findAll({
         where: {
-          title: {
-            $iLike: `%${query}%`
-          }
+          title: { $iLike: `%${query}%` },
+          $or: [
+            { userId: { $eq: userId } },
+            { access: { $eq: roleId } },
+            { access: { $eq: DOCUMENTS.PUBLIC } },
+          ]
         }
       })
       .then((documents) => {
         if (documents) {
-          res.json(documents);
-        } else {
-          res.status(404).json({ msg: 'No document found' });
+          return res.json(documents);
         }
+        return res.status(404).json({ msg: 'No document found' });
       })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+      .catch(error =>
+        res.status(412).json({ msg: error.message })
+      );
   },
 };
