@@ -8,6 +8,7 @@ export default {
     public: [],
     role: [],
     search: [],
+    filter: [],
     current: {}
   },
   user: {

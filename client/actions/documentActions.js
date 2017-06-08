@@ -203,18 +203,31 @@ export function roleDocumentsDispatcher() {
 
 
 /**
- * Get Role Documents
+ * Filter Documents
+ * @param {array} documents - all returned role documents
+ * @param {number} filter - type of document to search for
+ * @desc Get all role documents
+ * @returns {object} action
+ */
+export function filterDocuments(documents, filter) {
+  return {
+    type: types.FILTER_DOCUMENTS,
+    documents,
+    filter
+  };
+}
+
+/**
+ * Search for Documents
  * @param {array} documents - all returned role documents
  * @param {number} documentsType type of document to search for
  * @desc Get all role documents
  * @returns {object} action
  */
-export function searchForDocuments(documents, documentsType) {
-  console.log(documents, '2nd action');
+export function searchForDocuments(documents) {
   return {
     type: types.SEARCH_FOR_DOCUMENTS,
-    documents,
-    documentsType
+    documents
   };
 }
 
@@ -225,12 +238,11 @@ export function searchForDocuments(documents, documentsType) {
  * @desc Get all documents
  * @returns {object} action
  */
-export function searchDocumentsDispatcher(documentTitle, documentsType) {
+export function searchDocumentsDispatcher(documentTitle) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
     api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
-      console.log(result.data, 'dispatch');
-      dispatch(searchForDocuments(result.data, documentsType));
+      dispatch(searchForDocuments(result.data));
       dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {

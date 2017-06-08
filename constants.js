@@ -9,3 +9,8 @@ export const ROLES = {
   ADMIN: 2,
   USER: 3
 };
+
+export const DEFAULT = {
+  LIMIT: 20,
+  OFFSET: 0
+};

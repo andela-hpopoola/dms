@@ -1,5 +1,5 @@
+import * as toastr from 'toastr';
 import * as types from './actionTypes';
-import * as toastr from '../utils/toastr';
 import * as auth from '../utils/auth';
 
 /**
@@ -9,6 +9,7 @@ import * as auth from '../utils/auth';
  * @returns {object} action
  */
 export function authenticateUser(token) {
+  auth.removeToken();
   auth.setToken(token);
   return {
     type: types.AUTHENTICATE_USER,

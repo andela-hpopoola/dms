@@ -19,6 +19,7 @@ class SearchForm extends Component {
     super(props);
 
     this.handleSearch = this.handleSearch.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
   }
 
 
@@ -29,7 +30,17 @@ class SearchForm extends Component {
    */
   handleSearch(event) {
     event.preventDefault();
-    this.props.onChange(event.target.search.value, event.target.documentType.value);
+    this.props.onChange(event.target.search.value);
+  }
+
+  /**
+   * @desc Returns the value in the Search Field
+   * @param {function} event - event of the field
+   * @return {string} Value in String Field
+   */
+  handleFilter(event) {
+    event.preventDefault();
+    this.props.onSelect(event.target.value);
   }
 
   /**
@@ -45,7 +56,8 @@ class SearchForm extends Component {
             <label htmlFor="search">Search for Documents</label>
           </div>
           <div className="input-field col m4 s4">
-            <select name="documentType" className="browser-default">
+            <select name="documentType" onChange={this.handleFilter}
+            className="browser-default">
               <option value={DOCUMENTS.ALL}>
                 All Documents
               </option>

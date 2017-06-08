@@ -1,4 +1,5 @@
-const bcrypt = require('bcryptjs');
+import bcrypt from 'bcryptjs';
+import { ROLES } from './../../constants';
 
 const salt = bcrypt.genSaltSync();
 
@@ -36,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     roleId: {
       type: DataTypes.INTEGER,
-      defaultValue: 1,
+      defaultValue: ROLES.USER,
       validate: {
         isInt: {
           msg: 'Invalid Role'

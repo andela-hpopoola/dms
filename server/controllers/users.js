@@ -1,24 +1,19 @@
-const jwt = require('jsonwebtoken');
-const Users = require('../models').Users;
-const Documents = require('../models').Documents;
-const model = require('./../utils/model');
+import jwt from 'jsonwebtoken';
+import { Users, Documents } from '../models';
+import model from './../utils/model';
+import { ROLES, DEFAULT } from './../../constants';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
-
-const DEFAULT_LIMIT = 20;
-const DEFAULT_OFFSET = 0;
-
 
 module.exports = {
   create(req, res) {
     return model.create(req, res, 'User', Users);
   },
 
-
   getAll(req, res) {
-    const limit = req.query.limit || DEFAULT_LIMIT;
-    const offset = req.query.offset || DEFAULT_OFFSET;
-    return model.getAll(req, res, 'User', Users, { limit, offset });
+    const limit = req.query.limit || DEFAULT.LIMIT;
+    const offset = req.query.offset || DEFAULT.OFFSET;
+    return model.getAll(req, res, 'User', Users, {}, { limit, offset });
   },
 
   getOne(req, res) {
@@ -141,8 +136,75 @@ module.exports = {
         if (!user) {
           res.status(404).json({ msg: 'User not found' });
         }
+        res.locals.user = user;
         next();
       }).catch(() => res.status(404).json('No Token was found'));
+  },
+
+  isAdmin(req, res, next) {
+    const roleId = res.locals.user.roleId;
+    if ((roleId === ROLES.SUPERADMIN) || (roleId === ROLES.ADMIN)) {
+      next();
+    } else {
+      res.status(403).json({ msg: 'Unauthorized Access' });
+    }
+  },
+
+  isSuperAdmin(req, res, next) {
+    const roleId = res.locals.user.roleId;
+    if (roleId === ROLES.SUPERADMIN) {
+      next();
+    } else {
+      res.status(403).json({ msg: 'Unauthorized Access' });
+    }
+  },
+
+  isOwner(req, res, next) {
+    const userId = res.locals.user.id;
+    const requestId = req.params.id;
+    if (userId === requestId) {
+      next();
+    } else {
+      res.status(403).json({ msg: 'Unauthorized Access' });
+    }
+    res.status(403).json({ msg: 'Unauthorized Access ' });
+  },
+
+  isAdminOrOwner(req, res, next) {
+    const userId = res.locals.user.id;
+    const requestId = req.params.id;
+    const roleId = res.locals.user.roleId;
+    if (userId === requestId) {
+      next();
+    } else if ((roleId === ROLES.SUPERADMIN) || (roleId === ROLES.ADMIN)) {
+      next();
+    } else {
+      res.status(403).json({ msg: 'Unauthorized Access' });
+    }
+  },
+
+  canManageDocument(req, res, next) {
+    const userId = res.locals.user.id;
+    const roleId = res.locals.user.roleId;
+    Documents
+      .findById(req.params.id)
+      .then((document) => {
+        if (document) {
+          if (userId === document.userId) {
+            next();
+          } else if (document.access === Documents.PUBLIC) {
+            if ((roleId === ROLES.SUPERADMIN) || (roleId === ROLES.ADMIN)) {
+              next();
+            } else {
+              res.status(403).json({ msg: 'Unauthorized Access ' });
+            }
+          }
+        } else {
+          res.status(404).json({ msg: 'Document not Found' });
+        }
+      }).catch((error) => {
+        res.status(412).json({ msg: error.message });
+      });
   },
 
   getDocuments(req, res) {
