@@ -1,93 +1,39 @@
 const jwt = require('jsonwebtoken');
 const Users = require('../models').Users;
 const Documents = require('../models').Documents;
+const model = require('./../utils/model');
+
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_OFFSET = 0;
 
+
 module.exports = {
   create(req, res) {
-    return Users
-      .create(req.body)
-      .then((user) => {
-        if (user) {
-          res.json(user);
-        } else {
-          res.status(412).json({ msg: 'User cannot be created' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.create(req, res, 'User', Users);
   },
+
 
   getAll(req, res) {
     const limit = req.query.limit || DEFAULT_LIMIT;
     const offset = req.query.offset || DEFAULT_OFFSET;
-    return Users
-      .findAll({ offset, limit })
-      .then((users) => {
-        if (users) {
-          res.json(users);
-        } else {
-          res.status(404).json({ msg: 'No user found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.getAll(req, res, 'User', Users, { limit, offset });
   },
 
   getOne(req, res) {
-    return Users
-      .findById(req.params.id)
-      .then((user) => {
-        if (user) {
-          res.json(user);
-        } else {
-          res.status(404).json({ msg: 'User not Found' });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    const id = req.params.id;
+    return model.findOne(req, res, 'User', Users, { id });
   },
 
   update(req, res) {
     const id = req.params.id;
-    return Users
-      .findOne({ where: { id } }).then((user) => {
-        if (user) {
-          user
-            .update(req.body)
-            .then(() => res.json({ msg: 'User Updated' }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        } else {
-          res.status(404).json({ msg: 'User not found' });
-        }
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.update(req, res, 'User', Users, { id });
   },
 
   delete(req, res) {
     const id = req.params.id;
-    return Users
-      .findOne({ where: { id } }).then((user) => {
-        if (user) {
-          return user
-            .destroy()
-            .then(() => res.status(202).json({ msg: 'User Deleted' }))
-            .catch((error) => {
-              res.status(412).json({ msg: error.message });
-            });
-        }
-        res.status(404).json({ msg: 'User not found' });
-      }).catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
+    return model.remove(req, res, 'User', Users, { id });
   },
 
   search(req, res) {
@@ -125,44 +71,57 @@ module.exports = {
     if (req.body.email && req.body.password) {
       const email = req.body.email;
       const password = req.body.password;
-      Users.findOne({ where: { email } })
-        .then((user) => {
-          if (!user) {
-            res.status(401).json({ msg: 'Invalid email or password' });
-          }
-          if (Users.isPassword(user.password, password)) {
-            const payload = { email: user.email };
-            user.token = jwt.sign(payload, 'secret');
-            res.header('x-auth', user.token).json({
-              name: user.name,
-              email: user.email,
-              token: user.token,
-              role: user.roleId
-            });
-          } else {
-            res.status(401).json({ msg: 'Invalid email or password' });
-          }
-        })
-        .catch(error => res.status(401).json({ msg: error.message }));
+      Users.findOne({
+        where: { email },
+        include: [{ model: Documents, as: 'Documents' }]
+      }).then((user) => {
+        if (!user) {
+          res.status(401).json({ msg: 'Invalid email or password' });
+        }
+        if (Users.isPassword(user.password, password)) {
+          const payload = { email: user.email };
+          user.token = jwt.sign(payload, JWT_SECRET_KEY);
+          res.header('x-auth', user.token).json({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            token: user.token,
+            roleId: user.roleId,
+            documents: user.Documents
+          });
+        } else {
+          res.status(401).json({ msg: 'Invalid email or password' });
+        }
+      })
+      .catch(error => res.status(401).json({ msg: error.message }));
     } else {
       res.status(401).json({ msg: 'Enter your registered email and password' });
     }
   },
 
+  logout(req, res) {
+    res.json({ msg: 'You have successfully logged out' });
+  },
+
   loginByToken(req, res) {
     const token = req.header('x-auth');
-    const decoded = jwt.verify(token, 'secret');
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
     const email = decoded.email;
-    Users.findOne({ where: { email } })
+    Users.findOne({
+      where: { email },
+      include: [{ model: Documents, as: 'Documents' }]
+    })
       .then((user) => {
         if (!user) {
           res.status(401).json({ msg: 'Invalid email' });
         }
         res.header('x-auth', token).json({
+          id: user.id,
           name: user.name,
           email: user.email,
           token,
-          role: user.roleId
+          roleId: user.roleId,
+          documents: user.Documents
         });
       })
       .catch(error => res.status(404).json({ msg: error.message }));
@@ -172,7 +131,7 @@ module.exports = {
     const token = req.header('x-auth');
     let decoded = { };
     try {
-      decoded = jwt.verify(token, 'secret');
+      decoded = jwt.verify(token, JWT_SECRET_KEY);
     } catch (e) {
       res.status(401).json({ msg: 'Invalid Token' });
     }

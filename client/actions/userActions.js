@@ -1,8 +1,8 @@
 import { browserHistory } from 'react-router';
+import * as toastr from 'toastr';
 import * as types from './actionTypes';
 import { deauthenticateUser, authenticateUser } from './authActions';
 import api from './../utils/api';
-import * as toastr from '../utils/toastr';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
 
 /**
@@ -68,14 +68,14 @@ export function login(user) {
  * @param {object} token saved token in LocalStorage
  * @returns {object} action
  */
-export function loginByToken(token) {
+export function loginByToken() {
   return (dispatch) => {
-    api.get('/users/login/token', token).then((result) => {
+    api.get('/users/login/token').then((result) => {
       if (result.status === 200) {
         dispatch(setCurrentUser(result.data));
         dispatch(authenticateUser(result.data.token));
         browserHistory.push('/dashboard');
-        toastr.success('Authomatically logged in');
+        // toastr.success('Authomatically logged in');
       } else {
         dispatch(deauthenticateUser());
       }
@@ -94,10 +94,14 @@ export function loginByToken(token) {
  */
 export function logout() {
   return (dispatch) => {
-    dispatch(logoutCurrentUser());
-    dispatch(deauthenticateUser());
-    browserHistory.push('/');
-    toastr.info('You have successfully signed out');
+    api.get('/users/logout').then((result) => {
+      dispatch(logoutCurrentUser());
+      dispatch(deauthenticateUser());
+      browserHistory.push('/');
+      toastr.info('You have successfully signed out');
+    }).catch((error) => {
+      toastr.error(error);
+    });
   };
 }
 
@@ -129,5 +133,44 @@ export function signup(user) {
       }
       dispatch(ajaxCallEnd());
     });
+  };
+}
+
+/**
+ * addNewDocument
+ * @desc adds a new document to users list of document
+ * @param {object} document details
+ * @returns {object} action
+ */
+export function addNewDocument(document) {
+  return {
+    type: types.ADD_NEW_DOCUMENT,
+    document
+  };
+}
+
+/**
+ * Update Existing Document
+ * @desc Update a Single Document
+ * @param {object} updatedDocument - the updated Document
+ * @returns {object} action
+ */
+export function updateExistingDocument(updatedDocument) {
+  return {
+    type: types.UPDATE_EXISTING_DOCUMENT,
+    updatedDocument
+  };
+}
+
+/**
+ * Delete Existing Document
+ * @desc Delete a Single Document
+ * @param {number} id - the deleted Document
+ * @returns {object} action
+ */
+export function deleteExistingDocument(id) {
+  return {
+    type: types.DELETE_EXISTING_DOCUMENT,
+    id
   };
 }

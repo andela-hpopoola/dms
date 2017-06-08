@@ -9,7 +9,7 @@ import initialState from './initialState';
  * @returns {any} any
  */
 export default function ajaxStatusReducer(
-  state = initialState.ajaxCallsInProgress, action
+  state = initialState.ajaxStatus, action
 ) {
   switch (action.type) {
     case types.AJAX_CALL_START:

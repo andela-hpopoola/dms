@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Nav from './../layout/nav';
+import Nav from './../layout/Nav';
 
 /**
  * @desc Set the PropTypes for Main
@@ -8,7 +8,7 @@ import Nav from './../layout/nav';
  * @return {jsx} returns jsx page component
  */
 const Main = props => (
-  <div className="main-container">
+  <div className="main">
     <Nav />
     { props.children }
   </div>

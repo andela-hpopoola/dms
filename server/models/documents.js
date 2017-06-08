@@ -16,9 +16,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     title: {
       type: DataTypes.STRING,
-      unique: {
-        msg: 'Document exists'
-      },
       allowNull: false,
       validate: {
         notEmpty: {
@@ -41,14 +38,6 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isInt: {
           msg: 'Invalid Access'
-        }
-      }
-    },
-    publishedAt: {
-      type: DataTypes.DATE,
-      validate: {
-        isDate: {
-          msg: 'Only valid dates are allowed'
         }
       }
     }

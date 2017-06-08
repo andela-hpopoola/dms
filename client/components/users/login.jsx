@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import ProgressBar from './../../components/common/ProgressBar';
 import { login, loginByToken } from './../../actions/userActions';
 import * as auth from './../../utils/auth';
 
@@ -29,9 +30,8 @@ class Login extends Component {
    * @return {void} returns nothing
    */
   componentWillMount() {
-    console.log(auth.getToken());
     if (auth.getToken()) {
-      this.props.actions.loginByToken(auth.getToken());
+      this.props.actions.loginByToken();
     }
   }
 
@@ -60,6 +60,7 @@ class Login extends Component {
               <span className="card-title">Login</span><br />
               <div className="row">
                 <form className="col s12" onSubmit={this.authenticateUser}>
+                  <ProgressBar />
 
                   {/* Email */}
                   <div className="row">
@@ -95,10 +96,10 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxCallsInProgress ? '...' : 'Submit'}
+                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
                     <i className="material-icons right">send</i>
                   </button>
-
+                  
                 </form>
               </div>
             </div>
@@ -114,9 +115,10 @@ class Login extends Component {
  * Set the PropTypes for Login
  */
 Login.propTypes = {
-  ajaxCallsInProgress: PropTypes.bool,
+  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     login: PropTypes.func,
+    loginByToken: PropTypes.func,
   }),
 };
 
@@ -124,7 +126,7 @@ Login.propTypes = {
  * Sets default values for Login Prototype
  */
 Login.defaultProps = {
-  ajaxCallsInProgress: false,
+  ajaxStatus: false,
   actions: {}
 };
 
@@ -136,7 +138,7 @@ Login.defaultProps = {
 function mapStateToProps(state) {
   return {
     errorMessage: state.errorMessage,
-    ajaxCallsInProgress: state.ajaxCallsInProgress
+    ajaxStatus: state.ajaxStatus
   };
 }
 

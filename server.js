@@ -2,6 +2,9 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+// Get all environment variables
+require('dotenv').config();
+
 // Set up the express app
 const app = express();
 const port = parseInt(process.env.PORT, 10) || 8000;

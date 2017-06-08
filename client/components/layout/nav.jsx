@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
@@ -24,17 +24,18 @@ const notloggedInList = (
 );
 
 /**
- * @class Nav
+ * Nav
  * @desc Page Navigation
+ * @param {object} props default properties
  * @returns {jsx} the page navigation
  */
 const Nav = (props) => {
   const { userIsLoggedIn } = props;
   return (
     <div className="navbar-fixed">
-      <nav>
-        <div className="nav-wrapper">
-          <div className="container">
+      <nav className="row">
+        <div className="nav-wrapper col s12">
+          <div className="main-container">
             <a href="#!" className="brand-logo">DMS</a>
             <ul className="right">
               { userIsLoggedIn ? loggedInList : notloggedInList }
