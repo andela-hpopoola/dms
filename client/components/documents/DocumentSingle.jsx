@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { DOCUMENTS } from './../../../constants';
 
 /**
  * Document Single
@@ -12,6 +13,19 @@ const DocumentSingle = ({ document }) => {
   const viewDocumentLink = `/view-document/${document.id}`;
   const editDocumentLink = `/edit-document/${document.id}`;
   const content = document.content.slice(0, 200);
+  let access = 'Role';
+  switch (document.access) {
+    case DOCUMENTS.PRIVATE:
+      access = 'Private';
+      break;
+
+    case DOCUMENTS.PUBLIC:
+      access = 'Public';
+      break;
+
+    default:
+      // no default
+  }
   return (
     <div className="col l6">
       <div className="card white darken-1 document__card">
@@ -21,7 +35,10 @@ const DocumentSingle = ({ document }) => {
             className="document__content"
             dangerouslySetInnerHTML={{ __html: content }}
           />
-          <div className="document__date">Published: {document.createdAt.slice(0, 10)}</div>
+          <div className="document__date">
+            Published: {document.createdAt.slice(0, 10)} |
+            &nbsp;<small> { access } access</small>
+          </div>
         </div>
         <div className="card-action">
           <Link to={viewDocumentLink} className="document__read">Read</Link>

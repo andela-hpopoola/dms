@@ -181,13 +181,13 @@ class Dashboard extends Component {
                   </a>
                 </div>
               </li>
-              <li className="collection-item">
+              { /*<li className="collection-item">
                 <div>
                   <a onClick={this.getRoleDocuments} href="#!public-documents">
                     Role Documents
                   </a>
                 </div>
-              </li>
+              </li>*/ }
               <li className="collection-item">
                 <div>
                   <Link to="/new-document">
