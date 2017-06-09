@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as toastr from '../../utils/toastr';
+import TinyMCE from 'react-tinymce';
 import { getDocument, updateDocument } from './../../actions/documentActions';
+import ProgressBar from './../../components/common/ProgressBar';
 
 
 /**
@@ -24,7 +25,8 @@ class EditDocument extends Component {
       form: {},
     };
     this.updateExistingDocument = this.updateExistingDocument.bind(this);
-    this.updateForm = this.updateForm.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
 
   /**
@@ -35,11 +37,28 @@ class EditDocument extends Component {
     this.props.actions.getDocument(this.props.params.id);
   }
 
-  updateForm(event) {
+  /**
+   * @desc Get the values of form fields
+   * @param {object} event - the event of the form
+   * @return {void} returns state
+   */
+  handleFormChange(event) {
     const field = event.target.name;
     const form = this.state.form;
     form[field] = event.target.value;
     return this.setState({ form });
+  }
+
+  /**
+   * @desc Handle Editor change
+   * @param {object} event - the event of the editor
+   * @return {string} the content
+   */
+  handleEditorChange(event) {
+    const form = this.state;
+    form.content = event.target.getContent();
+    return this.setState({ form });
+    // console.log('Content was updated:', e.target.getContent());
   }
 
   /**
@@ -69,6 +88,7 @@ class EditDocument extends Component {
                 <form className="col s12" onSubmit={this.updateExistingDocument}>
 
                   <h4>{currentDocument.title}</h4>
+
                   {/* Title */}
                   <div className="row">
                     <div className="input-field col s12">
@@ -79,33 +99,31 @@ class EditDocument extends Component {
                         className="validate"
                         value={this.state.form.title || currentDocument.title}
                         required="required"
-                        onChange={this.updateForm}
+                        onChange={this.handleFormChange}
                       />
                       <label htmlFor="title" className="active">Title</label>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <textarea
-                        id="content"
-                        name="content"
-                        type="text"
-                        className="materialize-textarea active"
-                        value={this.state.form.content || currentDocument.content}
-                        required="required"
-                        onChange={this.updateForm}
-                      />
-                      <label htmlFor="content" className="active">Content</label>
-                    </div>
-                  </div>
+                  <TinyMCE
+                    content={this.state.form.content || currentDocument.content}
+                    config={{
+                      plugins: 'link image code',
+                      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+                    }}
+                    onChange={this.handleEditorChange}
+                  />
 
                   {/* Access */}
                   <div className="row">
                     <div className="input-field col s12">
                       <h6><strong>Access</strong></h6>
-                      <select name="access" className="browser-default" onChange={this.updateForm}>
+                      <select
+                        name="access"
+                        className="browser-default"
+                        onChange={this.handleFormChange}
+                      >
                         <option value={access}>
                           Current Access Level ({access})
                         </option>
@@ -122,6 +140,7 @@ class EditDocument extends Component {
                     </div>
                   </div>
 
+                  <ProgressBar />
 
                   {/* Submit Button */}
                   <button
@@ -129,7 +148,7 @@ class EditDocument extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
+                    Send
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -148,10 +167,13 @@ class EditDocument extends Component {
  * Set the PropTypes for EditDocument
  */
 EditDocument.propTypes = {
+  params: PropTypes.shape({
+    id: PropTypes.string
+  }),
   roleId: PropTypes.number,
-  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     getDocument: PropTypes.func,
+    updateDocument: PropTypes.func,
   }),
   currentDocument: PropTypes.shape({
     id: PropTypes.number,
@@ -168,6 +190,7 @@ EditDocument.propTypes = {
  * Sets default values for EditDocument Prototype
  */
 EditDocument.defaultProps = {
+  params: 1,
   actions: {},
   currentDocument: {},
   roleId: 0,

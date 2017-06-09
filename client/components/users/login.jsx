@@ -96,10 +96,9 @@ class Login extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
+                    Submitting
                     <i className="material-icons right">send</i>
                   </button>
-                  
                 </form>
               </div>
             </div>
@@ -115,7 +114,6 @@ class Login extends Component {
  * Set the PropTypes for Login
  */
 Login.propTypes = {
-  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     login: PropTypes.func,
     loginByToken: PropTypes.func,
@@ -126,7 +124,6 @@ Login.propTypes = {
  * Sets default values for Login Prototype
  */
 Login.defaultProps = {
-  ajaxStatus: false,
   actions: {}
 };
 
@@ -137,8 +134,7 @@ Login.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
-    errorMessage: state.errorMessage,
-    ajaxStatus: state.ajaxStatus
+    errorMessage: state.errorMessage
   };
 }
 

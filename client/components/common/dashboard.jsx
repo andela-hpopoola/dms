@@ -5,10 +5,13 @@ import { bindActionCreators } from 'redux';
 import { Link } from 'react-router';
 import DocumentList from './../documents/DocumentList';
 import SearchForm from './../common/SearchForm';
+import ProgressBar from './../../components/common/ProgressBar';
+import { DOCUMENTS } from './../../../constants';
 import {
   publicDocumentsDispatcher,
   roleDocumentsDispatcher,
   searchDocumentsDispatcher,
+  filterDocuments
  } from './../../actions/documentActions';
 /**
  * @class Dashboard
@@ -25,15 +28,41 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentDocuments: []
+      currentDocuments: [],
+      search: false,
     };
     this.getPublicDocuments = this.getPublicDocuments.bind(this);
     this.getRoleDocuments = this.getRoleDocuments.bind(this);
     this.getMyDocuments = this.getMyDocuments.bind(this);
     this.searchForDocuments = this.searchForDocuments.bind(this);
+    this.filterSearchDocuments = this.filterSearchDocuments.bind(this);
 
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
+  }
+
+  /**
+   * @desc Invoked immediately after a props is passed to document
+   * @param {object} nextProps - the next props the component receives
+   * @return {void} returns nothing
+   */
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.searchDocuments.length !== 0) {
+      if (this.props.searchDocuments !== nextProps.searchDocuments) {
+        if (this.state.search) {
+          this.setState({
+            currentDocuments: nextProps.searchDocuments,
+            documentSource: 'Search Documents',
+            search: false
+          });
+        }
+      }
+    }
+    if (this.props.filteredDocuments !== nextProps.filteredDocuments) {
+      this.setState({
+        currentDocuments: nextProps.filteredDocuments,
+      });
+    }
   }
 
 
@@ -42,7 +71,10 @@ class Dashboard extends Component {
    * @return {void} returns nothing
    */
   getMyDocuments() {
-    this.setState({ currentDocuments: [] });
+    this.setState({
+      currentDocuments: [],
+      search: false
+    });
     // console.log('public documents');
   }
 
@@ -53,7 +85,8 @@ class Dashboard extends Component {
   getPublicDocuments() {
     this.setState({
       currentDocuments: this.props.publicDocuments,
-      documentSource: 'Public Documents'
+      documentSource: 'Public Documents',
+      search: false
     });
   }
 
@@ -64,36 +97,43 @@ class Dashboard extends Component {
   getRoleDocuments() {
     this.setState({
       currentDocuments: this.props.roleDocuments,
-      documentSource: 'Role Documents'
+      documentSource: 'Role Documents',
+      search: false
     });
   }
 
   /**
+   * @desc Get all my Documents
+   * @param {integer} filtering for search page
+   * @return {void} returns nothing
+   */
+  filterSearchDocuments(filter) {
+    if (this.state.search) {
+      const documents = this.state.currentDocuments;
+      if (documents.length === 0) {
+        this.getMyDocuments();
+      }
+      if (filter === DOCUMENTS.ALL) {
+        this.setState({ currentDocuments: this.state.currentDocuments });
+      } else {
+        this.props.actions.filterDocuments(documents, filter);
+      }
+    }
+  }
+
+  /**
    * The method is used to search for documents
-   * @param {string} queryText - get the documents to search
-   * @param {string} documentType - get the documents access
+   * @param {string} query - get the documents to search
+   * @param {string} filter - get the documents access
    * @return {object} sets the state based on document
    */
-  searchForDocuments(query, documentType) {
-    // const queryText = query.toLowerCase();
-    // let { currentDocuments } = this.state;
-    // // if the current document is empty
-    // // get the user document
-    // if (currentDocuments.length === 0) {
-    //   currentDocuments = this.props.user.documents;
-    // }
-    // console.log(currentDocuments, 'currenetDocuments');
-    // const searchResult = currentDocuments.filter(
-    //   document =>
-    //     document.title.toLowerCase().indexOf(queryText) !== -1 ||
-    //       document.content.toLowerCase().indexOf(queryText) !== -1
-    // );
-    // console.log(searchResult, 'searchResult');
-    // this.setState({ currentDocuments: searchResult });
-    console.log(query, documentType, 'query doc type');
-    this.props.actions.searchDocumentsDispatcher(query, documentType);
-    console.log(this.props.searchDocuments);
+  searchForDocuments(query) {
+    this.props.actions.searchDocumentsDispatcher(query);
+    this.setState({
+      search: true
+    });
   }
+
   /**
    * @desc Displays the Dashboard
    * @return {any} The Dashboard Content
@@ -149,7 +189,12 @@ class Dashboard extends Component {
           <div className="col l8">
             <h1>Welcome to the Dashboard {user.name} ({user.email})</h1>
             <h3> {noOfDocuments} {documentSource}</h3>
-            <SearchForm onChange={this.searchForDocuments} />
+            <ProgressBar />
+            <SearchForm
+              onChange={this.searchForDocuments}
+              onSelect={this.filterSearchDocuments}
+              disableFilter={this.state.search}
+            />
             <DocumentList documents={documents} />
           </div>
         </div>
@@ -166,6 +211,7 @@ Dashboard.propTypes = {
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
+    filterDocuments: PropTypes.func.isRequired,
   }),
   user: PropTypes.shape({
     name: PropTypes.string,
@@ -176,6 +222,7 @@ Dashboard.propTypes = {
   publicDocuments: PropTypes.arrayOf(PropTypes.object),
   roleDocuments: PropTypes.arrayOf(PropTypes.object),
   searchDocuments: PropTypes.arrayOf(PropTypes.object),
+  filteredDocuments: PropTypes.arrayOf(PropTypes.object),
 };
 
 /**
@@ -183,9 +230,10 @@ Dashboard.propTypes = {
  */
 Dashboard.defaultProps = {
   user: {},
-  publicDocuments: {},
-  roleDocuments: {},
-  searchDocuments: {},
+  publicDocuments: [],
+  roleDocuments: [],
+  searchDocuments: [],
+  filteredDocuments: [],
   actions: {}
 };
 
@@ -200,6 +248,7 @@ function mapStateToProps(state) {
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
     searchDocuments: state.documents.search,
+    filteredDocuments: state.documents.filter,
     ajaxStatus: state.ajaxStatus
   };
 }
@@ -215,7 +264,8 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,
-      searchDocumentsDispatcher
+      searchDocumentsDispatcher,
+      filterDocuments
     }, dispatch)
   };
 }

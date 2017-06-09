@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import ProgressBar from './../../components/common/ProgressBar';
 import { signup } from './../../actions/userActions';
-
 
 /**
  * @class Signup
@@ -49,7 +49,7 @@ class Signup extends Component {
               <span className="card-title">Signup</span><br />
               <div className="row">
                 <form className="col s12" onSubmit={this.createUser}>
-
+                  <ProgressBar />
                   {/* Name */}
                   <div className="row">
                     <div className="input-field col s12">
@@ -98,7 +98,7 @@ class Signup extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
+                    Submit
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -117,7 +117,6 @@ class Signup extends Component {
  * Set the PropTypes for Signup
  */
 Signup.propTypes = {
-  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     signup: PropTypes.func,
   }),
@@ -127,7 +126,6 @@ Signup.propTypes = {
  * Sets default values for Signup Prototype
  */
 Signup.defaultProps = {
-  ajaxStatus: false,
   actions: {}
 };
 
@@ -138,8 +136,7 @@ Signup.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
-    errorMessage: state.errorMessage,
-    ajaxStatus: state.ajaxStatus
+    errorMessage: state.errorMessage
   };
 }
 

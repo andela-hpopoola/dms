@@ -16,7 +16,9 @@ const DocumentSingle = ({ document }) => {
       <div className="card white darken-1 document__card">
         <div className="card-content">
           <span className="card-title">{document.title}</span>
-          <div>{ document.content }</div>
+          <div
+            dangerouslySetInnerHTML={{ __html: document.content }}
+          />
         </div>
         <div className="card-action">
           <Link to={viewDocumentLink}>Read</Link>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import TinyMCE from 'react-tinymce';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { createDocument } from './../../actions/documentActions';
@@ -20,10 +21,23 @@ class NewDocument extends Component {
    */
   constructor(props) {
     super(props);
-
+    this.state = {
+      content: {},
+    };
     this.createNewDocument = this.createNewDocument.bind(this);
+    this.handleEditorChange = this.handleEditorChange.bind(this);
   }
 
+  /**
+   * @desc Handle Editor change
+   * @param {object} event - the event of the editor
+   * @return {string} the content
+   */
+  handleEditorChange(event) {
+    const content = event.target.getContent();
+    return this.setState({ content });
+    // console.log('Content was updated:', e.target.getContent());
+  }
   /**
    * @desc maps state to properties
    * @param {object} event - form event
@@ -32,7 +46,7 @@ class NewDocument extends Component {
   createNewDocument(event) {
     event.preventDefault();
     const title = event.target.title.value;
-    const content = event.target.content.value;
+    const content = this.state.content;
     const access = event.target.access.value;
     const userId = this.props.userId;
     this.props.actions.createDocument({ title, content, access, userId });
@@ -67,18 +81,14 @@ class NewDocument extends Component {
                   </div>
 
                   {/* Content */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <textarea
-                        id="content"
-                        name="content"
-                        type="text"
-                        className="materialize-textarea"
-                        required="required"
-                      />
-                      <label htmlFor="content">Content</label>
-                    </div>
-                  </div>
+                  <TinyMCE
+                    content="<p>Enter your document content here</p>"
+                    config={{
+                      plugins: 'link image code',
+                      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+                    }}
+                    onChange={this.handleEditorChange}
+                  />
 
                   {/* Access */}
                   <div className="row">

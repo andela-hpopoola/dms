@@ -94,7 +94,7 @@ export function loginByToken() {
  */
 export function logout() {
   return (dispatch) => {
-    api.get('/users/logout').then((result) => {
+    api.get('/users/logout').then(() => {
       dispatch(logoutCurrentUser());
       dispatch(deauthenticateUser());
       browserHistory.push('/');

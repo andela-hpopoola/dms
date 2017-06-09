@@ -1,8 +1,7 @@
 module.exports = {
-  getAll(req, res, name, Model, where = {}) {
-    console.log(Model);
+  getAll(req, res, name, Model, where = {}, limits = {}) {
     Model
-      .findAll(where)
+      .findAll({ where, limits })
       .then((model) => {
         if (model) {
           res.json(model);
@@ -17,7 +16,7 @@ module.exports = {
 
   findOne(req, res, name, Model, where = {}) {
     Model
-      .findOne(where)
+      .findOne({ where })
       .then((model) => {
         if (model) {
           res.json(model);
@@ -32,7 +31,7 @@ module.exports = {
 
   get(req, res, name, Model, where = {}) {
     Model
-      .find(where)
+      .find({ where })
       .then((model) => {
         if (model) {
           res.json(model);
@@ -62,7 +61,7 @@ module.exports = {
 
   update(req, res, name, Model, where = {}) {
     Model
-      .findOne(where).then((model) => {
+      .findOne({ where }).then((model) => {
         if (model) {
           model
             .update(req.body)
@@ -80,10 +79,10 @@ module.exports = {
 
   remove(req, res, name, Model, where = {}) {
     Model
-      .findOne(where).then((model) => {
+      .findOne({ where }).then((model) => {
         if (model) {
           model
-            .destroy(where)
+            .destroy({ where })
             .then(() => res.status(202).json({ msg: `${name} Deleted` }))
             .catch((error) => {
               res.status(412).json({ msg: error.message });
@@ -94,8 +93,5 @@ module.exports = {
       }).catch((error) => {
         res.status(412).json({ msg: error.message });
       });
-  }
-} ;
-
-
-
+  },
+};
