@@ -13,7 +13,7 @@ node_js:
   - "7"
 postgres: 
   adapter: postgresql
-  database: myapp_test
+  database: dms_test
   username: postgres
 script: 
   - "npm test"

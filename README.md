@@ -60,8 +60,9 @@ The api endpoints are protected from authorized access. The unprotected endpoint
 ## Endpoints
 
 #### Users
-EndPoint                |      Functionality                        |     Access
-------------------------|------------------------------------------------------------
+
+  EndPoint              | Functionality                             | Access
+ ----------             | ---------------                           | ------------------ 
 `POST /users/login`     |   Logs in a user.                         |  No Authentication
 `POST /users/logout`    |   Logs out a user.                        |  No Authentication
 `POST /users`           |   Creates a new user.                     |  Admin / SuperAdmin
@@ -72,8 +73,9 @@ EndPoint                |      Functionality                        |     Access
 `GET /users/:id/documents`   | Gets all documents for a particular user | User
 
 #### Documents
-EndPoint                |   Functionality                         |     Access
-------------------------|----------------------------------------------------------------
+
+  EndPoint              | Functionality                           | Access
+ ----------             | ---------------                         | ------------------ 
 `POST /documents`       |   Creates a new document instance.      |  User
 `GET /documents`        |   Find matching instances of document.  |  User
 `GET /documents/:id`    |   Find document.                        |  User
@@ -124,7 +126,7 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 3. A number of people that have view a public document is tracked.
 
 
-#### Licence
+## Licence
 Copyright (c) 2017 Haruna Popoola
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
