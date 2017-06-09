@@ -47,11 +47,11 @@ class Dashboard extends Component {
    * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
-  componentWillMount() {
-    if (auth.getToken()) {
-      this.props.actions.loginByToken();
-    }
-  }
+  // componentWillMount() {
+  //   if (auth.getToken()) {
+  //     this.props.actions.loginByToken();
+  //   }
+  // }
 
   /**
    * @desc Invoked immediately after a props is passed to document
