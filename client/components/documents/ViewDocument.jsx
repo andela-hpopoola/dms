@@ -40,23 +40,28 @@ class ViewDocument extends Component {
    * @desc Displays the ViewDocument Page
    * @return {any} The ViewDocument form
    */
-   deleteAlert(event) {
-     sweetAlert({
-       title: 'Delete Document',
-       text: 'You are about to delete this document',
-       type: 'error',
-       showCancelButton: true,
-       closeOnConfirm: true,
-       confirmButtonText: 'Yes, delete it!',
-       confirmButtonColor: '#ec6c62'
-     }, this.delete);
-   }
+  deleteAlert() {
+    sweetAlert({
+      title: 'Delete Document',
+      text: 'You are about to delete this document',
+      type: 'error',
+      showCancelButton: true,
+      closeOnConfirm: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#ec6c62'
+    }, this.delete);
+  }
 
-   delete(isConfirm) {
-     if (isConfirm) {
-       this.props.actions.deleteDocument(this.props.params.id);
-     }
-   }
+  /**
+   * @desc Deletes a document
+   * @param {booleam} isConfirm - Confirmation to delete
+   * @return {any} The document to delete
+   */
+  delete(isConfirm) {
+    if (isConfirm) {
+      this.props.actions.deleteDocument(this.props.params.id);
+    }
+  }
 
   /**
    * @desc Displays the ViewDocument Page
@@ -70,13 +75,13 @@ class ViewDocument extends Component {
           <div className="card col s12">
             <div className="card-content">
               <span className="card-title">ViewDocument</span><br />
-              <a
+              <button
                 onClick={this.deleteAlert}
                 className="waves-effect waves-light btn right"
               >
                 <i className="material-icons left">cloud</i>
                 Delete
-              </a>
+              </button>
               <div className="row">
                 <div className="col s12">
                   <h4>{currentDocument.title}</h4>
