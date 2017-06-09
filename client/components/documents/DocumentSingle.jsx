@@ -21,7 +21,7 @@ const DocumentSingle = ({ document }) => {
             className="document__content"
             dangerouslySetInnerHTML={{ __html: content }}
           />
-          <div className="document__date">Published: {document.createdAt.slice(0,10)}</div>
+          <div className="document__date">Published: {document.createdAt.slice(0, 10)}</div>
         </div>
         <div className="card-action">
           <Link to={viewDocumentLink} className="document__read">Read</Link>

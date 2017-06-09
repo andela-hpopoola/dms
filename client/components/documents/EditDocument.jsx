@@ -119,7 +119,7 @@ class EditDocument extends Component {
                   </div>
 
                   {/* Content */}
-                  <Textarea 
+                  <TinyMCE
                     content={this.state.form.content || currentDocument.content}
                     config={{
                       plugins: 'link image code',
@@ -157,7 +157,7 @@ class EditDocument extends Component {
 
                   {/* Submit Button */}
                   <button
-                    className="btn red darken-1"
+                    className="btn waves-effect waves-light"
                     type="submit"
                     name="submit"
                   >
