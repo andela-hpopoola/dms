@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as auth from './../../utils/auth';
 import ProgressBar from './../../components/common/ProgressBar';
 import { signup } from './../../actions/userActions';
 
@@ -21,6 +22,16 @@ class Signup extends Component {
     super(props);
 
     this.createUser = this.createUser.bind(this);
+  }
+
+  /**
+   * @desc Invoked before a component is mounted
+   * @return {void} returns nothing
+   */
+  componentWillMount() {
+    if (auth.getToken()) {
+      auth.removeToken();
+    }
   }
 
   /**
