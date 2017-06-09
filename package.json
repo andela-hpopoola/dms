@@ -15,6 +15,7 @@
     ],
     "exclude": [
       "**/*.spec.jsx",
+      "**/utils/",
       "public"
     ],
     "extension": [

@@ -16,9 +16,9 @@ module.exports = {
             .json({ msg: 'Document name exists' });
         }
         return model.create(req, res, 'Document', Documents);
-      }).catch((error) => {
-        return res.status(412).json({ msg: error.message });
-      });
+      }).catch(error =>
+        res.status(412).json({ msg: error.message })
+      );
   },
 
   getAll(req, res) {

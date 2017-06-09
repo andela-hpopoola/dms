@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const expect = require('expect');
-const app = require('./../../../../server');
+const app = require('./../../../server');
 
 const request = supertest(app);
 describe('Routes: Index', () => {
