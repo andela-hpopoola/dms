@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { DOCUMENTS } from './../../../constants';
 
 /**
  * @class SearchForm
@@ -51,34 +50,14 @@ class SearchForm extends Component {
     return (
       <form onSubmit={this.handleSearch}>
         <div className="row">
-          <div className="input-field col m6 s5">
+          <div className="input-field col m10 s9">
             <input name="search" type="text" className="validate white" />
             <label htmlFor="search">Search for Documents</label>
-          </div>
-          <div className="input-field col m4 s4">
-            <select
-              name="documentType"
-              onChange={this.handleFilter}
-              className="browser-default"
-            >
-              <option value={DOCUMENTS.ALL}>
-                All Documents
-              </option>
-              <option value={DOCUMENTS.PRIVATE}>
-                My Personal Documents
-              </option>
-              <option value={this.props.roleId}>
-                Roles Documents
-              </option>
-              <option value={DOCUMENTS.PUBLIC}>
-                Public Documents
-              </option>
-            </select>
           </div>
           <div className="input-field col m2 s3">
             <div className="col s12">
               <button
-                className="btn cyan waves-effect waves-light"
+                className="btn  red darken-2 waves-effect waves-light"
                 type="submit"
               >
                 <i className="material-icons">search</i>
@@ -97,7 +76,6 @@ class SearchForm extends Component {
 SearchForm.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
-  roleId: PropTypes.number.isRequired,
 };
 
 /**

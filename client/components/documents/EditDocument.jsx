@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import TinyMCE from 'react-tinymce';
 import { getDocument, updateDocument } from './../../actions/documentActions';
 import ProgressBar from './../../components/common/ProgressBar';
-
+import { DOCUMENTS } from './../../../constants';
 
 /**
  * @class EditDocument
@@ -77,7 +77,20 @@ class EditDocument extends Component {
    */
   render() {
     const { currentDocument } = this.props;
-    const access = currentDocument.access;
+    let access = 'Role';
+    switch (currentDocument.access) {
+      case DOCUMENTS.PRIVATE:
+        access = 'Private';
+        break;
+
+      case DOCUMENTS.PUBLIC:
+        access = 'Public';
+        break;
+
+      default:
+        // no default
+    }
+
     return (
       <div className="container">
         <div className="row">
@@ -106,7 +119,7 @@ class EditDocument extends Component {
                   </div>
 
                   {/* Content */}
-                  <TinyMCE
+                  <Textarea 
                     content={this.state.form.content || currentDocument.content}
                     config={{
                       plugins: 'link image code',
@@ -124,7 +137,7 @@ class EditDocument extends Component {
                         className="browser-default"
                         onChange={this.handleFormChange}
                       >
-                        <option value={access}>
+                        <option value={currentDocument.access}>
                           Current Access Level ({access})
                         </option>
                         <option value="0">
@@ -144,7 +157,7 @@ class EditDocument extends Component {
 
                   {/* Submit Button */}
                   <button
-                    className="btn waves-effect waves-light"
+                    className="btn red darken-1"
                     type="submit"
                     name="submit"
                   >

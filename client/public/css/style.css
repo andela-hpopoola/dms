@@ -1194,3 +1194,40 @@ body {
 
 .progressBarContainer {
   margin: 30px 0; }
+
+.dashboard__welcome {
+  font-size: 18px;
+  font-weight: 500;
+  color: gray; }
+
+.document__number {
+  font-size: 34px; }
+
+.card .card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: black; }
+
+.card .card-content {
+  color: gray;
+  font-size: 13px;
+  overflow: hidden; }
+
+.card .card-action {
+  color: red !important;
+  font-size: 14px;
+  font-weight: 500; }
+
+.card .document__edit {
+  color: gray !important; }
+
+.card .document__content {
+  height: 120px;
+  overflow: hidden; }
+
+.top__space {
+  margin-top: 50px !important; }
+
+.collection-header h4 {
+  font-size: 24px !important;
+  margin: 10px !important; }

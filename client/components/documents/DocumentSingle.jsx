@@ -11,19 +11,22 @@ import { Link } from 'react-router';
 const DocumentSingle = ({ document }) => {
   const viewDocumentLink = `/view-document/${document.id}`;
   const editDocumentLink = `/edit-document/${document.id}`;
+  const content = document.content.slice(0, 200);
   return (
     <div className="col l6">
       <div className="card white darken-1 document__card">
         <div className="card-content">
           <span className="card-title">{document.title}</span>
           <div
-            dangerouslySetInnerHTML={{ __html: document.content }}
+            className="document__content"
+            dangerouslySetInnerHTML={{ __html: content }}
           />
+          <div className="document__date">Published: {document.createdAt.slice(0,10)}</div>
         </div>
         <div className="card-action">
-          <Link to={viewDocumentLink}>Read</Link>
+          <Link to={viewDocumentLink} className="document__read">Read</Link>
           <div className="right">
-            <Link to={editDocumentLink}>Edit</Link>
+            <Link to={editDocumentLink} className="document__edit">Edit</Link>
           </div>
         </div>
       </div>
