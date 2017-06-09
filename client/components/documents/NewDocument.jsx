@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TinyMCE from 'react-tinymce';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import toastr from 'toastr';
 import { createDocument } from './../../actions/documentActions';
 import { DOCUMENTS } from './../../../constants';
 
@@ -22,7 +23,7 @@ class NewDocument extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: {},
+      content: '',
     };
     this.createNewDocument = this.createNewDocument.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
@@ -45,11 +46,20 @@ class NewDocument extends Component {
    */
   createNewDocument(event) {
     event.preventDefault();
+
     const title = event.target.title.value;
-    const content = this.state.content;
+    const content = this.state.content || '';
     const access = event.target.access.value;
     const userId = this.props.userId;
-    this.props.actions.createDocument({ title, content, access, userId });
+
+    // Validation
+    if (!this.state.content && (this.state.content.length < 6)) {
+      toastr.error('Enter a valid document content');
+    } else if (title.length < 6) {
+      toastr.error('Your title must be more than 6 characters');
+    } else {
+      this.props.actions.createDocument({ title, content, access, userId });
+    }
   }
 
   /**
@@ -82,7 +92,7 @@ class NewDocument extends Component {
 
                   {/* Content */}
                   <TinyMCE
-                    content="<p>Enter your document content here</p>"
+                    content=""
                     config={{
                       plugins: 'link image code',
                       toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
@@ -115,7 +125,7 @@ class NewDocument extends Component {
                     type="submit"
                     name="submit"
                   >
-                    {this.props.ajaxStatus ? 'Submitting...' : 'Submit'}
+                    Submit
                     <i className="material-icons right">send</i>
                   </button>
 
@@ -136,7 +146,6 @@ class NewDocument extends Component {
 NewDocument.propTypes = {
   roleId: PropTypes.number,
   userId: PropTypes.number,
-  ajaxStatus: PropTypes.bool,
   actions: PropTypes.shape({
     createDocument: PropTypes.func,
   }),
@@ -146,7 +155,6 @@ NewDocument.propTypes = {
  * Sets default values for NewDocument Prototype
  */
 NewDocument.defaultProps = {
-  ajaxStatus: false,
   actions: {},
   roleId: 0,
   userId: 0,
@@ -159,7 +167,6 @@ NewDocument.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
-    ajaxStatus: state.ajaxStatus,
     roleId: state.user.roleId,
     userId: state.user.id
   };

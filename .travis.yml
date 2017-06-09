@@ -1,4 +1,22 @@
+after_failure: 
+  - "npm run coverage"
+after_success: 
+  - "npm run coverage"
+before_script: 
+  - "psql -c 'create database travis;' -U postgres"
+  - "dropdb --if-exists travis && createdb travis"
+  - "npm install"
+  - "sequelize db:migrate"
+dist: trusty
 language: node_js
-node_js:
+node_js: 
   - "7"
-after_success: npm run coverage
+postgres: 
+  adapter: postgresql
+  database: dms_test
+  username: postgres
+script: 
+  - "npm test"
+services: 
+  - postgresql
+sudo: required
