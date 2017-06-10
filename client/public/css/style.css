@@ -1203,6 +1203,14 @@ body {
 .document__number {
   font-size: 34px; }
 
+.card.card__top {
+  margin-bottom: 0;
+  border-radius: 2px 2px 0 0; }
+
+.card.card__bottom {
+  margin-top: 0;
+  border-radius: 0 0 2px 2px; }
+
 .card .card-title {
   font-size: 16px;
   font-weight: 500;

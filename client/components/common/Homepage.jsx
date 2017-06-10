@@ -6,6 +6,8 @@ import { loginByToken } from './../../actions/userActions';
 import * as auth from './../../utils/auth';
 import Login from './../users/Login';
 import Dashboard from './../common/Dashboard';
+
+
 /**
  * @desc Set the PropTypes for Homepage
  * @param {object} props - default properties
@@ -18,7 +20,6 @@ class Homepage extends Component {
    */
   componentWillMount() {
     if (auth.getToken()) {
-      this.props.actions.loginByToken();
       this.loggedIn = true;
     }
   }

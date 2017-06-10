@@ -14,7 +14,9 @@ module.exports = (app) => {
   app.get('/search/users/', users.authenticate, users.isAdmin, users.search);
 
   app.post('/documents', users.authenticate, documents.create);
-  app.get('/documents', users.authenticate, documents.getAll);
+  app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents/public', users.authenticate, documents.public);
+  app.get('/documents/role', users.authenticate, documents.role);
   app.get('/documents/:id', users.authenticate, users.canManageDocument, documents.getOne);
   app.put('/documents/:id', users.authenticate, users.canManageDocument, documents.update);
   app.delete('/documents/:id', users.authenticate, users.canManageDocument, documents.delete);

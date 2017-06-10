@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
+import { Button, Modal } from 'react-materialize';
 import { DOCUMENTS } from './../../../constants';
 
 /**
@@ -10,9 +11,8 @@ import { DOCUMENTS } from './../../../constants';
  * @returns {jsx} the formatted document
  */
 const DocumentSingle = ({ document }) => {
-  const viewDocumentLink = `/view-document/${document.id}`;
   const editDocumentLink = `/edit-document/${document.id}`;
-  const content = document.content.slice(0, 200);
+  const documentExtract = document.content.slice(0, 200);
   let access = 'Role';
   switch (document.access) {
     case DOCUMENTS.PRIVATE:
@@ -27,23 +27,33 @@ const DocumentSingle = ({ document }) => {
       // no default
   }
   return (
-    <div className="col l6">
-      <div className="card white darken-1 document__card">
+    <div className="col m6 l4 s12">
+      <div className="card red darken-1 card__top">
         <div className="card-content">
+          <div className="document__access">{access}</div>
           <span className="card-title">{document.title}</span>
-          <div
-            className="document__content"
-            dangerouslySetInnerHTML={{ __html: content }}
-          />
           <div className="document__date">
-            Published: {document.createdAt.slice(0, 10)} |
-            &nbsp;<small> { access } access</small>
+            Published: {document.createdAt.slice(0, 10)}
           </div>
         </div>
+      </div>
+      <div className="card white darken-1 card__bottom">
+        <div className="card-content">
+          <div
+            className="document__content"
+            dangerouslySetInnerHTML={{ __html: documentExtract }}
+          />
+        </div>
         <div className="card-action">
-          <Link to={viewDocumentLink} className="document__read">Read</Link>
+          <Link to={editDocumentLink} className="document__edit">Edit</Link>
+          { /* <Link to={viewDocumentLink} className="document__read">Read</Link>*/ }
           <div className="right">
-            <Link to={editDocumentLink} className="document__edit">Edit</Link>
+            <Modal
+              header={document.title}
+              trigger={<Button waves="light">Read</Button>}
+            >
+              <div>{document.content}</div>
+            </Modal>
           </div>
         </div>
       </div>

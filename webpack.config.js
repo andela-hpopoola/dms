@@ -1,3 +1,4 @@
+var webpack = require("webpack");
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
@@ -9,12 +10,17 @@ module.exports = {
     new ExtractTextPlugin('css/style.css', {
       allChunks: true
     }),
-
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery"
+    })
   ],
   output: {
     path: path.join(__dirname, 'client/public/'),
     filename: 'bundle.js'
   },
+externals: { jquery: "jQuery" },
   resolve: {
     root: __dirname,
     extensions: ['', '.js', '.jsx']
@@ -32,7 +38,26 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('css!sass')
+      }, {
+        test: /\.css$/,
+        loader: "style-loader!css-loader?root=."
       },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/octet-stream"
+      }, {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file"
+      }, {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=image/svg+xml"
+      }
     ]
   },
   devtool: 'cheap-module-eval-source-map'

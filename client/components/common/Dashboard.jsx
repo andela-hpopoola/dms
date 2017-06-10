@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Link } from 'react-router';
+import { Button } from 'react-materialize';
 import DocumentList from './../documents/DocumentList';
-import SearchForm from './../common/SearchForm';
 import ProgressBar from './../../components/common/ProgressBar';
 import { DOCUMENTS } from './../../../constants';
 import { loginByToken } from './../../actions/userActions';
@@ -15,6 +14,17 @@ import {
   searchDocumentsDispatcher,
   filterDocuments
  } from './../../actions/documentActions';
+
+// Require Editor JS files.
+require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
+// Require Editor CSS files.
+require('./../../../node_modules/froala-editor/css/froala_style.min.css');
+require('./../../../node_modules/froala-editor/css/froala_editor.pkgd.min.css');
+
+// Require Font Awesome.
+require('./../../../node_modules/font-awesome/css/font-awesome.css');
+
+const FroalaEditor = require('react-froala-wysiwyg');
 /**
  * @class Dashboard
  * @desc Class to display the dashboard
@@ -47,11 +57,11 @@ class Dashboard extends Component {
    * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
-  // componentWillMount() {
-  //   if (auth.getToken()) {
-  //     this.props.actions.loginByToken();
-  //   }
-  // }
+  componentWillMount() {
+    if (auth.getToken()) {
+      this.props.actions.loginByToken();
+    }
+  }
 
   /**
    * @desc Invoked immediately after a props is passed to document
@@ -164,54 +174,29 @@ class Dashboard extends Component {
     return (
       <div className="main-container">
         <div className="row">
-          <div className="col l4 top__space">
-            <ul className="collection with-header">
-              <li className="collection-header"><h4>Menu</h4></li>
-              <li className="collection-item">
-                <div>
-                  <a onClick={this.getMyDocuments} href="#!my-documents">
-                    My Documents
-                  </a>
-                </div>
-              </li>
-              <li className="collection-item">
-                <div>
-                  <a onClick={this.getPublicDocuments} href="#!public-documents">
-                    Public Documents
-                  </a>
-                </div>
-              </li>
-              { /*<li className="collection-item">
-                <div>
-                  <a onClick={this.getRoleDocuments} href="#!public-documents">
-                    Role Documents
-                  </a>
-                </div>
-              </li>*/ }
-              <li className="collection-item">
-                <div>
-                  <Link to="/new-document">
-                    New Document
-                  </Link>
-                </div>
-              </li>
-            </ul>
-          </div>
-          <div className="col l8 top__space">
-            <h2 className="dashboard__welcome">
-              Welcome to the Dashboard {user.name} ({user.email})
-            </h2>
+          <div className="col s12 m8 top__space">
             <h3 className="document__number">
               You have {noOfDocuments} {documentSource}(s)
             </h3>
-            <ProgressBar />
-            <SearchForm
-              onChange={this.searchForDocuments}
-              onSelect={this.filterSearchDocuments}
-              disableFilter={this.state.search}
-            />
-            <DocumentList documents={documents} />
           </div>
+          <div className="col s12 m4 top__space">
+            <Button waves="light" className="right">New Document</Button>
+          </div>
+        </div>
+        <ProgressBar />
+        {/* <SearchForm
+          onChange={this.searchForDocuments}
+          onSelect={this.filterSearchDocuments}
+          disableFilter={this.state.search}
+        /> */}
+        <DocumentList documents={documents} />
+        <div>
+          <FroalaEditor
+            tag="textarea"
+            config={this.config}
+            model={this.state.model}
+            onModelChange={this.handleModelChange}
+          />
         </div>
       </div>
     );

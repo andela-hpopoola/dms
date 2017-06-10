@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import ProgressBar from './../../components/common/ProgressBar';
 import { login, loginByToken } from './../../actions/userActions';
@@ -31,7 +32,7 @@ class Login extends Component {
    */
   componentWillMount() {
     if (auth.getToken()) {
-      this.props.actions.loginByToken();
+      browserHistory.push('/dashboard');
     }
   }
 

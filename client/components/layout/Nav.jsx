@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import Sidebar from './../layout/Sidebar';
 
 // list to show when user is logged in
 const loggedInList = (
@@ -36,6 +37,7 @@ const Nav = (props) => {
       <nav className="row  red darken-2">
         <div className="nav-wrapper col s12">
           <div className="main-container">
+            { userIsLoggedIn && <Sidebar /> }
             <a href="#!" className="brand-logo">DMS</a>
             <ul className="right">
               { userIsLoggedIn ? loggedInList : notloggedInList }
@@ -75,3 +77,36 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(Nav);
 
+/* <div className="col l4 top__space">
+  <ul className="collection with-header">
+    <li className="collection-header"><h4>Menu</h4></li>
+    <li className="collection-item">
+      <div>
+        <a onClick={this.getMyDocuments} href="#!my-documents">
+          My Documents
+        </a>
+      </div>
+    </li>
+    <li className="collection-item">
+      <div>
+        <a onClick={this.getPublicDocuments} href="#!public-documents">
+          Public Documents
+        </a>
+      </div>
+    </li>
+    <li className="collection-item">
+      <div>
+        <a onClick={this.getRoleDocuments} href="#!public-documents">
+          Role Documents
+        </a>
+      </div>
+    </li>
+    <li className="collection-item">
+      <div>
+        <Link to="/new-document">
+          New Document
+        </Link>
+      </div>
+    </li>
+  </ul>
+</div> */
