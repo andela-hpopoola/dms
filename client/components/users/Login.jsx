@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import ProgressBar from './../../components/common/ProgressBar';
 import { login, loginByToken } from './../../actions/userActions';
-import * as auth from './../../utils/auth';
 
 /**
  * @class Login
@@ -30,11 +28,11 @@ class Login extends Component {
    * @desc Invoked before a component is mounted
    * @return {void} returns nothing
    */
-  componentWillMount() {
-    if (auth.getToken()) {
-      browserHistory.push('/dashboard');
-    }
-  }
+  // componentWillMount() {
+  //   if (auth.getToken()) {
+  //     browserHistory.push('/dashboard');
+  //   }
+  // }
 
   /**
    * @desc maps state to properties
@@ -98,7 +96,6 @@ class Login extends Component {
                     name="submit"
                   >
                     Login
-                    <i className="material-icons right">send</i>
                   </button>
                 </form>
               </div>

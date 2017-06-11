@@ -1,19 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import strip from 'strip';
 import { Button, Modal } from 'react-materialize';
 import { DOCUMENTS } from './../../../constants';
 
 /**
  * Document Single
  * @desc Formats a Single Document
- * @param {object} document an object of document details
+ * @param {object} props an object of document details
  * @returns {jsx} the formatted document
  */
-const DocumentSingle = ({ document }) => {
-  const editDocumentLink = `/edit-document/${document.id}`;
-  const documentExtract = document.content.slice(0, 200);
+const DocumentSingle = (props) => {
+  const { document } = props;
+  const documentExtract = strip(document.content.slice(0, 200));
   let access = 'Role';
+  let userDocument = false;
+
+  if (document.userId === props.userId) {
+    userDocument = true;
+  }
   switch (document.access) {
     case DOCUMENTS.PRIVATE:
       access = 'Private';
@@ -26,11 +31,21 @@ const DocumentSingle = ({ document }) => {
     default:
       // no default
   }
+  const handleClick = (event) => {
+    event.preventDefault();
+    // console.log(event.target.name, 'Single Document');
+    props.onEdit(event.target.id);
+  };
   return (
     <div className="col m6 l4 s12">
       <div className="card red darken-1 card__top">
         <div className="card-content">
-          <div className="document__access">{access}</div>
+          <div className="document__access">
+            {access}
+            <div className="right">
+              {userDocument && 'Delete'}
+            </div>
+          </div>
           <span className="card-title">{document.title}</span>
           <div className="document__date">
             Published: {document.createdAt.slice(0, 10)}
@@ -39,20 +54,23 @@ const DocumentSingle = ({ document }) => {
       </div>
       <div className="card white darken-1 card__bottom">
         <div className="card-content">
-          <div
-            className="document__content"
-            dangerouslySetInnerHTML={{ __html: documentExtract }}
-          />
+          <div className="document__content">
+            {documentExtract}
+          </div>
         </div>
         <div className="card-action">
-          <Link to={editDocumentLink} className="document__edit">Edit</Link>
-          { /* <Link to={viewDocumentLink} className="document__read">Read</Link>*/ }
+          {userDocument &&
+          <a onClick={handleClick} id={document.id} href="/#!" className="document__edit">Edit</a>
+          }
           <div className="right">
             <Modal
               header={document.title}
               trigger={<Button waves="light">Read</Button>}
             >
-              <div>{document.content}</div>
+              <div
+                className="document__content"
+                dangerouslySetInnerHTML={{ __html: documentExtract }}
+              />
             </Modal>
           </div>
         </div>
@@ -68,7 +86,9 @@ DocumentSingle.propTypes = {
   document: PropTypes.shape({
     title: PropTypes.string,
     content: PropTypes.string,
-  })
+  }),
+  onEdit: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired
 };
 
 /**

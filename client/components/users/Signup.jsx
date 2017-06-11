@@ -110,7 +110,7 @@ class Signup extends Component {
                     name="submit"
                   >
                     Submit
-                    <i className="material-icons right">send</i>
+                    <i className="fa fa-chevron-right" />
                   </button>
 
                 </form>

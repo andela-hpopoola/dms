@@ -79,7 +79,7 @@ class ViewDocument extends Component {
                 onClick={this.deleteAlert}
                 className="waves-effect waves-light btn right"
               >
-                <i className="material-icons left">cloud</i>
+                <i className="fa fa-cloud" />
                 Delete
               </button>
               <div className="row">

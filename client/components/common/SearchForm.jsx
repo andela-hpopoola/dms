@@ -50,19 +50,17 @@ class SearchForm extends Component {
     return (
       <form onSubmit={this.handleSearch}>
         <div className="row">
-          <div className="input-field col m10 s9">
+          <div className="input-field col s12">
             <input name="search" type="text" className="validate white" />
             <label htmlFor="search">Search for Documents</label>
           </div>
-          <div className="input-field col m2 s3">
-            <div className="col s12">
-              <button
-                className="btn  red darken-2 waves-effect waves-light"
-                type="submit"
-              >
-                <i className="material-icons">search</i>
-              </button>
-            </div>
+          <div className="input-field col s12">
+            <button
+              className="btn  red darken-2 waves-effect waves-light"
+              type="submit"
+            >
+              Search
+            </button>
           </div>
         </div>
       </form>
