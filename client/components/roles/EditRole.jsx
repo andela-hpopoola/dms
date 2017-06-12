@@ -48,7 +48,7 @@ class EditRole extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc Update an existing role
    * @param {object} event - form event
    * @return {any} redirects role to dashboard or show error
    */
@@ -85,6 +85,8 @@ class EditRole extends Component {
                       value={this.state.form.title || currentRole.title}
                       required="required"
                       onChange={this.handleFormChange}
+                      pattern=".{3,}"
+                      title="3 characters minimum"
                     />
                     <label htmlFor="title" className="active">Title</label>
                   </div>

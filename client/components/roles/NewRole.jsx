@@ -22,7 +22,7 @@ class NewRole extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc Create a new role
    * @param {object} event - form event
    * @return {any} redirects role to dashboard or show error
    */
@@ -54,6 +54,8 @@ class NewRole extends Component {
                     type="text"
                     className="validate"
                     required="required"
+                    pattern=".{3,}"
+                    title="3 characters minimum"
                   />
                   <label htmlFor="title">Title</label>
                 </div>

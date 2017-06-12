@@ -13,6 +13,15 @@ export default function user(state = initialState.user, action) {
     case types.SET_CURRENT_USER:
       return Object.assign({}, state, action.user);
 
+    case types.UPDATE_USER_PROFILE:
+      return Object.assign(
+        {},
+        state,
+        {
+          ...action.updatedProfile
+        }
+      );
+
     case types.LOGOUT_CURRENT_USER:
       return Object.assign({}, state, {});
 

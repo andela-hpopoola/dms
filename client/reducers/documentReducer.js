@@ -47,21 +47,6 @@ export default function document(state = initialState.documents, action) {
       );
     }
 
-    case types.FILTER_DOCUMENTS: {
-      const filter = parseInt(action.filter, 10);
-      const filteredDocuments = action.documents.filter(
-        searchDocument => searchDocument.access !== filter
-      );
-
-      return Object.assign(
-        {},
-        state,
-        {
-          filter: [...filteredDocuments]
-        }
-      );
-    }
-
     default:
       return state;
   }

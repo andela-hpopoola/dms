@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getDocument } from './../../actions/documentActions';
@@ -80,7 +81,12 @@ class EditDocument extends Component {
   updateExistingDocument(event) {
     event.preventDefault();
     const form = this.state.form;
-    this.props.onUpdate(form, this.props.currentDocument);
+    if (typeof form.content !== 'undefined' &&
+      (form.content.length < 6)) {
+      toastr.error('Document content must be greater than 6');
+    } else {
+      this.props.onUpdate(form, this.props.currentDocument);
+    }
   }
 
   /**
@@ -124,6 +130,8 @@ class EditDocument extends Component {
                       value={this.state.form.title || currentDocument.title}
                       required="required"
                       onChange={this.handleFormChange}
+                      pattern=".{6,}"
+                      title="6 characters minimum"
                     />
                     <label htmlFor="title" className="active">Title</label>
                   </div>

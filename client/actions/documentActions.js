@@ -74,8 +74,8 @@ export function getDocument(id) {
 }
 
 /**
- * Get Document
- * @desc View an existing document
+ * Update Document
+ * @desc Update an existing document
  * @param {object} updatedDocument - updated document details
  * @param {object} currentDocument - current document details
  * @returns {object} action
@@ -206,22 +206,6 @@ export function roleDocumentsDispatcher() {
       }
       dispatch(ajaxCallEnd());
     });
-  };
-}
-
-
-/**
- * Filter Documents
- * @param {array} documents - all returned role documents
- * @param {number} filter - type of document to search for
- * @desc Get all role documents
- * @returns {object} action
- */
-export function filterDocuments(documents, filter) {
-  return {
-    type: types.FILTER_DOCUMENTS,
-    documents,
-    filter
   };
 }
 

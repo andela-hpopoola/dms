@@ -18,7 +18,6 @@ class SearchForm extends Component {
     super(props);
 
     this.handleSearch = this.handleSearch.bind(this);
-    this.handleFilter = this.handleFilter.bind(this);
   }
 
 
@@ -33,16 +32,6 @@ class SearchForm extends Component {
   }
 
   /**
-   * @desc Returns the value in the Search Field
-   * @param {function} event - event of the field
-   * @return {string} Value in String Field
-   */
-  handleFilter(event) {
-    event.preventDefault();
-    this.props.onSelect(event.target.value);
-  }
-
-  /**
    * @desc Displays the SearchForm Page
    * @return {any} The SearchForm form
    */
@@ -51,7 +40,14 @@ class SearchForm extends Component {
       <form onSubmit={this.handleSearch}>
         <div className="row">
           <div className="input-field col s12">
-            <input name="search" type="text" className="validate white" />
+            <input
+              name="search"
+              type="text"
+              className="validate white"
+              required="required"
+              pattern=".{3,}"
+              title="3 characters minimum"
+            />
             <label htmlFor="search">Search for Documents</label>
           </div>
           <div className="input-field col s12">
@@ -73,7 +69,6 @@ class SearchForm extends Component {
  */
 SearchForm.propTypes = {
   onChange: PropTypes.func.isRequired,
-  onSelect: PropTypes.func.isRequired,
 };
 
 /**

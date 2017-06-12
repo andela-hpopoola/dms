@@ -8,11 +8,11 @@ import sweetAlert from 'sweetalert';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
 import EditDocument from './../documents/EditDocument';
+import EditProfile from './../users/EditProfile';
 import NewRole from './../roles/NewRole';
 import EditRole from './../roles/EditRole';
 import ProgressBar from './../../components/common/ProgressBar';
-import { DOCUMENTS } from './../../../constants';
-import { loginByToken } from './../../actions/userActions';
+import { updateProfile } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
 import AllUsers from './../users/AllUsers';
 import AllRoles from './../roles/AllRoles';
@@ -23,12 +23,9 @@ import {
   deleteDocument,
   publicDocumentsDispatcher,
   roleDocumentsDispatcher,
-  searchDocumentsDispatcher,
-  filterDocuments
+  searchDocumentsDispatcher
  } from './../../actions/documentActions';
-import {
-  createRole, updateRole
- } from './../../actions/roleActions';
+import { createRole, updateRole } from './../../actions/roleActions';
 
 /**
  * @class Dashboard
@@ -60,6 +57,8 @@ class Dashboard extends Component {
     this.loadNewRole = this.loadNewRole.bind(this);
     this.editExistingDocument = this.editExistingDocument.bind(this);
     this.editDocument = this.editDocument.bind(this);
+    this.editUserProfile = this.editUserProfile.bind(this);
+    this.editProfile = this.editProfile.bind(this);
     this.editRole = this.editRole.bind(this);
     this.delete = this.delete.bind(this);
     this.deleteAlert = this.deleteAlert.bind(this);
@@ -97,11 +96,6 @@ class Dashboard extends Component {
           });
         }
       }
-    }
-    if (this.props.filteredDocuments !== nextProps.filteredDocuments) {
-      this.setState({
-        currentDocuments: nextProps.filteredDocuments,
-      });
     }
   }
 
@@ -202,7 +196,8 @@ class Dashboard extends Component {
   loadNewDocument(event) {
     event.preventDefault();
     this.setState({
-      page: 'new_document'
+      page: 'new_document',
+      page_title: 'New Document'
     });
   }
 
@@ -224,14 +219,8 @@ class Dashboard extends Component {
    * @return {any} redirects document to dashboard or show error
    */
   createNewDocument(data) {
-    if (data.content && (data.content.length < 6)) {
-      toastr.error('Enter a valid document content');
-    } else if (data.title.length < 6) {
-      toastr.error('Your title must be more than 6 characters');
-    } else {
-      this.props.actions.createDocument(data);
-      this.setState({ page: 'dashboard' });
-    }
+    this.props.actions.createDocument(data);
+    this.setState({ page: 'dashboard' });
   }
 
   /**
@@ -240,12 +229,8 @@ class Dashboard extends Component {
    * @return {any} redirects role to dashboard or show error
    */
   createNewRole(data) {
-    if (data.title < 3) {
-      toastr.error('Enter a valid role content');
-    } else {
-      this.props.actions.createRole(data);
-      this.setState({ page: 'dashboard' });
-    }
+    this.props.actions.createRole(data);
+    this.setState({ page: 'dashboard' });
   }
 
   /**
@@ -257,6 +242,18 @@ class Dashboard extends Component {
     this.setState({
       page: 'edit_document',
       id
+    });
+  }
+
+  /**
+   * @desc edit Profile
+   * @param {event} event
+   * @return {void} returns nothing
+   */
+  editProfile(event) {
+    event.preventDefault();
+    this.setState({
+      page: 'edit_profile',
     });
   }
 
@@ -273,7 +270,7 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc edit existing document
    * @param {object} updatedDocument - the updated document
    * @param {object} currentDocument - the current document
    * @return {any} redirects document to dashboard or show error
@@ -291,10 +288,21 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc maps state to properties
-   * @param {object} updatedDocument - the updated document
-   * @param {object} currentDocument - the current document
+   * @desc edit user profile
+   * @param {object} updatedProfile - the updated profile
+   * @param {object} currentProfile - the current profile
    * @return {any} redirects document to dashboard or show error
+   */
+  editUserProfile(updatedProfile, currentProfile) {
+    this.props.actions.updateProfile(updatedProfile, currentProfile);
+    this.setState({ page: 'dashboard' });
+  }
+
+  /**
+   * @desc Edit Existing Role
+   * @param {object} updatedRole - the updated role
+   * @param {object} currentRole - the current role
+   * @return {any} redirects role to dashboard or show error
    */
   editExistingRole(updatedRole, currentRole) {
     // Validation
@@ -417,6 +425,12 @@ class Dashboard extends Component {
       </div>
     );
 
+    const editProfile = (
+      <div className="col s12">
+        <EditProfile onUpdate={this.editUserProfile} user={this.props.user} />
+      </div>
+    );
+
     const editRole = (
       <div className="col s12">
         <EditRole onUpdate={this.editExistingRole} id={this.state.id} />
@@ -439,6 +453,9 @@ class Dashboard extends Component {
         break;
       case 'edit_document':
         content = editDocument;
+        break;
+      case 'edit_profile':
+        content = editProfile;
         break;
       case 'edit_role':
         content = editRole;
@@ -550,6 +567,13 @@ class Dashboard extends Component {
                     </a>
                   </div>
                 </li>
+                <li className="collection-item">
+                  <div>
+                    <a onClick={this.editProfile} href="/!#">
+                      Edit Profile
+                    </a>
+                  </div>
+                </li>
               </ul>
             </div>
 
@@ -611,12 +635,12 @@ Dashboard.propTypes = {
     deleteDocument: PropTypes.func,
     getUsers: PropTypes.func,
     createRole: PropTypes.func,
+    updateProfile: PropTypes.func,
     updateRole: PropTypes.func,
     getRoles: PropTypes.func,
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
-    filterDocuments: PropTypes.func.isRequired,
     loginByToken: PropTypes.func
   }),
   user: PropTypes.shape({
@@ -631,8 +655,7 @@ Dashboard.propTypes = {
   }),
   publicDocuments: PropTypes.arrayOf(PropTypes.object),
   roleDocuments: PropTypes.arrayOf(PropTypes.object),
-  searchDocuments: PropTypes.arrayOf(PropTypes.object),
-  filteredDocuments: PropTypes.arrayOf(PropTypes.object)
+  searchDocuments: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**
@@ -644,7 +667,6 @@ Dashboard.defaultProps = {
   publicDocuments: [],
   roleDocuments: [],
   searchDocuments: [],
-  filteredDocuments: [],
   actions: {}
 };
 
@@ -661,7 +683,6 @@ function mapStateToProps(state) {
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
     searchDocuments: state.documents.search,
-    filteredDocuments: state.documents.filter,
     ajaxStatus: state.ajaxStatus
   };
 }
@@ -681,12 +702,11 @@ function mapDispatchToProps(dispatch) {
       getUsers,
       createRole,
       updateRole,
+      updateProfile,
       getRoles,
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,
       searchDocumentsDispatcher,
-      filterDocuments,
-      loginByToken
     }, dispatch)
   };
 }

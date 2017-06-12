@@ -35,7 +35,7 @@ class Login extends Component {
   // }
 
   /**
-   * @desc maps state to properties
+   * @desc Authenticate the user
    * @param {object} event - form event
    * @return {any} redirects user to dashboard or show error
    */

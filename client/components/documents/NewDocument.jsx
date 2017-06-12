@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { connect } from 'react-redux';
 import { DOCUMENTS } from './../../../constants';
 
@@ -45,7 +46,7 @@ class NewDocument extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc Create a New Document
    * @param {object} event - form event
    * @return {any} redirects document to dashboard or show error
    */
@@ -56,7 +57,11 @@ class NewDocument extends Component {
     const content = this.state.content || '';
     const access = event.target.access.value;
     const userId = this.props.userId;
-    this.props.onSubmit({ title, content, access, userId });
+    if (typeof content === 'undefined' || (content.length < 6)) {
+      toastr.error('Enter a valid document content');
+    } else {
+      this.props.onSubmit({ title, content, access, userId });
+    }
   }
 
   /**
@@ -67,7 +72,6 @@ class NewDocument extends Component {
     return (
       <div className="card col s12">
         <div className="card-content">
-          <span className="card-title">NewDocument</span><br />
           <div className="row">
             <form className="col s12" onSubmit={this.createNewDocument}>
 
@@ -80,6 +84,8 @@ class NewDocument extends Component {
                     type="text"
                     className="validate"
                     required="required"
+                    pattern=".{6,}"
+                    title="6 characters minimum"
                   />
                   <label htmlFor="title">Title</label>
                 </div>

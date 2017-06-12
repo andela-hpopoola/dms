@@ -29,6 +29,44 @@ export function logoutCurrentUser() {
   };
 }
 
+/**
+ * Update User Profile
+ * @desc Update the users profile
+ * @param {object} updatedProfile - the updated Profile
+ * @returns {object} action
+ */
+export function updateUserProfile(updatedProfile) {
+  return {
+    type: types.UPDATE_USER_PROFILE,
+    updatedProfile
+  };
+}
+
+/**
+ * Update Profile
+ * @desc Update an existing profile
+ * @param {object} updatedProfile - updated profile details
+ * @param {object} currentProfile - current profile details
+ * @returns {object} action
+ */
+export function updateProfile(updatedProfile, currentProfile) {
+  return (dispatch) => {
+    const id = currentProfile.id;
+    api.put(`/users/${id}`, updatedProfile).then(() => {
+      updatedProfile = { ...currentProfile, ...updatedProfile };
+      dispatch(updateUserProfile(updatedProfile));
+      toastr.success('Profile updated successfully');
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+    });
+  };
+}
 
 /**
  * login

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as auth from './../../utils/auth';
@@ -35,7 +36,7 @@ class Signup extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc Create a new user
    * @param {object} event - form event
    * @return {any} redirects user to dashboard or show error
    */
@@ -44,7 +45,13 @@ class Signup extends Component {
     const name = event.target.name.value;
     const email = event.target.email.value;
     const password = event.target.password.value;
-    this.props.actions.signup({ name, email, password });
+    const confirmPassword = event.target.confirmPassword.value;
+
+    if (password === confirmPassword) {
+      this.props.actions.signup({ name, email, password });
+    } else {
+      toastr.error('Password do not match');
+    }
   }
 
   /**
@@ -70,11 +77,13 @@ class Signup extends Component {
                         type="text"
                         className="validate"
                         required="required"
+                        pattern=".{3,}"
+                        title="3 characters minimum"
+                        oninvalid="this.setCustomValidity('Enter a valid Name')"
                       />
                       <label htmlFor="name">Name</label>
                     </div>
                   </div>
-
                   {/* Email */}
                   <div className="row">
                     <div className="input-field col s12">
@@ -98,8 +107,26 @@ class Signup extends Component {
                         type="password"
                         className="validate"
                         required="required"
+                        pattern=".{6,}"
+                        title="6 characters minimum"
                       />
                       <label htmlFor="password">Password</label>
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="row">
+                    <div className="input-field col s12">
+                      <input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        className="validate"
+                        required="required"
+                        pattern=".{6,}"
+                        title="6 characters minimum"
+                      />
+                      <label htmlFor="password">Confirm Password</label>
                     </div>
                   </div>
 
@@ -109,8 +136,7 @@ class Signup extends Component {
                     type="submit"
                     name="submit"
                   >
-                    Submit
-                    <i className="fa fa-chevron-right" />
+                    Create Account
                   </button>
 
                 </form>
@@ -119,7 +145,6 @@ class Signup extends Component {
           </div>
         </div>
       </div>
-
     );
   }
 }
