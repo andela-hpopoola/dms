@@ -147,9 +147,13 @@ export function getPublicDocuments(documents) {
 export function publicDocumentsDispatcher() {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents').then((result) => {
-      dispatch(getPublicDocuments(result.data));
-      dispatch(ajaxCallEnd());
+    api.get('/documents/public').then((result) => {
+      if (result.status === 200) {
+        dispatch(getPublicDocuments(result.data));
+        dispatch(ajaxCallEnd());
+      } else {
+        dispatch(getPublicDocuments([]));
+      }
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code
@@ -185,9 +189,13 @@ export function getRoleDocuments(documents) {
 export function roleDocumentsDispatcher() {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents').then((result) => {
-      dispatch(getRoleDocuments(result.data));
-      dispatch(ajaxCallEnd());
+    api.get('/documents/role').then((result) => {
+      if (result.status === 200) {
+        dispatch(getRoleDocuments(result.data));
+        dispatch(ajaxCallEnd());
+      } else {
+        dispatch(getRoleDocuments([]));
+      }
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code
@@ -242,8 +250,13 @@ export function searchDocumentsDispatcher(documentTitle) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
     api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
-      dispatch(searchForDocuments(result.data));
-      dispatch(ajaxCallEnd());
+      if (result.data.length === 0) {
+        toastr.info('No search result found');
+        dispatch(ajaxCallEnd());
+      } else {
+        dispatch(searchForDocuments(result.data));
+        dispatch(ajaxCallEnd());
+      }
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code

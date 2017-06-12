@@ -4,7 +4,6 @@
  */
 export default {
   documents: {
-    all: [],
     public: [],
     role: [],
     search: [],
@@ -14,7 +13,12 @@ export default {
   user: {
     documents: []
   },
-  role: [],
+  all: {
+    users: [],
+    documents: [],
+    roles: []
+  },
+  roles: [],
   ajaxStatus: false,
   auth: false,
   errorMessage: ''

@@ -1194,3 +1194,57 @@ body {
 
 .progressBarContainer {
   margin: 30px 0; }
+
+.dashboard__welcome {
+  font-size: 18px;
+  font-weight: 500;
+  color: gray; }
+
+.document__number {
+  font-size: 34px; }
+
+.dashboard__title {
+  color: gray; }
+
+.dashboard__count {
+  font-size: 18px;
+  margin: 0;
+  padding: 0; }
+
+.dashboard__icon {
+  margin-top: -40px;
+  font-size: 4em; }
+
+.collection-header h4 {
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  margin: 5px !important; }
+
+.card {
+  display: block; }
+  .card.card__top {
+    margin-bottom: 0;
+    border-radius: 2px 2px 0 0; }
+  .card.card__bottom {
+    margin-top: 0;
+    border-radius: 0 0 2px 2px; }
+  .card .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: black; }
+  .card .card-content {
+    color: gray;
+    font-size: 13px;
+    overflow: hidden; }
+  .card .card-action {
+    color: red !important;
+    font-size: 14px;
+    font-weight: 500; }
+  .card .document__edit {
+    color: gray !important; }
+  .card .document__content {
+    height: 120px;
+    overflow: hidden; }
+
+.top__space {
+  margin-top: 50px !important; }
