@@ -33,8 +33,11 @@ const DocumentSingle = (props) => {
   }
   const handleClick = (event) => {
     event.preventDefault();
-    // console.log(event.target.name, 'Single Document');
     props.onEdit(event.target.id);
+  };
+  const handleDelete = (event) => {
+    event.preventDefault();
+    props.onDelete(event.target.id);
   };
   return (
     <div className="col m6 l4 s12">
@@ -43,7 +46,16 @@ const DocumentSingle = (props) => {
           <div className="document__access">
             {access}
             <div className="right">
-              {userDocument && 'Delete'}
+              {userDocument &&
+                <a
+                  onClick={handleDelete}
+                  id={document.id}
+                  href="/#!"
+                  className="document__delete"
+                >
+                  Delete
+                </a>
+              }
             </div>
           </div>
           <span className="card-title">{document.title}</span>
@@ -69,7 +81,7 @@ const DocumentSingle = (props) => {
             >
               <div
                 className="document__content"
-                dangerouslySetInnerHTML={{ __html: documentExtract }}
+                dangerouslySetInnerHTML={{ __html: document.content }}
               />
             </Modal>
           </div>
@@ -87,7 +99,7 @@ DocumentSingle.propTypes = {
     title: PropTypes.string,
     content: PropTypes.string,
   }),
-  onEdit: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   userId: PropTypes.number.isRequired
 };
 

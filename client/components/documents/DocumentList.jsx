@@ -14,6 +14,7 @@ const DocumentList = (props) => {
     allDocuments = documents.map(
       document => (<DocumentSingle
         onEdit={props.onEdit}
+        onDelete={props.onDelete}
         userId={props.userId}
         document={document}
         key={document.id}

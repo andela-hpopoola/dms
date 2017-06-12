@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Col } from 'react-materialize';
 import toastr from 'toastr';
+import sweetAlert from 'sweetalert';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
 import EditDocument from './../documents/EditDocument';
@@ -11,9 +12,13 @@ import ProgressBar from './../../components/common/ProgressBar';
 import { DOCUMENTS } from './../../../constants';
 import { loginByToken } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
+import AllUsers from './../users/AllUsers';
+import AllRoles from './../roles/AllRoles';
+import { getUsers, getRoles } from './../../actions/allActions';
 import {
   createDocument,
   updateDocument,
+  deleteDocument,
   publicDocumentsDispatcher,
   roleDocumentsDispatcher,
   searchDocumentsDispatcher,
@@ -49,9 +54,15 @@ class Dashboard extends Component {
     this.createNewDocument = this.createNewDocument.bind(this);
     this.editExistingDocument = this.editExistingDocument.bind(this);
     this.editDocument = this.editDocument.bind(this);
+    this.delete = this.delete.bind(this);
+    this.deleteAlert = this.deleteAlert.bind(this);
+    this.getAllUsers = this.getAllUsers.bind(this);
+    this.getAllRoles = this.getAllRoles.bind(this);
 
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
+    this.props.actions.getUsers();
+    this.props.actions.getRoles();
   }
 
   /**
@@ -113,6 +124,36 @@ class Dashboard extends Component {
       search: false,
       page: 'my_documents',
       pageTitle: 'Personal Documents'
+    });
+  }
+
+  /**
+   * @desc Get all users
+   * @param {event} event
+   * @return {void} returns nothing
+   */
+  getAllUsers(event) {
+    event.preventDefault();
+    this.props.actions.getUsers();
+    this.setState({
+      search: false,
+      page: 'all_users',
+      pageTitle: 'All Users'
+    });
+  }
+
+  /**
+   * @desc Get all roles
+   * @param {event} event
+   * @return {void} returns nothing
+   */
+  getAllRoles(event) {
+    event.preventDefault();
+    this.props.actions.getRoles();
+    this.setState({
+      search: false,
+      page: 'all_roles',
+      pageTitle: 'All Roles'
     });
   }
 
@@ -234,10 +275,39 @@ class Dashboard extends Component {
   searchForDocuments(query) {
     this.props.actions.searchDocumentsDispatcher(query);
     this.setState({
-      pageTitle: `Search Results`,
+      pageTitle: 'Search Results',
       search: true,
       page: 'search_documents'
     });
+  }
+
+  /**
+   * @desc Displays the ViewDocument Page
+   * @param {integer} id - id of document to delete
+   * @return {any} The ViewDocument form
+   */
+  deleteAlert(id) {
+    this.state.id = id;
+    sweetAlert({
+      title: 'Delete Document',
+      text: 'You are about to delete this document',
+      type: 'error',
+      showCancelButton: true,
+      closeOnConfirm: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#ec6c62'
+    }, this.delete);
+  }
+
+  /**
+   * @desc Deletes a document
+   * @param {booleam} isConfirm - Confirmation to delete
+   * @return {any} The document to delete
+   */
+  delete(isConfirm) {
+    if (isConfirm) {
+      this.props.actions.deleteDocument(this.state.id);
+    }
   }
 
   /**
@@ -317,6 +387,7 @@ class Dashboard extends Component {
       case 'public_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
+          onDelete={this.deleteAlert}
           userId={user.id}
           documents={this.props.publicDocuments}
         />);
@@ -324,6 +395,7 @@ class Dashboard extends Component {
       case 'role_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
+          onDelete={this.deleteAlert}
           userId={user.id}
           documents={this.props.roleDocuments}
         />);
@@ -331,6 +403,7 @@ class Dashboard extends Component {
       case 'my_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
+          onDelete={this.deleteAlert}
           userId={user.id}
           documents={this.props.user.documents}
         />);
@@ -338,9 +411,16 @@ class Dashboard extends Component {
       case 'search_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
+          onDelete={this.deleteAlert}
           userId={user.id}
           documents={this.props.searchDocuments}
         />);
+        break;
+      case 'all_users':
+        content = (<AllUsers users={this.props.all.users} />);
+        break;
+      case 'all_roles':
+        content = (<AllRoles roles={this.props.all.roles} />);
         break;
       case 'dashboard':
       default:
@@ -387,6 +467,20 @@ class Dashboard extends Component {
                   <div>
                     <a onClick={this.loadNewDocument} href="/!#">
                       New Documents
+                    </a>
+                  </div>
+                </li>
+                <li className="collection-item">
+                  <div>
+                    <a onClick={this.getAllUsers} href="/!#">
+                      All Users
+                    </a>
+                  </div>
+                </li>
+                <li className="collection-item">
+                  <div>
+                    <a onClick={this.getAllRoles} href="/!#">
+                      All Roles
                     </a>
                   </div>
                 </li>
@@ -449,22 +543,29 @@ Dashboard.propTypes = {
   actions: PropTypes.shape({
     createDocument: PropTypes.func,
     updateDocument: PropTypes.func,
+    deleteDocument: PropTypes.func,
+    getUsers: PropTypes.func,
+    getRoles: PropTypes.func,
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
     filterDocuments: PropTypes.func.isRequired,
-    loginByToken: PropTypes.func,
+    loginByToken: PropTypes.func
   }),
   user: PropTypes.shape({
     name: PropTypes.string,
     token: PropTypes.string,
     email: PropTypes.string,
-    documents: PropTypes.array,
+    documents: PropTypes.array
+  }),
+  all: PropTypes.shape({
+    users: PropTypes.arrayOf(PropTypes.object),
+    roles: PropTypes.arrayOf(PropTypes.object)
   }),
   publicDocuments: PropTypes.arrayOf(PropTypes.object),
   roleDocuments: PropTypes.arrayOf(PropTypes.object),
   searchDocuments: PropTypes.arrayOf(PropTypes.object),
-  filteredDocuments: PropTypes.arrayOf(PropTypes.object),
+  filteredDocuments: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**
@@ -472,6 +573,7 @@ Dashboard.propTypes = {
  */
 Dashboard.defaultProps = {
   user: {},
+  all: [],
   publicDocuments: [],
   roleDocuments: [],
   searchDocuments: [],
@@ -486,6 +588,7 @@ Dashboard.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
+    all: state.all,
     user: state.user,
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
@@ -506,6 +609,9 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({
       createDocument,
       updateDocument,
+      deleteDocument,
+      getUsers,
+      getRoles,
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,
       searchDocumentsDispatcher,
