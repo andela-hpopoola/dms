@@ -31,7 +31,6 @@ export function createRole(role) {
       if (result.status === 200) {
         dispatch(addNewRole(result.data));
         toastr.success('Role successfully created');
-        browserHistory.push('/dashboard');
       } else {
         toastr.error(result.data.msg);
       }
@@ -85,29 +84,6 @@ export function getAllRoles(role) {
   return {
     type: types.GET_ALL_ROLES,
     role
-  };
-}
-
-
-/**
- * Get Role
- * @desc View an existing role
- * @param {number} id role id
- * @returns {object} action
- */
-export function getRoles(id) {
-  return (dispatch) => {
-    api.get(`/roles/${id}`).then((result) => {
-      dispatch(getAllRoles(result.data));
-    }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
-    });
   };
 }
 

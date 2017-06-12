@@ -8,24 +8,14 @@ import initialState from './initialState';
  * @param {function} action the action to check
  * @returns {any} any
  */
-export default function role(state = initialState.role, action) {
+export default function roles(state = initialState.roles, action) {
   switch (action.type) {
 
     case types.ADD_NEW_ROLE:
-      return state.roles.concat([action.role]);
+      return action.role;
 
-    case types.UPDATE_EXISTING_ROLE: {
-      const filteredRoles = state.roles.filter(
-        updatedRole => updatedRole.id !== action.updatedRole.id
-      );
-      return filteredRoles;
-    }
-    case types.DELETE_EXISTING_ROLE: {
-      const filteredRoles = state.roles.filter(
-        deletedRole => deletedRole.id !== parseInt(action.id, 10)
-      );
-      return filteredRoles;
-    }
+    case types.UPDATE_EXISTING_ROLE:
+      return action.role;
 
     default:
       return state;

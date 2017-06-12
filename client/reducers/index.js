@@ -3,6 +3,7 @@ import authReducer from './authReducer';
 import allReducer from './allReducer';
 import userReducer from './userReducer';
 import documentReducer from './documentReducer';
+import roleReducer from './roleReducer';
 import ajaxStatusReducer from './ajaxStatusReducer';
 
 /**
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   all: allReducer,
   auth: authReducer,
   user: userReducer,
+  roles: roleReducer,
   documents: documentReducer,
   ajaxStatus: ajaxStatusReducer,
 });

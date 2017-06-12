@@ -8,6 +8,8 @@ import sweetAlert from 'sweetalert';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
 import EditDocument from './../documents/EditDocument';
+import NewRole from './../roles/NewRole';
+import EditRole from './../roles/EditRole';
 import ProgressBar from './../../components/common/ProgressBar';
 import { DOCUMENTS } from './../../../constants';
 import { loginByToken } from './../../actions/userActions';
@@ -24,6 +26,9 @@ import {
   searchDocumentsDispatcher,
   filterDocuments
  } from './../../actions/documentActions';
+import {
+  createRole, updateRole
+ } from './../../actions/roleActions';
 
 /**
  * @class Dashboard
@@ -49,11 +54,13 @@ class Dashboard extends Component {
     this.getRoleDocuments = this.getRoleDocuments.bind(this);
     this.getMyDocuments = this.getMyDocuments.bind(this);
     this.searchForDocuments = this.searchForDocuments.bind(this);
-    this.filterSearchDocuments = this.filterSearchDocuments.bind(this);
     this.loadNewDocument = this.loadNewDocument.bind(this);
     this.createNewDocument = this.createNewDocument.bind(this);
+    this.createNewRole = this.createNewRole.bind(this);
+    this.loadNewRole = this.loadNewRole.bind(this);
     this.editExistingDocument = this.editExistingDocument.bind(this);
     this.editDocument = this.editDocument.bind(this);
+    this.editRole = this.editRole.bind(this);
     this.delete = this.delete.bind(this);
     this.deleteAlert = this.deleteAlert.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
@@ -188,7 +195,7 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc Get role documents
+   * @desc loads new document
    * @param {event} event
    * @return {void} returns nothing
    */
@@ -200,19 +207,43 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc maps state to properties
+   * @desc Loads new role
+   * @param {event} event
+   * @return {void} returns nothing
+   */
+  loadNewRole(event) {
+    event.preventDefault();
+    this.setState({
+      page: 'new_role'
+    });
+  }
+
+  /**
+   * @desc creates a new document once submitted
    * @param {object} data - the form data to create the document from
    * @return {any} redirects document to dashboard or show error
    */
   createNewDocument(data) {
-    // console.log(data);
-        // Validation
     if (data.content && (data.content.length < 6)) {
       toastr.error('Enter a valid document content');
     } else if (data.title.length < 6) {
       toastr.error('Your title must be more than 6 characters');
     } else {
       this.props.actions.createDocument(data);
+      this.setState({ page: 'dashboard' });
+    }
+  }
+
+  /**
+   * @desc creates a new role once submitted
+   * @param {object} data - the form data to create the role from
+   * @return {any} redirects role to dashboard or show error
+   */
+  createNewRole(data) {
+    if (data.title < 3) {
+      toastr.error('Enter a valid role content');
+    } else {
+      this.props.actions.createRole(data);
       this.setState({ page: 'dashboard' });
     }
   }
@@ -225,6 +256,18 @@ class Dashboard extends Component {
   editDocument(id) {
     this.setState({
       page: 'edit_document',
+      id
+    });
+  }
+
+  /**
+   * @desc edit Role
+   * @param {integer} id - the id of the role to edit
+   * @return {void} returns nothing
+   */
+  editRole(id) {
+    this.setState({
+      page: 'edit_role',
       id
     });
   }
@@ -248,23 +291,21 @@ class Dashboard extends Component {
   }
 
   /**
-   * @desc Get all my Documents
-   * @param {integer} filter - filtering for search page
-   * @return {void} returns nothing
+   * @desc maps state to properties
+   * @param {object} updatedDocument - the updated document
+   * @param {object} currentDocument - the current document
+   * @return {any} redirects document to dashboard or show error
    */
-  filterSearchDocuments(filter) {
-    if (this.state.search) {
-      const documents = this.state.currentDocuments;
-      if (documents.length === 0) {
-        this.getMyDocuments();
-      }
-      if (filter === DOCUMENTS.ALL) {
-        this.setState({ currentDocuments: this.state.currentDocuments });
-      } else {
-        this.props.actions.filterDocuments(documents, filter);
-      }
+  editExistingRole(updatedRole, currentRole) {
+    // Validation
+    if (updatedRole.title && updatedRole.title.length < 3) {
+      toastr.error('Your title must be more than 3 characters');
+    } else {
+      this.props.actions.updateRole(updatedRole, currentRole);
+      this.setState({ page: 'dashboard' });
     }
   }
+
 
   /**
    * The method is used to search for documents
@@ -376,13 +417,31 @@ class Dashboard extends Component {
       </div>
     );
 
+    const editRole = (
+      <div className="col s12">
+        <EditRole onUpdate={this.editExistingRole} id={this.state.id} />
+      </div>
+    );
+
+    const newRole = (
+      <div className="col s12">
+        <NewRole onSubmit={this.createNewRole} />
+      </div>
+    );
+
     let content;
     switch (this.state.page) {
       case 'new_document':
         content = newDocument;
         break;
+      case 'new_role':
+        content = newRole;
+        break;
       case 'edit_document':
         content = editDocument;
+        break;
+      case 'edit_role':
+        content = editRole;
         break;
       case 'public_documents':
         content = (<DocumentList
@@ -472,6 +531,13 @@ class Dashboard extends Component {
                 </li>
                 <li className="collection-item">
                   <div>
+                    <a onClick={this.loadNewRole} href="/!#">
+                      New Roles
+                    </a>
+                  </div>
+                </li>
+                <li className="collection-item">
+                  <div>
                     <a onClick={this.getAllUsers} href="/!#">
                       All Users
                     </a>
@@ -494,7 +560,6 @@ class Dashboard extends Component {
                   <div>
                     <SearchForm
                       onChange={this.searchForDocuments}
-                      onSelect={this.filterSearchDocuments}
                       disableFilter={this.state.search}
                     />
                   </div>
@@ -545,6 +610,8 @@ Dashboard.propTypes = {
     updateDocument: PropTypes.func,
     deleteDocument: PropTypes.func,
     getUsers: PropTypes.func,
+    createRole: PropTypes.func,
+    updateRole: PropTypes.func,
     getRoles: PropTypes.func,
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
@@ -590,6 +657,7 @@ function mapStateToProps(state) {
   return {
     all: state.all,
     user: state.user,
+    roles: state.roles,
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
     searchDocuments: state.documents.search,
@@ -611,6 +679,8 @@ function mapDispatchToProps(dispatch) {
       updateDocument,
       deleteDocument,
       getUsers,
+      createRole,
+      updateRole,
       getRoles,
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,

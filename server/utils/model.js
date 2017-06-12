@@ -12,8 +12,8 @@ module.exports = {
       ((typeof parseInt(req.query.limit, 10) === 'number') ||
       typeof parseInt(req.query.limit, 10) === 'number')
     ) {
-      const limit = req.query.limit || DEFAULT.LIMIT;
-      const offset = req.query.offset || DEFAULT.OFFSET;
+      const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
+      const offset = parseInt(req.query.offset, 10) || DEFAULT.OFFSET;
       Model
         .findAndCountAll({ where, limit, offset })
         .then((result) => {
@@ -24,7 +24,8 @@ module.exports = {
           if (currentPage > totalPage) {
             currentPage = totalPage;
           }
-          res.json({ data, total, currentPage, totalPage, limit, offset });
+          const pagination = { total, currentPage, totalPage, limit, offset };
+          res.json({ data, pagination });
         })
         .catch((error) => {
           res.status(412).json({ msg: error.message });

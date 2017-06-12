@@ -18,7 +18,7 @@ export default {
     documents: [],
     roles: []
   },
-  role: [],
+  roles: [],
   ajaxStatus: false,
   auth: false,
   errorMessage: ''
