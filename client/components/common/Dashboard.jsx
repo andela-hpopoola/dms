@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Col } from 'react-materialize';
 import sweetAlert from 'sweetalert';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
 import EditDocument from './../documents/EditDocument';
@@ -11,7 +13,7 @@ import EditProfile from './../users/EditProfile';
 import NewRole from './../roles/NewRole';
 import EditRole from './../roles/EditRole';
 import ProgressBar from './../../components/common/ProgressBar';
-import { updateProfile, deleteUser } from './../../actions/userActions';
+import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
 import AllUsers from './../users/AllUsers';
 import AllRoles from './../roles/AllRoles';
@@ -25,6 +27,7 @@ import {
   searchDocumentsDispatcher
  } from './../../actions/documentActions';
 import { createRole, updateRole } from './../../actions/roleActions';
+import { LIMIT } from './../../../constants';
 
 /**
  * @class Dashboard
@@ -44,12 +47,15 @@ class Dashboard extends Component {
       id: 0,
       page: 'dashboard',
       search: false,
+      offset: 0
     };
     this.getDashboard = this.getDashboard.bind(this);
     this.getPublicDocuments = this.getPublicDocuments.bind(this);
     this.getRoleDocuments = this.getRoleDocuments.bind(this);
     this.getMyDocuments = this.getMyDocuments.bind(this);
     this.searchForDocuments = this.searchForDocuments.bind(this);
+    this.searchForUsers = this.searchForUsers.bind(this);
+    this.onPaginateChange = this.onPaginateChange.bind(this);
     this.loadNewDocument = this.loadNewDocument.bind(this);
     this.createNewDocument = this.createNewDocument.bind(this);
     this.createNewRole = this.createNewRole.bind(this);
@@ -68,7 +74,6 @@ class Dashboard extends Component {
 
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
-    this.props.actions.getUsers();
     this.props.actions.getRoles();
   }
 
@@ -88,31 +93,36 @@ class Dashboard extends Component {
    * @return {void} returns nothing
    */
   componentWillReceiveProps(nextProps) {
-    if (nextProps.searchDocuments.length !== 0) {
-      if (this.props.searchDocuments !== nextProps.searchDocuments) {
+    if (nextProps.searchItems.length !== 0) {
+      if (this.props.searchItems !== nextProps.searchItems) {
         if (this.state.search) {
           this.setState({
-            currentDocuments: nextProps.searchDocuments,
+            currentItems: nextProps.searchItems,
             search: false
           });
         }
       }
     }
   }
-
-
   /**
-   * @desc Get dashboard
-   * @param {event} event
+   * @desc Get items when pagination change
+   * @param {number} page - the current page
    * @return {void} returns nothing
    */
-  getDashboard(event) {
-    event.preventDefault();
-    this.setState({
-      pageTitle: `Welcome back ${this.props.user.name}`,
-      search: false,
-      page: 'dashboard'
-    });
+  onPaginateChange(page) {
+    switch (this.state.page) {
+      case 'all_users':
+        this.props.actions.getUsers((page - 1) * LIMIT.USERS);
+        break;
+      case 'public_documents':
+        this.props.actions.publicDocumentsDispatcher((page - 1) * LIMIT.DOCUMENTS);
+        break;
+      case 'role_documents':
+        this.props.actions.roleDocumentsDispatcher((page - 1) * LIMIT.DOCUMENTS);
+        break;
+      default:
+        // do nothing
+    }
   }
 
   /**
@@ -129,6 +139,19 @@ class Dashboard extends Component {
     });
   }
 
+  /**
+   * @desc Get dashboard
+   * @param {event} event
+   * @return {void} returns nothing
+   */
+  getDashboard(event) {
+    event.preventDefault();
+    this.setState({
+      pageTitle: `Welcome back ${this.props.user.name}`,
+      search: false,
+      page: 'dashboard'
+    });
+  }
   /**
    * @desc Get all users
    * @param {event} event
@@ -335,6 +358,21 @@ class Dashboard extends Component {
     });
   }
 
+  /**
+   * The method is used to search for users
+   * @param {string} query - get the users to search
+   * @param {string} filter - get the users access
+   * @return {object} sets the state based on user
+   */
+  searchForUsers(query) {
+    this.props.actions.searchUsersDispatcher(query);
+    this.setState({
+      pageTitle: 'Search Results',
+      search: true,
+      page: 'search_users'
+    });
+  }
+
  /**
    * @desc Displays an alert to delete a documeant
    * @param {integer} id - id of document to delete
@@ -402,8 +440,6 @@ class Dashboard extends Component {
     const myDocumentsCount = this.props.user.documents.length;
     const publicDocumentsCount = this.props.publicDocuments.length;
     const roleDocumentsCount = this.props.roleDocuments.length;
-    const myRoles = this.props.all.roles.filter(role => role.id === user.roleId);
-    console.log(myRoles);
     const dashboard = (
       <div>
         <Col l={4} m={6} s={12} key="1">
@@ -479,6 +515,10 @@ class Dashboard extends Component {
     );
 
     let content;
+    const currentPage = this.props.pagination.currentPage;
+    const total = this.props.pagination.total;
+    const defaultPageSize = this.props.pagination.limit;
+
     switch (this.state.page) {
       case 'new_document':
         content = newDocument;
@@ -496,41 +536,94 @@ class Dashboard extends Component {
         content = editRole;
         break;
       case 'public_documents':
-        content = (<DocumentList
-          onEdit={this.editDocument}
-          onDelete={this.deleteDocumentAlert}
-          userId={user.id}
-          documents={this.props.publicDocuments}
-        />);
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.publicDocuments}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
         break;
       case 'role_documents':
-        content = (<DocumentList
-          onEdit={this.editDocument}
-          onDelete={this.deleteDocumentAlert}
-          userId={user.id}
-          documents={this.props.roleDocuments}
-        />);
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.roleDocuments}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
         break;
       case 'my_documents':
-        content = (<DocumentList
-          onEdit={this.editDocument}
-          onDelete={this.deleteDocumentAlert}
-          userId={user.id}
-          documents={this.props.user.documents}
-        />);
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.user.documents}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
         break;
       case 'search_documents':
-        content = (<DocumentList
-          onEdit={this.editDocument}
-          onDelete={this.deleteDocumentAlert}
-          userId={user.id}
-          documents={this.props.searchDocuments}
-        />);
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.searchItems}
+            />
+          </div>);
         break;
       case 'all_users':
+        content = (
+          <div>
+            <AllUsers
+              users={this.props.all.users}
+              count={this.props.pagination.offset}
+              roleId={this.props.user.roleId}
+              onChange={this.searchForUsers}
+              onDelete={this.deleteUserAlert}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
+        break;
+      case 'search_users':
         content = (<AllUsers
-          users={this.props.all.users}
+          users={this.props.searchItems}
           roleId={this.props.user.roleId}
+          onChange={this.searchForUsers}
           onDelete={this.deleteUserAlert}
         />);
         break;
@@ -623,7 +716,6 @@ class Dashboard extends Component {
                   <div>
                     <SearchForm
                       onChange={this.searchForDocuments}
-                      disableFilter={this.state.search}
                     />
                   </div>
                 </li>
@@ -659,7 +751,7 @@ class Dashboard extends Component {
             {/* End Sidebar */}
           </div>
 
-          {/* main page */}
+          {/* main ƒtoatl */}
           <div className="col l9 top__space">
             <div className="row">
               <div className="col s12">
@@ -696,13 +788,22 @@ Dashboard.propTypes = {
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
-    loginByToken: PropTypes.func
+    searchUsersDispatcher: PropTypes.func.isRequired,
+    loginByToken: PropTypes.func,
+    roleId: PropTypes.number.isRequired
+  }),
+  pagination: PropTypes.shape({
+    total: PropTypes.number,
+    currentPage: PropTypes.number,
+    offset: PropTypes.number,
+    limit: PropTypes.number
   }),
   user: PropTypes.shape({
     name: PropTypes.string,
     token: PropTypes.string,
     email: PropTypes.string,
-    documents: PropTypes.array
+    documents: PropTypes.array,
+    roleId: PropTypes.number
   }),
   all: PropTypes.shape({
     users: PropTypes.arrayOf(PropTypes.object),
@@ -710,7 +811,7 @@ Dashboard.propTypes = {
   }),
   publicDocuments: PropTypes.arrayOf(PropTypes.object),
   roleDocuments: PropTypes.arrayOf(PropTypes.object),
-  searchDocuments: PropTypes.arrayOf(PropTypes.object)
+  searchItems: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**
@@ -719,9 +820,10 @@ Dashboard.propTypes = {
 Dashboard.defaultProps = {
   user: {},
   all: [],
+  pagination: {},
   publicDocuments: [],
   roleDocuments: [],
-  searchDocuments: [],
+  searchItems: [],
   actions: {}
 };
 
@@ -737,7 +839,8 @@ function mapStateToProps(state) {
     roles: state.roles,
     publicDocuments: state.documents.public,
     roleDocuments: state.documents.role,
-    searchDocuments: state.documents.search,
+    searchItems: state.all.search,
+    pagination: state.all.pagination,
     ajaxStatus: state.ajaxStatus
   };
 }
@@ -763,6 +866,7 @@ function mapDispatchToProps(dispatch) {
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,
       searchDocumentsDispatcher,
+      searchUsersDispatcher,
     }, dispatch)
   };
 }

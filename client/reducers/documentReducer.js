@@ -37,16 +37,6 @@ export default function document(state = initialState.documents, action) {
         }
       );
 
-    case types.SEARCH_FOR_DOCUMENTS: {
-      return Object.assign(
-        {},
-        state,
-        {
-          search: action.documents
-        }
-      );
-    }
-
     default:
       return state;
   }

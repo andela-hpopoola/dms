@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { connect } from 'react-redux';
-import { DOCUMENTS } from './../../../constants';
+import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
 // Require Editor JS files.
 require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
@@ -94,7 +94,7 @@ class NewDocument extends Component {
               {/* Content */}
               <FroalaEditor
                 tag="textarea"
-                config={this.config}
+                config={EDITOR_CONFIG}
                 model={this.state.content}
                 onModelChange={this.handleModelChange}
               />

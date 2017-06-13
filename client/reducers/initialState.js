@@ -6,8 +6,6 @@ export default {
   documents: {
     public: [],
     role: [],
-    search: [],
-    filter: [],
     current: {}
   },
   user: {
@@ -17,7 +15,9 @@ export default {
   all: {
     users: [],
     documents: [],
-    roles: []
+    roles: [],
+    search: [],
+    pagination: []
   },
   roles: [],
   ajaxStatus: false,

@@ -1,6 +1,7 @@
 import * as toastr from 'toastr';
 import * as types from './actionTypes';
 import api from './../utils/api';
+import { LIMIT } from './../../constants';
 
 /**
  * Get All Users
@@ -16,16 +17,32 @@ export function getAllUsers(users) {
 }
 
 /**
- * Get Users
- * @desc View an existing document
- * @param {number} id document id
+ * Get All Users
+ * @desc Sets the current pagination
+ * @param {array} pagination - list of all users
  * @returns {object} action
  */
-export function getUsers() {
+export function setPagination(pagination) {
+  return {
+    type: types.SET_PAGINATION,
+    pagination
+  };
+}
+
+/**
+ * Get Users
+ * @desc View an existing document
+ * @param {number} offset - the current page to load users
+ * @returns {object} action
+ */
+export function getUsers(offset = 0) {
+  const limit = LIMIT.USERS;
   return (dispatch) => {
-    api.get('/users').then((result) => {
+    api.get(`/users/?limit=${limit}&offset=${offset}`).then((result) => {
       if (result.status === 200) {
-        dispatch(getAllUsers(result.data));
+        const users = result.data;
+        dispatch(getAllUsers(users.data));
+        dispatch(setPagination(users.pagination));
       } else {
         toastr.error(result.data.msg);
       }

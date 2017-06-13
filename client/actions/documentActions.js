@@ -4,6 +4,8 @@ import * as types from './actionTypes';
 import { addNewDocument, updateExistingDocument, deleteExistingDocument } from './userActions';
 import api from './../utils/api';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
+import { setPagination } from './allActions';
+import { LIMIT } from './../../constants';
 
 /**
  * create Document
@@ -142,18 +144,22 @@ export function getPublicDocuments(documents) {
 /**
  * Public Documents Dispatcher
  * @desc Get all public documents
+ * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function publicDocumentsDispatcher() {
+export function publicDocumentsDispatcher(offset) {
+  const limit = LIMIT.DOCUMENTS;
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents/public').then((result) => {
+    api.get(`/documents/public/?limit=${limit}&offset=${offset}`).then((result) => {
       if (result.status === 200) {
-        dispatch(getPublicDocuments(result.data));
-        dispatch(ajaxCallEnd());
+        const documents = result.data;
+        dispatch(getPublicDocuments(documents.data));
+        dispatch(setPagination(documents.pagination));
       } else {
         dispatch(getPublicDocuments([]));
       }
+      dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code
@@ -184,14 +190,18 @@ export function getRoleDocuments(documents) {
 /**
  * Role Documents Dispatcher
  * @desc Get all public documents
+ * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function roleDocumentsDispatcher() {
+export function roleDocumentsDispatcher(offset) {
+  const limit = LIMIT.DOCUMENTS;
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents/role').then((result) => {
+    api.get(`/documents/public/?limit=${limit}&offset=${offset}`).then((result) => {
       if (result.status === 200) {
-        dispatch(getRoleDocuments(result.data));
+        const documents = result.data;
+        dispatch(getRoleDocuments(documents.data));
+        dispatch(setPagination(documents.pagination));
         dispatch(ajaxCallEnd());
       } else {
         dispatch(getRoleDocuments([]));

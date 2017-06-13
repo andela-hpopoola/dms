@@ -281,3 +281,49 @@ export function deleteUser(id) {
     });
   };
 }
+
+
+/**
+ * Search for Users
+ * @param {array} users - all returned role users
+ * @param {number} usersType type of user to search for
+ * @desc Get all role users
+ * @returns {object} action
+ */
+export function searchForUsers(users) {
+  return {
+    type: types.SEARCH_FOR_USERS,
+    users
+  };
+}
+
+/**
+ * Search Users Dispatcher
+ * @param {string} userTitle the title of the user to search for
+ * @param {number} usersType type of user to search for
+ * @desc Get all users
+ * @returns {object} action
+ */
+export function searchUsersDispatcher(userTitle) {
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    api.get(`/search/users/?q=${userTitle}`).then((result) => {
+      if (result.data.length === 0) {
+        toastr.info('No search result found');
+        dispatch(ajaxCallEnd());
+      } else {
+        dispatch(searchForUsers(result.data));
+        dispatch(ajaxCallEnd());
+      }
+    }).catch((error) => {
+      if (error.response) {
+        // if the server responded with a status code
+        // that falls out of the range of 2xx
+        toastr.error(error.response);
+      } else {
+        toastr.error(error);
+      }
+      dispatch(ajaxCallEnd());
+    });
+  };
+}

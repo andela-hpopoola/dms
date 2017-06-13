@@ -5,8 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getDocument } from './../../actions/documentActions';
 import ProgressBar from './../../components/common/ProgressBar';
-import { DOCUMENTS } from './../../../constants';
-
+import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
 // Require Editor JS files.
 require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
@@ -140,7 +139,7 @@ class EditDocument extends Component {
                 {/* Content */}
                 <FroalaEditor
                   tag="textarea"
-                  config={this.config}
+                  config={EDITOR_CONFIG}
                   model={this.state.form.content || currentDocument.content}
                   onModelChange={this.handleModelChange}
                 />
