@@ -37,7 +37,7 @@ const DocumentSingle = (props) => {
   };
   const handleDelete = (event) => {
     event.preventDefault();
-    props.onDelete(event.target.id);
+    props.onDelete(event.target.id, 'Document');
   };
   return (
     <div className="col m6 l4 s12">
@@ -72,7 +72,14 @@ const DocumentSingle = (props) => {
         </div>
         <div className="card-action">
           {userDocument &&
-          <a onClick={handleClick} id={document.id} href="/#!" className="document__edit">Edit</a>
+          <a
+            onClick={handleClick}
+            id={document.id}
+            href="/#!"
+            className="document__edit waves-effect waves-teal btn-flat"
+          >
+            Edit
+          </a>
           }
           <div className="right">
             <Modal

@@ -24,7 +24,7 @@ module.exports = (app) => {
 
   app.get('/roles', users.authenticate, roles.getAll);
   app.post('/roles', users.authenticate, users.isSuperAdmin, roles.create);
-  app.get('/roles/:id', users.authenticate, users.isSuperAdmin, roles.getOne);
+  app.get('/roles/:id', roles.getOne);
   app.put('/roles/:id', users.authenticate, users.isSuperAdmin, roles.update);
   app.delete('/roles/:id', users.authenticate, users.isSuperAdmin, roles.delete);
 };

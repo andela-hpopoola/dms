@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Col } from 'react-materialize';
-import toastr from 'toastr';
 import sweetAlert from 'sweetalert';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
@@ -12,7 +11,7 @@ import EditProfile from './../users/EditProfile';
 import NewRole from './../roles/NewRole';
 import EditRole from './../roles/EditRole';
 import ProgressBar from './../../components/common/ProgressBar';
-import { updateProfile } from './../../actions/userActions';
+import { updateProfile, deleteUser } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
 import AllUsers from './../users/AllUsers';
 import AllRoles from './../roles/AllRoles';
@@ -60,8 +59,10 @@ class Dashboard extends Component {
     this.editUserProfile = this.editUserProfile.bind(this);
     this.editProfile = this.editProfile.bind(this);
     this.editRole = this.editRole.bind(this);
-    this.delete = this.delete.bind(this);
-    this.deleteAlert = this.deleteAlert.bind(this);
+    this.deleteDocument = this.deleteDocument.bind(this);
+    this.deleteDocumentAlert = this.deleteDocumentAlert.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.deleteUserAlert = this.deleteUserAlert.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
     this.getAllRoles = this.getAllRoles.bind(this);
 
@@ -277,14 +278,8 @@ class Dashboard extends Component {
    */
   editExistingDocument(updatedDocument, currentDocument) {
     // Validation
-    if (updatedDocument.content && (updatedDocument.content.length < 6)) {
-      toastr.error('Enter a valid document content');
-    } else if (updatedDocument.title && updatedDocument.title.length < 6) {
-      toastr.error('Your title must be more than 6 characters');
-    } else {
-      this.props.actions.updateDocument(updatedDocument, currentDocument);
-      this.setState({ page: 'dashboard' });
-    }
+    this.props.actions.updateDocument(updatedDocument, currentDocument);
+    this.setState({ page: 'dashboard' });
   }
 
   /**
@@ -305,13 +300,8 @@ class Dashboard extends Component {
    * @return {any} redirects role to dashboard or show error
    */
   editExistingRole(updatedRole, currentRole) {
-    // Validation
-    if (updatedRole.title && updatedRole.title.length < 3) {
-      toastr.error('Your title must be more than 3 characters');
-    } else {
-      this.props.actions.updateRole(updatedRole, currentRole);
-      this.setState({ page: 'dashboard' });
-    }
+    this.props.actions.updateRole(updatedRole, currentRole);
+    this.setState({ page: 'dashboard' });
   }
 
 
@@ -330,12 +320,12 @@ class Dashboard extends Component {
     });
   }
 
-  /**
-   * @desc Displays the ViewDocument Page
+ /**
+   * @desc Displays an alert to delete a documeant
    * @param {integer} id - id of document to delete
-   * @return {any} The ViewDocument form
+   * @return {boolean} - cancel / confirmation
    */
-  deleteAlert(id) {
+  deleteDocumentAlert(id) {
     this.state.id = id;
     sweetAlert({
       title: 'Delete Document',
@@ -345,7 +335,25 @@ class Dashboard extends Component {
       closeOnConfirm: true,
       confirmButtonText: 'Yes, delete it!',
       confirmButtonColor: '#ec6c62'
-    }, this.delete);
+    }, this.deleteDocument);
+  }
+
+  /**
+   * @desc Displays an alert to delete user
+   * @param {integer} id - id of user to delete
+   * @return {boolean} - cancel / confirmation
+   */
+  deleteUserAlert(id) {
+    this.state.id = id;
+    sweetAlert({
+      title: 'Delete User',
+      text: 'You are about to delete this user',
+      type: 'error',
+      showCancelButton: true,
+      closeOnConfirm: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#ec6c62'
+    }, this.deleteUser);
   }
 
   /**
@@ -353,9 +361,20 @@ class Dashboard extends Component {
    * @param {booleam} isConfirm - Confirmation to delete
    * @return {any} The document to delete
    */
-  delete(isConfirm) {
+  deleteDocument(isConfirm) {
     if (isConfirm) {
       this.props.actions.deleteDocument(this.state.id);
+    }
+  }
+
+  /**
+   * @desc Deletes a user
+   * @param {booleam} isConfirm - Confirmation to  user
+   * @return {any} The document to user
+   */
+  deleteUser(isConfirm) {
+    if (isConfirm) {
+      this.props.actions.deleteUser(this.state.id);
     }
   }
 
@@ -368,7 +387,8 @@ class Dashboard extends Component {
     const myDocumentsCount = this.props.user.documents.length;
     const publicDocumentsCount = this.props.publicDocuments.length;
     const roleDocumentsCount = this.props.roleDocuments.length;
-
+    const myRoles = this.props.all.roles.filter(role => role.id === user.roleId);
+    console.log(myRoles);
     const dashboard = (
       <div>
         <Col l={4} m={6} s={12} key="1">
@@ -463,7 +483,7 @@ class Dashboard extends Component {
       case 'public_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
-          onDelete={this.deleteAlert}
+          onDelete={this.deleteDocumentAlert}
           userId={user.id}
           documents={this.props.publicDocuments}
         />);
@@ -471,7 +491,7 @@ class Dashboard extends Component {
       case 'role_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
-          onDelete={this.deleteAlert}
+          onDelete={this.deleteDocumentAlert}
           userId={user.id}
           documents={this.props.roleDocuments}
         />);
@@ -479,7 +499,7 @@ class Dashboard extends Component {
       case 'my_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
-          onDelete={this.deleteAlert}
+          onDelete={this.deleteDocumentAlert}
           userId={user.id}
           documents={this.props.user.documents}
         />);
@@ -487,13 +507,17 @@ class Dashboard extends Component {
       case 'search_documents':
         content = (<DocumentList
           onEdit={this.editDocument}
-          onDelete={this.deleteAlert}
+          onDelete={this.deleteDocumentAlert}
           userId={user.id}
           documents={this.props.searchDocuments}
         />);
         break;
       case 'all_users':
-        content = (<AllUsers users={this.props.all.users} />);
+        content = (<AllUsers
+          users={this.props.all.users}
+          roleId={this.props.user.roleId}
+          onDelete={this.deleteUserAlert}
+        />);
         break;
       case 'all_roles':
         content = (<AllRoles roles={this.props.all.roles} />);
@@ -599,6 +623,21 @@ class Dashboard extends Component {
                     Name: {user.name}
                   </div>
                 </li>
+                <li className="collection-item">
+                  <div>
+                    Email: {user.email}
+                  </div>
+                </li>
+                <li className="collection-item">
+                  <div>
+                    Role: {user.roleName}
+                  </div>
+                </li>
+                <li className="collection-item">
+                  <div>
+                    <button className="btn">Edit Profile</button>
+                  </div>
+                </li>
               </ul>
             </div>
 
@@ -636,6 +675,7 @@ Dashboard.propTypes = {
     getUsers: PropTypes.func,
     createRole: PropTypes.func,
     updateProfile: PropTypes.func,
+    deleteUser: PropTypes.func,
     updateRole: PropTypes.func,
     getRoles: PropTypes.func,
     publicDocumentsDispatcher: PropTypes.func.isRequired,
@@ -703,6 +743,7 @@ function mapDispatchToProps(dispatch) {
       createRole,
       updateRole,
       updateProfile,
+      deleteUser,
       getRoles,
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,

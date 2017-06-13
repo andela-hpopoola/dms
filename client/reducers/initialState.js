@@ -11,7 +11,8 @@ export default {
     current: {}
   },
   user: {
-    documents: []
+    documents: [],
+    roleName: 'Unknown'
   },
   all: {
     users: [],

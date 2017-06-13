@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ROLES } from './../../../constants';
 
 /**
  * User Single
@@ -8,17 +9,35 @@ import PropTypes from 'prop-types';
  * @returns {jsx} the formatted user
  */
 const UserRow = (props) => {
-  const { user } = props;
-  const { index } = props;
+  const { user, index } = props;
 
+  let superAccess = false;
+  if (props.roleId === ROLES.SUPERADMIN) {
+    superAccess = true;
+  }
+  const handleDelete = (event) => {
+    event.preventDefault();
+    props.onDelete(event.target.id);
+  };
   return (
-    <tbody>
-      <tr>
-        <td>{index}</td>
-        <td>{user.name}</td>
-        <td>{user.email}</td>
-      </tr>
-    </tbody>
+    <tr>
+      <td>{index}</td>
+      <td>{user.name}</td>
+      <td>{user.email}</td>
+      <td>
+        {
+          superAccess &&
+          <a
+            href="/#!"
+            id={user.id}
+            className="waves-effect waves-light btn-flat"
+            onClick={handleDelete}
+          >
+            Delete
+          </a>
+        }
+      </td>
+    </tr>
   );
 };
 
@@ -31,6 +50,8 @@ UserRow.propTypes = {
     email: PropTypes.string,
   }),
   index: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  roleId: PropTypes.number.isRequired
 };
 
 /**
