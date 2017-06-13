@@ -221,7 +221,10 @@ class Dashboard extends Component {
    */
   createNewDocument(data) {
     this.props.actions.createDocument(data);
-    this.setState({ page: 'dashboard' });
+    this.setState({
+      page: 'dashboard',
+      pageTitle: `Welcome back ${this.props.user.name}`,
+    });
   }
 
   /**
@@ -231,7 +234,10 @@ class Dashboard extends Component {
    */
   createNewRole(data) {
     this.props.actions.createRole(data);
-    this.setState({ page: 'dashboard' });
+    this.setState({
+      page: 'dashboard',
+      pageTitle: `Welcome back ${this.props.user.name}`,
+    });
   }
 
   /**
@@ -279,7 +285,10 @@ class Dashboard extends Component {
   editExistingDocument(updatedDocument, currentDocument) {
     // Validation
     this.props.actions.updateDocument(updatedDocument, currentDocument);
-    this.setState({ page: 'dashboard' });
+    this.setState({
+      page: 'dashboard',
+      pageTitle: `Welcome back ${this.props.user.name}`
+    });
   }
 
   /**
@@ -290,7 +299,10 @@ class Dashboard extends Component {
    */
   editUserProfile(updatedProfile, currentProfile) {
     this.props.actions.updateProfile(updatedProfile, currentProfile);
-    this.setState({ page: 'dashboard' });
+    this.setState({
+      page: 'dashboard',
+      pageTitle: `Welcome back ${this.props.user.name}`,
+    });
   }
 
   /**
@@ -301,7 +313,10 @@ class Dashboard extends Component {
    */
   editExistingRole(updatedRole, currentRole) {
     this.props.actions.updateRole(updatedRole, currentRole);
-    this.setState({ page: 'dashboard' });
+    this.setState({
+      page: 'dashboard',
+      pageTitle: `Welcome back ${this.props.user.name}`
+    });
   }
 
 
@@ -635,7 +650,7 @@ class Dashboard extends Component {
                 </li>
                 <li className="collection-item">
                   <div>
-                    <button className="btn">Edit Profile</button>
+                    <button className="waves-effect waves-light btn-flat">Edit Profile</button>
                   </div>
                 </li>
               </ul>
