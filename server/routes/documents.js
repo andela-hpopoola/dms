@@ -17,16 +17,6 @@ module.exports = (app) => {
    *         type: integer
    */
 
-  // Security Schema definition
-  /**
-   * @swagger
-   * securityDefinitions:
-   *  x-auth:
-   *    type: apiKey
-   *    in: header
-   *    name: JWT-TOKEN
-   */
-
   /**
    * @swagger
    * /documents:
@@ -49,7 +39,7 @@ module.exports = (app) => {
    *         description: Successfully created
    *       412:
    *         description: Document cannot be created
-   *     security:
+   *     :
    *     - x-auth:
    *
    *   Pagination:
@@ -57,7 +47,20 @@ module.exports = (app) => {
    *       data:
    *         type: array
    *       pagination:
-   *         type: object
+   *         $ref: '#/definitions/PaginationList'
+   *
+   *   PaginationList:
+   *     properties:
+   *       total:
+   *         type: integer
+   *       currentPage:
+   *         type: integer
+   *       totalPage:
+   *         type: integer
+   *       limit:
+   *         type: integer
+   *       offset:
+   *         type: integer
    */
   app.post('/documents', users.authenticate, documents.create);
 
@@ -81,8 +84,6 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth: []
    */
   app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
 
@@ -107,8 +108,6 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth: []
    */
   app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
 
@@ -132,8 +131,6 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth: []
    */
   app.get('/documents/public', users.authenticate, documents.public);
 
@@ -157,8 +154,6 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth: []
    */
   app.get('/documents/roles', users.authenticate, documents.role);
 
@@ -185,8 +180,6 @@ module.exports = (app) => {
    *           $ref: '#/definitions/Documents'
    *       404:
    *         description: Document not found
-   *     security:
-   *     - x-auth: []
    */
   app.get('/documents/:id', users.authenticate, users.canManageDocument, documents.getOne);
 
@@ -211,8 +204,6 @@ module.exports = (app) => {
    *         description: Successfully updated
    *       404:
    *         description: Document cannot be found
-   *     security:
-   *     - x-auth: []
    */
   app.put('/documents/:id', users.authenticate, users.canManageDocument, documents.update);
 
@@ -237,8 +228,6 @@ module.exports = (app) => {
    *         description: Successfully deleted
    *       404:
    *         description: Document cannot be found
-   *     security:
-   *     - x-auth: []
    */
   app.delete('/documents/:id', users.authenticate, users.canManageDocument, documents.delete);
 
@@ -263,8 +252,6 @@ module.exports = (app) => {
    *         description: An array of all documents
    *       404:
    *         description: No document found
-   *     security:
-   *     - x-auth: []
    */
   app.get('/search/documents/', users.authenticate, documents.search);
 };
