@@ -15,8 +15,6 @@ const InputRoles = require('./../../seeders/roles');
 let token = '';
 let id = '';
 let adminId = '';
-let documentId = '';
-let roleId = '';
 let adminToken = '';
 
 

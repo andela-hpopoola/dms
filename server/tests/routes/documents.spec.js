@@ -12,11 +12,9 @@ const InputDocuments = require('./../../seeders/documents');
 const InputUsers = require('./../../seeders/users');
 const InputRoles = require('./../../seeders/roles');
 
-let token = '';
-let id = '';
+
 let adminId = '';
 let documentId = '';
-let roleId = '';
 let adminToken = '';
 
 
