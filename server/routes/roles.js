@@ -11,17 +11,6 @@ module.exports = (app) => {
    *         type: string
    */
 
-  // Security Schema definition
-  /**
-   * @swagger
-   * securityDefinitions:
-   *  x-auth:
-   *    type: apiKey
-   *    in: header
-   *    name: JWT-TOKEN
-   */
-
-
   // Get all Roles
   /**
    * @swagger
@@ -42,8 +31,6 @@ module.exports = (app) => {
    *         description: Roles not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth:
    */
   app.get('/roles', users.authenticate, roles.getAll);
 
@@ -69,8 +56,6 @@ module.exports = (app) => {
    *         description: Successfully created
    *       412:
    *         description: Role cannot be created
-   *     security:
-   *     - x-auth:
    */
   app.post('/roles', users.authenticate, users.isSuperAdmin, roles.create);
 
@@ -98,8 +83,6 @@ module.exports = (app) => {
    *           $ref: '#/definitions/Roles'
    *       404:
    *         description: Role not found
-   *     security:
-   *     - x-auth:
    */
   app.get('/roles/:id', roles.getOne);
 
@@ -124,8 +107,6 @@ module.exports = (app) => {
    *         description: Successfully updated
    *       404:
    *         description: Role cannot be found
-   *     security:
-   *     - x-auth:
    */
   app.put('/roles/:id', users.authenticate, users.isSuperAdmin, roles.update);
 
@@ -150,8 +131,6 @@ module.exports = (app) => {
    *         description: Successfully deleted
    *       404:
    *         description: Role cannot be found
-   *     security:
-   *     - x-auth:
    */
   app.delete('/roles/:id', users.authenticate, users.isSuperAdmin, roles.delete);
 };
