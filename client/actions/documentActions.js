@@ -147,15 +147,26 @@ export function getPublicDocuments(documents) {
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function publicDocumentsDispatcher(offset) {
+export function publicDocumentsDispatcher(offset = null) {
+  let paginate = false;
   const limit = LIMIT.DOCUMENTS;
+  let publicURL = '/documents/public';
+  if (offset !== null) {
+    paginate = true;
+    publicURL = `/documents/public/?limit=${limit}&offset=${offset}`;
+  }
+
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(`/documents/public/?limit=${limit}&offset=${offset}`).then((result) => {
+    api.get(publicURL).then((result) => {
       if (result.status === 200) {
         const documents = result.data;
-        dispatch(getPublicDocuments(documents.data));
-        dispatch(setPagination(documents.pagination));
+        if (paginate) {
+          dispatch(getPublicDocuments(documents.data));
+          dispatch(setPagination(documents.pagination));
+        } else {
+          dispatch(getPublicDocuments(documents));
+        }
       } else {
         dispatch(getPublicDocuments([]));
       }
@@ -189,23 +200,34 @@ export function getRoleDocuments(documents) {
 
 /**
  * Role Documents Dispatcher
- * @desc Get all public documents
+ * @desc Get all role documents
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function roleDocumentsDispatcher(offset) {
+export function roleDocumentsDispatcher(offset = null) {
+  let paginate = false;
   const limit = LIMIT.DOCUMENTS;
+  let roleURL = '/documents/role';
+  if (offset !== null) {
+    paginate = true;
+    roleURL = `/documents/role/?limit=${limit}&offset=${offset}`;
+  }
+
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(`/documents/public/?limit=${limit}&offset=${offset}`).then((result) => {
+    api.get(roleURL).then((result) => {
       if (result.status === 200) {
         const documents = result.data;
-        dispatch(getRoleDocuments(documents.data));
-        dispatch(setPagination(documents.pagination));
-        dispatch(ajaxCallEnd());
+        if (paginate) {
+          dispatch(getRoleDocuments(documents.data));
+          dispatch(setPagination(documents.pagination));
+        } else {
+          dispatch(getRoleDocuments(documents));
+        }
       } else {
         dispatch(getRoleDocuments([]));
       }
+      dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code

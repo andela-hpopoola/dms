@@ -27,7 +27,7 @@ import {
   searchDocumentsDispatcher
  } from './../../actions/documentActions';
 import { createRole, updateRole } from './../../actions/roleActions';
-import { LIMIT } from './../../../constants';
+import { ROLES, LIMIT } from './../../../constants';
 
 /**
  * @class Dashboard
@@ -189,7 +189,7 @@ class Dashboard extends Component {
    */
   getPublicDocuments(event) {
     event.preventDefault();
-    this.props.actions.publicDocumentsDispatcher();
+    this.props.actions.publicDocumentsDispatcher(0);
     this.setState({
       pageTitle: 'Public Document',
       search: false,
@@ -204,7 +204,7 @@ class Dashboard extends Component {
    */
   getRoleDocuments(event) {
     event.preventDefault();
-    this.props.actions.roleDocumentsDispatcher();
+    this.props.actions.roleDocumentsDispatcher(0);
     this.setState({
       pageTitle: 'Role Document',
       search: false,
@@ -678,40 +678,11 @@ class Dashboard extends Component {
                     </a>
                   </div>
                 </li>
-                <li className="collection-item">
-                  <div>
-                    <a onClick={this.loadNewRole} href="/!#">
-                      New Roles
-                    </a>
-                  </div>
-                </li>
-                <li className="collection-item">
-                  <div>
-                    <a onClick={this.getAllUsers} href="/!#">
-                      All Users
-                    </a>
-                  </div>
-                </li>
-                <li className="collection-item">
-                  <div>
-                    <a onClick={this.getAllRoles} href="/!#">
-                      All Roles
-                    </a>
-                  </div>
-                </li>
-                <li className="collection-item">
-                  <div>
-                    <a onClick={this.editProfile} href="/!#">
-                      Edit Profile
-                    </a>
-                  </div>
-                </li>
               </ul>
             </div>
 
             <div className="card white">
-              <ul className="collection with-header">
-                <li className="collection-header"><h4>Menu</h4></li>
+              <ul className="collection">
                 <li className="collection-item">
                   <div>
                     <SearchForm
@@ -748,10 +719,52 @@ class Dashboard extends Component {
               </ul>
             </div>
 
-            {/* End Sidebar */}
+            { user.roleId !== ROLES.USER ?
+              <div className="card white">
+                <ul className="collection with-header">
+                  <li className="collection-header"><h4>ADMINISTRATOR</h4></li>
+                  <li className="collection-item">
+                    <div>
+                      <a onClick={this.loadNewRole} href="/!#">
+                        New Roles
+                      </a>
+                    </div>
+                  </li>
+                  <li className="collection-item">
+                    <div>
+                      <a onClick={this.getAllRoles} href="/!#">
+                        All Roles
+                      </a>
+                    </div>
+                  </li>
+                  <li className="collection-item">
+                    <div>
+                      <a onClick={this.getAllUsers} href="/!#">
+                        All Users
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div> : ' '
+            }
+
+            { user.roleId === ROLES.SUPERADMIN ?
+              <div className="card white">
+                <ul className="collection with-header">
+                  <li className="collection-header"><h4>SUPER ADMIN</h4></li>
+                  <li className="collection-item">
+                    <div>
+                      <a onClick={this.loadNewRole} href="/!#">
+                        New Roles
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </div> : ' '
+            }
           </div>
 
-          {/* main ƒtoatl */}
+          {/* main content */}
           <div className="col l9 top__space">
             <div className="row">
               <div className="col s12">
@@ -790,7 +803,6 @@ Dashboard.propTypes = {
     searchDocumentsDispatcher: PropTypes.func.isRequired,
     searchUsersDispatcher: PropTypes.func.isRequired,
     loginByToken: PropTypes.func,
-    roleId: PropTypes.number.isRequired
   }),
   pagination: PropTypes.shape({
     total: PropTypes.number,

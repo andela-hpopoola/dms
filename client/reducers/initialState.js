@@ -17,7 +17,7 @@ export default {
     documents: [],
     roles: [],
     search: [],
-    pagination: []
+    pagination: {}
   },
   roles: [],
   ajaxStatus: false,
