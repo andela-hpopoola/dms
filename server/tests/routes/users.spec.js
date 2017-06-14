@@ -305,5 +305,41 @@ describe('Users Routes', () => {
           });
       });
     });
+
+    describe('GET /users/:id/documents', () => {
+      it('should not retrieve invalid documents', (done) => {
+        request.get('/users/invalid/documents')
+          .set('x-auth', adminToken)
+          .expect(412)
+          .end((err) => {
+            done(err);
+          });
+      });
+    });
+
+    describe('GET /users/{id}/documents', () => {
+      it('should return null when user has no document', (done) => {
+        request.get('/users/0/documents')
+          .set('x-auth', adminToken)
+          .expect(200)
+          .end((err, res) => {
+            const expected = res.body;
+            const actual = null;
+            expect(expected).toEqual(actual);
+            done(err);
+          });
+      });
+    });
+
+    describe('GET /users/{notFound}/documents', () => {
+      it('should not retrieve documents with wrong token', (done) => {
+        request.get('/users/1234243/documents')
+          .set('x-auth', 'wrongtoken')
+          .expect(401)
+          .end((err) => {
+            done(err);
+          });
+      });
+    });
   });
 });
