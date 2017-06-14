@@ -147,7 +147,7 @@ export function getPublicDocuments(documents) {
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function publicDocumentsDispatcher(offset=null) {
+export function publicDocumentsDispatcher(offset = null) {
   let paginate = false;
   const limit = LIMIT.DOCUMENTS;
   let publicURL = '/documents/public';
@@ -204,7 +204,7 @@ export function getRoleDocuments(documents) {
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function roleDocumentsDispatcher(offset=null) {
+export function roleDocumentsDispatcher(offset = null) {
   let paginate = false;
   const limit = LIMIT.DOCUMENTS;
   let roleURL = '/documents/role';
