@@ -4,21 +4,29 @@ import DocumentSingle from './DocumentSingle';
 /**
  * Document List
  * @desc List of Documents
- * @param {array} documents current user documents
+ * @param {array} props current user documents
  * @returns {jsx} the listed document
  */
-const DocumentList = ({ documents }) => {
+const DocumentList = (props) => {
   let allDocuments = [];
-  allDocuments = documents.map(
-    document => <DocumentSingle document={document} key={document.id} />
-  );
+  const { documents } = props;
+  if (documents.length > 0) {
+    allDocuments = documents.map(
+      document => (<DocumentSingle
+        onEdit={props.onEdit}
+        onDelete={props.onDelete}
+        userId={props.userId}
+        document={document}
+        key={document.id}
+      />)
+    );
+  } else {
+    allDocuments = <h3 className="not-found"> No Document found </h3>;
+  }
+
   return (
     <div className="row">
-      {
-        documents ?
-        allDocuments :
-        <h3> You have no document </h3>
-      }
+      { allDocuments }
     </div>
   );
 };
@@ -27,7 +35,8 @@ const DocumentList = ({ documents }) => {
  * Set the PropTypes for DocumentList
  */
 DocumentList.propTypes = {
-  documents: PropTypes.arrayOf(PropTypes.object)
+  documents: PropTypes.arrayOf(PropTypes.object),
+  userId: PropTypes.number.isRequired
 };
 
 /**

@@ -4,17 +4,22 @@
  */
 export default {
   documents: {
-    all: [],
     public: [],
     role: [],
-    search: [],
-    filter: [],
     current: {}
   },
   user: {
-    documents: []
+    documents: [],
+    roleName: 'Unknown'
   },
-  role: [],
+  all: {
+    users: [],
+    documents: [],
+    roles: [],
+    search: [],
+    pagination: {}
+  },
+  roles: [],
   ajaxStatus: false,
   auth: false,
   errorMessage: ''

@@ -1,8 +1,11 @@
-engines:
-  rubocop:
-    enabled: false
-  eslint:
+checks: 
+  enabled: false
+  import/extensions: ~
+engines: 
+  eslint: 
     enabled: true
-exclude_paths:
-- "tests/"
-- "public/"
+  rubocop: 
+    enabled: false
+exclude_paths: 
+  - tests/
+  - public/

@@ -4,6 +4,8 @@ import * as types from './actionTypes';
 import { addNewDocument, updateExistingDocument, deleteExistingDocument } from './userActions';
 import api from './../utils/api';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
+import { setPagination } from './allActions';
+import { LIMIT } from './../../constants';
 
 /**
  * create Document
@@ -74,8 +76,8 @@ export function getDocument(id) {
 }
 
 /**
- * Get Document
- * @desc View an existing document
+ * Update Document
+ * @desc Update an existing document
  * @param {object} updatedDocument - updated document details
  * @param {object} currentDocument - current document details
  * @returns {object} action
@@ -142,13 +144,32 @@ export function getPublicDocuments(documents) {
 /**
  * Public Documents Dispatcher
  * @desc Get all public documents
+ * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function publicDocumentsDispatcher() {
+export function publicDocumentsDispatcher(offset = null) {
+  let paginate = false;
+  const limit = LIMIT.DOCUMENTS;
+  let publicURL = '/documents/public';
+  if (offset !== null) {
+    paginate = true;
+    publicURL = `/documents/public/?limit=${limit}&offset=${offset}`;
+  }
+
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents').then((result) => {
-      dispatch(getPublicDocuments(result.data));
+    api.get(publicURL).then((result) => {
+      if (result.status === 200) {
+        const documents = result.data;
+        if (paginate) {
+          dispatch(getPublicDocuments(documents.data));
+          dispatch(setPagination(documents.pagination));
+        } else {
+          dispatch(getPublicDocuments(documents));
+        }
+      } else {
+        dispatch(getPublicDocuments([]));
+      }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {
@@ -179,14 +200,33 @@ export function getRoleDocuments(documents) {
 
 /**
  * Role Documents Dispatcher
- * @desc Get all public documents
+ * @desc Get all role documents
+ * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function roleDocumentsDispatcher() {
+export function roleDocumentsDispatcher(offset = null) {
+  let paginate = false;
+  const limit = LIMIT.DOCUMENTS;
+  let roleURL = '/documents/role';
+  if (offset !== null) {
+    paginate = true;
+    roleURL = `/documents/role/?limit=${limit}&offset=${offset}`;
+  }
+
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get('/documents').then((result) => {
-      dispatch(getRoleDocuments(result.data));
+    api.get(roleURL).then((result) => {
+      if (result.status === 200) {
+        const documents = result.data;
+        if (paginate) {
+          dispatch(getRoleDocuments(documents.data));
+          dispatch(setPagination(documents.pagination));
+        } else {
+          dispatch(getRoleDocuments(documents));
+        }
+      } else {
+        dispatch(getRoleDocuments([]));
+      }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
       if (error.response) {
@@ -198,22 +238,6 @@ export function roleDocumentsDispatcher() {
       }
       dispatch(ajaxCallEnd());
     });
-  };
-}
-
-
-/**
- * Filter Documents
- * @param {array} documents - all returned role documents
- * @param {number} filter - type of document to search for
- * @desc Get all role documents
- * @returns {object} action
- */
-export function filterDocuments(documents, filter) {
-  return {
-    type: types.FILTER_DOCUMENTS,
-    documents,
-    filter
   };
 }
 
@@ -242,8 +266,13 @@ export function searchDocumentsDispatcher(documentTitle) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
     api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
-      dispatch(searchForDocuments(result.data));
-      dispatch(ajaxCallEnd());
+      if (result.data.length === 0) {
+        toastr.info('No search result found');
+        dispatch(ajaxCallEnd());
+      } else {
+        dispatch(searchForDocuments(result.data));
+        dispatch(ajaxCallEnd());
+      }
     }).catch((error) => {
       if (error.response) {
         // if the server responded with a status code

@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/andela-hpopoola/dms.svg?branch=develop)](https://travis-ci.org/andela-hpopoola/dms)
+[![Coverage Status](https://coveralls.io/repos/github/andela-hpopoola/dms/badge.svg?branch=develop)](https://coveralls.io/github/andela-hpopoola/dms?branch=develop)
+[![Code Climate](https://codeclimate.com/github/andela-hpopoola/dms/badges/gpa.svg)](https://codeclimate.com/github/andela-hpopoola/dms)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 # Document Management System (DMS)
 
 DMS is a modern full stack document management system, complete with roles and privileges. It creates a restful API for users to create and manage documents and for admins to manage users. 

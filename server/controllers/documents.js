@@ -1,6 +1,6 @@
 import { Documents } from '../models';
 import model from './../utils/model';
-import { DEFAULT, DOCUMENTS } from './../../constants';
+import { DOCUMENTS } from './../../constants';
 
 module.exports = {
   create(req, res) {
@@ -22,20 +22,37 @@ module.exports = {
   },
 
   getAll(req, res) {
-    const limit = req.query.limit || DEFAULT.LIMIT;
-    const offset = req.query.offset || DEFAULT.OFFSET;
     const whereQuery = {
       access: {
         // Not equal to private documents
         $ne: DOCUMENTS.PRIVATE
       }
     };
-    return model.getAll(req, res, 'Document', Documents, whereQuery, { limit, offset });
+    return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
   getOne(req, res) {
     const id = req.params.id;
-    return model.findOne(req, res, 'Document', Documents, { id });
+    return model.getOne(req, res, 'Document', Documents, { id });
+  },
+
+  public(req, res) {
+    const whereQuery = {
+      access: {
+        $eq: DOCUMENTS.PUBLIC
+      }
+    };
+    return model.getAll(req, res, 'Document', Documents, whereQuery);
+  },
+
+  role(req, res) {
+    const roleId = parseInt(res.locals.user.roleId, 10);
+    const whereQuery = {
+      access: {
+        $eq: roleId
+      },
+    };
+    return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
   update(req, res) {

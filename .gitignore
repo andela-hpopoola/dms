@@ -1,3 +1,11 @@
+**/bundle.js
+**/public/css/style.css
+*.eot
+*.woff
+*.woff2
+*.ttf
+*.svg
+
 # Logs
 logs
 *.log

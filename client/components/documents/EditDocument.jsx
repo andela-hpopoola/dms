@@ -1,11 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import TinyMCE from 'react-tinymce';
-import { getDocument, updateDocument } from './../../actions/documentActions';
+import { getDocument } from './../../actions/documentActions';
 import ProgressBar from './../../components/common/ProgressBar';
+import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
+// Require Editor JS files.
+require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
+// Require Editor CSS files.
+require('./../../../node_modules/froala-editor/css/froala_style.min.css');
+require('./../../../node_modules/froala-editor/css/froala_editor.pkgd.min.css');
+
+// Require Font Awesome.
+require('./../../../node_modules/font-awesome/css/font-awesome.css');
+
+const FroalaEditor = require('react-froala-wysiwyg');
 
 /**
  * @class EditDocument
@@ -22,11 +33,13 @@ class EditDocument extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: props.id,
       form: {},
+      model: 'starting text'
     };
     this.updateExistingDocument = this.updateExistingDocument.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
-    this.handleEditorChange = this.handleEditorChange.bind(this);
+    this.handleModelChange = this.handleModelChange.bind(this);
   }
 
   /**
@@ -34,7 +47,7 @@ class EditDocument extends Component {
    * @return {void} returns nothing
    */
   componentDidMount() {
-    this.props.actions.getDocument(this.props.params.id);
+    this.props.actions.getDocument(this.state.id);
   }
 
   /**
@@ -49,18 +62,16 @@ class EditDocument extends Component {
     return this.setState({ form });
   }
 
-  /**
+ /**
    * @desc Handle Editor change
-   * @param {object} event - the event of the editor
+   * @param {object} content - content from text editor
    * @return {string} the content
    */
-  handleEditorChange(event) {
-    const form = this.state;
-    form.content = event.target.getContent();
+  handleModelChange(content) {
+    const form = this.state.form;
+    form.content = content;
     return this.setState({ form });
-    // console.log('Content was updated:', e.target.getContent());
   }
-
   /**
    * @desc maps state to properties
    * @param {object} event - form event
@@ -68,7 +79,13 @@ class EditDocument extends Component {
    */
   updateExistingDocument(event) {
     event.preventDefault();
-    this.props.actions.updateDocument(this.state.form, this.props.currentDocument);
+    const form = this.state.form;
+    if (typeof form.content !== 'undefined' &&
+      (form.content.length < 6)) {
+      toastr.error('Document content must be greater than 6');
+    } else {
+      this.props.onUpdate(form, this.props.currentDocument);
+    }
   }
 
   /**
@@ -77,88 +94,97 @@ class EditDocument extends Component {
    */
   render() {
     const { currentDocument } = this.props;
-    const access = currentDocument.access;
+    let access = 'Role';
+    switch (currentDocument.access) {
+      case DOCUMENTS.PRIVATE:
+        access = 'Private';
+        break;
+
+      case DOCUMENTS.PUBLIC:
+        access = 'Public';
+        break;
+
+      default:
+        // no default
+    }
+
     return (
-      <div className="container">
-        <div className="row">
-          <div className="card col s12">
-            <div className="card-content">
-              <span className="card-title">EditDocument</span><br />
-              <div className="row">
-                <form className="col s12" onSubmit={this.updateExistingDocument}>
+      <div className="row">
+        <div className="card col s12">
+          <div className="card-content">
+            <span className="card-title">EditDocument</span><br />
+            <div className="row">
+              <form className="col s12" onSubmit={this.updateExistingDocument}>
 
-                  <h4>{currentDocument.title}</h4>
+                <h4>{currentDocument.title}</h4>
 
-                  {/* Title */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        className="validate"
-                        value={this.state.form.title || currentDocument.title}
-                        required="required"
-                        onChange={this.handleFormChange}
-                      />
-                      <label htmlFor="title" className="active">Title</label>
-                    </div>
+                {/* Title */}
+                <div className="row">
+                  <div className="input-field col s12">
+                    <input
+                      id="title"
+                      name="title"
+                      type="text"
+                      className="validate"
+                      value={this.state.form.title || currentDocument.title}
+                      required="required"
+                      onChange={this.handleFormChange}
+                      pattern=".{6,}"
+                      title="6 characters minimum"
+                    />
+                    <label htmlFor="title" className="active">Title</label>
                   </div>
+                </div>
 
-                  {/* Content */}
-                  <TinyMCE
-                    content={this.state.form.content || currentDocument.content}
-                    config={{
-                      plugins: 'link image code',
-                      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-                    }}
-                    onChange={this.handleEditorChange}
-                  />
-
-                  {/* Access */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <h6><strong>Access</strong></h6>
-                      <select
-                        name="access"
-                        className="browser-default"
-                        onChange={this.handleFormChange}
-                      >
-                        <option value={access}>
-                          Current Access Level ({access})
-                        </option>
-                        <option value="0">
-                          Document can be viewed by only me (Private)
-                        </option>
-                        <option value="-1">
-                          Document can be viewed by everyone (Public)
-                        </option>
-                        <option value={this.props.roleId}>
-                          Document can be viewed by same role (Role)
-                        </option>
-                      </select>
-                    </div>
+                {/* Content */}
+                <FroalaEditor
+                  tag="textarea"
+                  config={EDITOR_CONFIG}
+                  model={this.state.form.content || currentDocument.content}
+                  onModelChange={this.handleModelChange}
+                />
+                {/* Access */}
+                <div className="row">
+                  <div className="input-field col s12">
+                    <h6><strong>Access</strong></h6>
+                    <select
+                      name="access"
+                      className="browser-default"
+                      onChange={this.handleFormChange}
+                    >
+                      <option value={currentDocument.access}>
+                        Current Access Level ({access})
+                      </option>
+                      <option value="0">
+                        Document can be viewed by only me (Private)
+                      </option>
+                      <option value="-1">
+                        Document can be viewed by everyone (Public)
+                      </option>
+                      <option value={this.props.roleId}>
+                        Document can be viewed by same role (Role)
+                      </option>
+                    </select>
                   </div>
+                </div>
 
-                  <ProgressBar />
+                <ProgressBar />
 
-                  {/* Submit Button */}
-                  <button
-                    className="btn waves-effect waves-light"
-                    type="submit"
-                    name="submit"
-                  >
-                    Send
-                    <i className="material-icons right">send</i>
-                  </button>
+                {/* Submit Button */}
+                <button
+                  className="btn waves-effect waves-light"
+                  type="submit"
+                  name="submit"
+                >
+                  Send
+                  <i className="fa fa-right">send</i>
+                </button>
 
-                </form>
-              </div>
+              </form>
             </div>
           </div>
         </div>
       </div>
-
     );
   }
 }
@@ -167,14 +193,12 @@ class EditDocument extends Component {
  * Set the PropTypes for EditDocument
  */
 EditDocument.propTypes = {
-  params: PropTypes.shape({
-    id: PropTypes.string
-  }),
+  id: PropTypes.string.isRequired,
   roleId: PropTypes.number,
   actions: PropTypes.shape({
     getDocument: PropTypes.func,
-    updateDocument: PropTypes.func,
   }),
+  onUpdate: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
     id: PropTypes.number,
     userId: PropTypes.number,
@@ -190,7 +214,6 @@ EditDocument.propTypes = {
  * Sets default values for EditDocument Prototype
  */
 EditDocument.defaultProps = {
-  params: 1,
   actions: {},
   currentDocument: {},
   roleId: 0,
@@ -219,7 +242,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ updateDocument, getDocument }, dispatch)
+    actions: bindActionCreators({ getDocument }, dispatch)
   };
 }
 

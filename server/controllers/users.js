@@ -18,7 +18,7 @@ module.exports = {
 
   getOne(req, res) {
     const id = req.params.id;
-    return model.findOne(req, res, 'User', Users, { id });
+    return model.getOne(req, res, 'User', Users, { id });
   },
 
   update(req, res) {

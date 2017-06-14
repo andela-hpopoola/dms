@@ -15,6 +15,8 @@ module.exports = (app) => {
 
   app.post('/documents', users.authenticate, documents.create);
   app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents/public', users.authenticate, documents.public);
+  app.get('/documents/role', users.authenticate, documents.role);
   app.get('/documents/:id', users.authenticate, users.canManageDocument, documents.getOne);
   app.put('/documents/:id', users.authenticate, users.canManageDocument, documents.update);
   app.delete('/documents/:id', users.authenticate, users.canManageDocument, documents.delete);
@@ -22,7 +24,7 @@ module.exports = (app) => {
 
   app.get('/roles', users.authenticate, roles.getAll);
   app.post('/roles', users.authenticate, users.isSuperAdmin, roles.create);
-  app.get('/roles/:id', users.authenticate, users.isSuperAdmin, roles.getOne);
+  app.get('/roles/:id', roles.getOne);
   app.put('/roles/:id', users.authenticate, users.isSuperAdmin, roles.update);
   app.delete('/roles/:id', users.authenticate, users.isSuperAdmin, roles.delete);
 };

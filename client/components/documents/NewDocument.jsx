@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TinyMCE from 'react-tinymce';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import toastr from 'toastr';
-import { createDocument } from './../../actions/documentActions';
-import { DOCUMENTS } from './../../../constants';
+import { connect } from 'react-redux';
+import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
+// Require Editor JS files.
+require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
+// Require Editor CSS files.
+require('./../../../node_modules/froala-editor/css/froala_style.min.css');
+require('./../../../node_modules/froala-editor/css/froala_editor.pkgd.min.css');
+
+// Require Font Awesome.
+require('./../../../node_modules/font-awesome/css/font-awesome.css');
+
+const FroalaEditor = require('react-froala-wysiwyg');
 
 /**
  * @class NewDocument
@@ -17,30 +24,29 @@ class NewDocument extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the NewDocument Page
-   * @param {object} props - The property of the NewDocument Page
+  * @param {object} props - The property of the NewDocument Page
    * @constructor
    */
   constructor(props) {
     super(props);
     this.state = {
-      content: '',
+      model: '',
     };
     this.createNewDocument = this.createNewDocument.bind(this);
-    this.handleEditorChange = this.handleEditorChange.bind(this);
+    this.handleModelChange = this.handleModelChange.bind(this);
+  }
+
+ /**
+   * @desc Handle Editor change
+   * @param {object} content - the content of the editor
+   * @return {string} the content
+   */
+  handleModelChange(content) {
+    return this.setState({ content });
   }
 
   /**
-   * @desc Handle Editor change
-   * @param {object} event - the event of the editor
-   * @return {string} the content
-   */
-  handleEditorChange(event) {
-    const content = event.target.getContent();
-    return this.setState({ content });
-    // console.log('Content was updated:', e.target.getContent());
-  }
-  /**
-   * @desc maps state to properties
+   * @desc Create a New Document
    * @param {object} event - form event
    * @return {any} redirects document to dashboard or show error
    */
@@ -51,14 +57,10 @@ class NewDocument extends Component {
     const content = this.state.content || '';
     const access = event.target.access.value;
     const userId = this.props.userId;
-
-    // Validation
-    if (!this.state.content && (this.state.content.length < 6)) {
+    if (typeof content === 'undefined' || (content.length < 6)) {
       toastr.error('Enter a valid document content');
-    } else if (title.length < 6) {
-      toastr.error('Your title must be more than 6 characters');
     } else {
-      this.props.actions.createDocument({ title, content, access, userId });
+      this.props.onSubmit({ title, content, access, userId });
     }
   }
 
@@ -68,74 +70,67 @@ class NewDocument extends Component {
    */
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="card col s12">
-            <div className="card-content">
-              <span className="card-title">NewDocument</span><br />
+      <div className="card col s12">
+        <div className="card-content">
+          <div className="row">
+            <form className="col s12" onSubmit={this.createNewDocument}>
+
+              {/* Title */}
               <div className="row">
-                <form className="col s12" onSubmit={this.createNewDocument}>
-
-                  {/* Title */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <input
-                        id="title"
-                        name="title"
-                        type="text"
-                        className="validate"
-                        required="required"
-                      />
-                      <label htmlFor="title">Title</label>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <TinyMCE
-                    content=""
-                    config={{
-                      plugins: 'link image code',
-                      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-                    }}
-                    onChange={this.handleEditorChange}
+                <div className="input-field col s12">
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    className="validate"
+                    required="required"
+                    pattern=".{6,}"
+                    title="6 characters minimum"
                   />
-
-                  {/* Access */}
-                  <div className="row">
-                    <div className="input-field col s12">
-                      <h6><strong>Access</strong></h6>
-                      <select name="access" className="browser-default">
-                        <option value={DOCUMENTS.PRIVATE}>
-                          Document can be viewed by only me (Private)
-                        </option>
-                        <option value={DOCUMENTS.PUBLIC}>
-                          Document can be viewed by everyone (Public)
-                        </option>
-                        <option value={this.props.roleId}>
-                          Document can be viewed by same role (Role)
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-
-                  {/* Submit Button */}
-                  <button
-                    className="btn waves-effect waves-light"
-                    type="submit"
-                    name="submit"
-                  >
-                    Submit
-                    <i className="material-icons right">send</i>
-                  </button>
-
-                </form>
+                  <label htmlFor="title">Title</label>
+                </div>
               </div>
-            </div>
+
+              {/* Content */}
+              <FroalaEditor
+                tag="textarea"
+                config={EDITOR_CONFIG}
+                model={this.state.content}
+                onModelChange={this.handleModelChange}
+              />
+              {/* Access */}
+              <div className="row">
+                <div className="input-field col s12">
+                  <h6><strong>Access</strong></h6>
+                  <select name="access" className="browser-default">
+                    <option value={DOCUMENTS.PRIVATE}>
+                      Document can be viewed by only me (Private)
+                    </option>
+                    <option value={DOCUMENTS.PUBLIC}>
+                      Document can be viewed by everyone (Public)
+                    </option>
+                    <option value={this.props.roleId}>
+                      Document can be viewed by same role (Role)
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+
+              {/* Submit Button */}
+              <button
+                className="btn waves-effect waves-light"
+                type="submit"
+                name="submit"
+              >
+                Submit
+                <i className="fa fa-right">send</i>
+              </button>
+
+            </form>
           </div>
         </div>
       </div>
-
     );
   }
 }
@@ -146,16 +141,13 @@ class NewDocument extends Component {
 NewDocument.propTypes = {
   roleId: PropTypes.number,
   userId: PropTypes.number,
-  actions: PropTypes.shape({
-    createDocument: PropTypes.func,
-  }),
+  onSubmit: PropTypes.func.isRequired,
 };
 
 /**
  * Sets default values for NewDocument Prototype
  */
 NewDocument.defaultProps = {
-  actions: {},
   roleId: 0,
   userId: 0,
 };
@@ -178,11 +170,11 @@ function mapStateToProps(state) {
  * @param {object} dispatch - the action to dispatch
  * @return {object} actions
  */
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({ createDocument }, dispatch)
-  };
-}
+// function mapDispatchToProps(dispatch) {
+//   return {
+//     actions: bindActionCreators({ createDocument }, dispatch)
+//   };
+// }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewDocument);
+export default connect(mapStateToProps)(NewDocument);
 
