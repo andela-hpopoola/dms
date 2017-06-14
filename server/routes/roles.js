@@ -43,7 +43,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/roles', users.authenticate, roles.getAll);
 
@@ -70,7 +70,7 @@ module.exports = (app) => {
    *       412:
    *         description: Role cannot be created
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.post('/roles', users.authenticate, users.isSuperAdmin, roles.create);
 
@@ -99,7 +99,7 @@ module.exports = (app) => {
    *       404:
    *         description: Role not found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/roles/:id', roles.getOne);
 
@@ -125,7 +125,7 @@ module.exports = (app) => {
    *       404:
    *         description: Role cannot be found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.put('/roles/:id', users.authenticate, users.isSuperAdmin, roles.update);
 
@@ -151,7 +151,7 @@ module.exports = (app) => {
    *       404:
    *         description: Role cannot be found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.delete('/roles/:id', users.authenticate, users.isSuperAdmin, roles.delete);
 };
