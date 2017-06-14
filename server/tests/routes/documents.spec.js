@@ -12,11 +12,9 @@ const InputDocuments = require('./../../seeders/documents');
 const InputUsers = require('./../../seeders/users');
 const InputRoles = require('./../../seeders/roles');
 
-let token = '';
-let id = '';
+
 let adminId = '';
 let documentId = '';
-let roleId = '';
 let adminToken = '';
 
 
@@ -157,14 +155,77 @@ describe('Document Routes', () => {
       });
     });
 
-    describe('SEARCH /users/:id/documents', () => {
-      it('should not search when character is less than 3', (done) => {
-        request.get('/search/documents/?q=do')
+    describe('SEARCH /users/documents', () => {
+      it('should not retrieve unsaved documents', (done) => {
+        request.get('/search/documents/?q=')
           .set('x-auth', adminToken)
           .expect(401)
           .end((err) => {
             done(err);
           });
+      });
+    });
+
+    describe('SEARCH /users/:id/documents', () => {
+      it('should not search when character is less than 3', (done) => {
+        request.get('/search/documents/?q=')
+          .set('x-auth', adminToken)
+          .expect(401)
+          .end((err) => {
+            done(err);
+          });
+      });
+    });
+
+    describe('PUT /documents/', () => {
+      it('should be updated by user', (done) => {
+        const updatedDetails = {
+          title: 'Updated Name',
+        };
+        request.put(`/documents/${documentId}`)
+          .set('x-auth', adminToken)
+          .send(updatedDetails)
+          .expect(200, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should return an error when document is not found', (done) => {
+        request.delete('/documents/1321342343')
+          .set('x-auth', adminToken)
+          .expect(403, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should be unable to delete document', (done) => {
+        request.delete(`/documents/${documentId}`)
+          .set('x-auth', adminToken)
+          .expect(403, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should not delete invalid document', (done) => {
+        request.delete('/documents/0')
+          .set('x-auth', adminToken)
+          .expect(404, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should delete a valid document', (done) => {
+        request.delete(`/documents/${documentId}`)
+          .set('x-auth', adminToken)
+          .expect(404, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should not delete invalid document', (done) => {
+        request.delete('/documents/0')
+          .set('x-auth', adminToken)
+          .expect(404, done());
       });
     });
   });

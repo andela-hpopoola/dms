@@ -1,11 +1,18 @@
-checks: 
-  enabled: false
-  import/extensions: ~
-engines: 
-  eslint: 
+engines:
+  eslint:
     enabled: true
-  rubocop: 
-    enabled: false
+    checks:
+      import/extensions:
+        enabled: false
+      similar code:
+        enabled: false
+
+ratings:
+  paths:
+  - client/**
+  - server/**
+
 exclude_paths: 
-  - tests/
-  - public/
+  - server/tests/
+  - client/tests/
+  - client/public/

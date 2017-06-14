@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
+const routes = require('./server/routes');
 
 // Get all environment variables
 require('dotenv').config();
@@ -9,12 +10,15 @@ require('dotenv').config();
 const app = express();
 const port = parseInt(process.env.PORT, 10) || 8000;
 
-// Parse incoming requests data (https://github.com/expressjs/body-parser)
+// Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // Require our routes into the application.
-require('./server/routes')(app);
+routes.swagger(app);
+routes.users(app);
+routes.documents(app);
+routes.roles(app);
 
 app.use(express.static('client/public'));
 
