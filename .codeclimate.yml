@@ -1,17 +1,17 @@
-engines: 
+engines:
   eslint:
     enabled: true
-    config:
-      config: ./.eslintrc.json
-      extensions:
-        - .es6
-        - .js
-        - .jsx
-checks: 
-  import/extensions:
-    enabled: false
-  similar code:
-    enabled: false
+    checks:
+      import/extensions:
+        enabled: false
+      similar code:
+        enabled: false
+
+ratings:
+  paths:
+  - client/**
+  - server/**
+
 exclude_paths: 
   - server/tests/
   - client/tests/

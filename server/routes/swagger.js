@@ -10,7 +10,7 @@ module.exports = (app) => {
       version: '1.0.0',
       description: 'DMS is a full stack document management system, complete with roles and privileges.',
     },
-    host: 'localhost:8000',
+    host: 'http://haruna-dms.herokuapp.com/',
     basePath: '/',
   };
 
