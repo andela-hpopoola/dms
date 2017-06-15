@@ -50,9 +50,9 @@ class SearchForm extends Component {
             />
             <label htmlFor="search">Search for Documents</label>
           </div>
-          <div className="input-field col s12">
+          <div className="col s12">
             <button
-              className="btn  red darken-2 waves-effect waves-light"
+              className="btn white-text red darken-2 waves-effect waves-light btn-flat"
               type="submit"
             >
               Search

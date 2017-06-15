@@ -47,8 +47,14 @@ class Dashboard extends Component {
       id: 0,
       page: 'dashboard',
       search: false,
-      offset: 0
+      offset: 0,
+      total: {
+        myDocuments: 0,
+        publicDocuments: 0,
+        roleDocuments: 0
+      }
     };
+
     this.getDashboard = this.getDashboard.bind(this);
     this.getPublicDocuments = this.getPublicDocuments.bind(this);
     this.getRoleDocuments = this.getRoleDocuments.bind(this);
@@ -71,21 +77,12 @@ class Dashboard extends Component {
     this.deleteUserAlert = this.deleteUserAlert.bind(this);
     this.getAllUsers = this.getAllUsers.bind(this);
     this.getAllRoles = this.getAllRoles.bind(this);
+    this.getCurrentPage = this.getCurrentPage.bind(this);
 
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
     this.props.actions.getRoles();
   }
-
-  /**
-   * @desc Invoked before a component is mounted
-   * @return {void} returns nothing
-   */
-  // componentWillMount() {
-  //   if (auth.getToken()) {
-  //     this.props.actions.loginByToken();
-  //   }
-  // }
 
   /**
    * @desc Invoked immediately after a props is passed to document
@@ -138,6 +135,215 @@ class Dashboard extends Component {
       pageTitle: 'Personal Documents'
     });
   }
+  /**
+   * @desc Get the current page
+   * @param {string} pageName - the current page
+   * @return {void} returns nothing
+   */
+  getCurrentPage() {
+    const { user } = this.props;
+
+    const myDocumentsCount = this.props.user.documents.length;
+    const publicDocumentsCount = this.props.publicDocuments.length;
+    const roleDocumentsCount = this.props.roleDocuments.length;
+
+    const dashboard = (
+      <div>
+        <Col l={4} m={6} s={12} key="1">
+          <a onClick={this.getMyDocuments} href="/!#" className="card white">
+            <div className="card-content green-text">
+              <span className="card-title dashboard__title">Personal</span>
+              <strong className="dashboard__count">
+                {myDocumentsCount} Documents
+                <div className="right">
+                  <i className="fa fa-file fa-3x dashboard__icon" />
+                </div>
+              </strong>
+            </div>
+          </a>
+        </Col>
+        <Col l={4} m={6} s={12}>
+          <a onClick={this.getPublicDocuments} href="/!#" className="card white">
+            <div className="card-content red-text">
+              <span className="card-title dashboard__title">Public</span>
+              <strong className="dashboard__count">
+                {publicDocumentsCount} Documents
+                <div className="right">
+                  <i className="fa fa-file fa-3x dashboard__icon" />
+                </div>
+              </strong>
+            </div>
+          </a>
+        </Col>
+        <Col l={4} m={6} s={12} key="2">
+          <a onClick={this.getRoleDocuments} href="/!#" className="card white">
+            <div className="card-content blue-text">
+              <span className="card-title dashboard__title">Role</span>
+              <strong className="dashboard__count">
+                {roleDocumentsCount} Documents
+                <div className="right">
+                  <i className="fa fa-file fa-3x dashboard__icon" />
+                </div>
+              </strong>
+            </div>
+          </a>
+        </Col>
+      </div>
+    );
+
+    const newDocument = (
+      <div className="col s12">
+        <NewDocument onSubmit={this.createNewDocument} />
+      </div>
+    );
+
+    const editDocument = (
+      <div className="col s12">
+        <EditDocument onUpdate={this.editExistingDocument} id={this.state.id} />
+      </div>
+    );
+
+    const editProfile = (
+      <div className="col s12">
+        <EditProfile onUpdate={this.editUserProfile} user={this.props.user} />
+      </div>
+    );
+
+    const editRole = (
+      <div className="col s12">
+        <EditRole onUpdate={this.editExistingRole} id={this.state.id} />
+      </div>
+    );
+
+    const newRole = (
+      <div className="col s12">
+        <NewRole onSubmit={this.createNewRole} />
+      </div>
+    );
+
+    let content;
+    const currentPage = this.props.pagination.currentPage;
+    const total = this.props.pagination.total;
+    const defaultPageSize = this.props.pagination.limit;
+
+    switch (this.state.page) {
+      case 'new_document':
+        content = newDocument;
+        break;
+      case 'new_role':
+        content = newRole;
+        break;
+      case 'edit_document':
+        content = editDocument;
+        break;
+      case 'edit_profile':
+        content = editProfile;
+        break;
+      case 'edit_role':
+        content = editRole;
+        break;
+      case 'public_documents':
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.publicDocuments}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
+        break;
+      case 'role_documents':
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.roleDocuments}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
+        break;
+      case 'my_documents':
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.user.documents}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
+        break;
+      case 'search_documents':
+        content = (
+          <div>
+            <DocumentList
+              onEdit={this.editDocument}
+              onDelete={this.deleteDocumentAlert}
+              userId={user.id}
+              documents={this.props.searchItems}
+            />
+          </div>);
+        break;
+      case 'all_users':
+        content = (
+          <div>
+            <AllUsers
+              users={this.props.all.users}
+              count={this.props.pagination.offset}
+              roleId={this.props.user.roleId}
+              onChange={this.searchForUsers}
+              onDelete={this.deleteUserAlert}
+            />
+            <Pagination
+              onChange={this.onPaginateChange}
+              defaultPageSize={defaultPageSize}
+              current={currentPage}
+              total={total}
+            />
+          </div>
+        );
+        break;
+      case 'search_users':
+        content = (<AllUsers
+          users={this.props.searchItems}
+          roleId={this.props.user.roleId}
+          onChange={this.searchForUsers}
+          onDelete={this.deleteUserAlert}
+        />);
+        break;
+      case 'all_roles':
+        content = (<AllRoles roles={this.props.all.roles} />);
+        break;
+      case 'dashboard':
+      default:
+        content = dashboard;
+    }
+
+    return content;
+  }
 
   /**
    * @desc Get dashboard
@@ -146,6 +352,8 @@ class Dashboard extends Component {
    */
   getDashboard(event) {
     event.preventDefault();
+    this.props.actions.publicDocumentsDispatcher();
+    this.props.actions.roleDocumentsDispatcher();
     this.setState({
       pageTitle: `Welcome back ${this.props.user.name}`,
       search: false,
@@ -437,203 +645,7 @@ class Dashboard extends Component {
    */
   render() {
     const { user } = this.props;
-    const myDocumentsCount = this.props.user.documents.length;
-    const publicDocumentsCount = this.props.publicDocuments.length;
-    const roleDocumentsCount = this.props.roleDocuments.length;
-    const dashboard = (
-      <div>
-        <Col l={4} m={6} s={12} key="1">
-          <a onClick={this.getMyDocuments} href="/!#" className="card white">
-            <div className="card-content green-text">
-              <span className="card-title dashboard__title">Personal</span>
-              <strong className="dashboard__count">
-                {myDocumentsCount} Documents
-                <div className="right">
-                  <i className="fa fa-file fa-3x dashboard__icon" />
-                </div>
-              </strong>
-            </div>
-          </a>
-        </Col>
-        <Col l={4} m={6} s={12}>
-          <a onClick={this.getPublicDocuments} href="/!#" className="card white">
-            <div className="card-content red-text">
-              <span className="card-title dashboard__title">Public</span>
-              <strong className="dashboard__count">
-                {publicDocumentsCount} Documents
-                <div className="right">
-                  <i className="fa fa-file fa-3x dashboard__icon" />
-                </div>
-              </strong>
-            </div>
-          </a>
-        </Col>
-        <Col l={4} m={6} s={12} key="2">
-          <a onClick={this.getRoleDocuments} href="/!#" className="card white">
-            <div className="card-content blue-text">
-              <span className="card-title dashboard__title">Role</span>
-              <strong className="dashboard__count">
-                {roleDocumentsCount} Documents
-                <div className="right">
-                  <i className="fa fa-file fa-3x dashboard__icon" />
-                </div>
-              </strong>
-            </div>
-          </a>
-        </Col>
-      </div>
-    );
-
-    const newDocument = (
-      <div className="col s12">
-        <NewDocument onSubmit={this.createNewDocument} />
-      </div>
-    );
-
-    const editDocument = (
-      <div className="col s12">
-        <EditDocument onUpdate={this.editExistingDocument} id={this.state.id} />
-      </div>
-    );
-
-    const editProfile = (
-      <div className="col s12">
-        <EditProfile onUpdate={this.editUserProfile} user={this.props.user} />
-      </div>
-    );
-
-    const editRole = (
-      <div className="col s12">
-        <EditRole onUpdate={this.editExistingRole} id={this.state.id} />
-      </div>
-    );
-
-    const newRole = (
-      <div className="col s12">
-        <NewRole onSubmit={this.createNewRole} />
-      </div>
-    );
-
-    let content;
-    const currentPage = this.props.pagination.currentPage;
-    const total = this.props.pagination.total;
-    const defaultPageSize = this.props.pagination.limit;
-
-    switch (this.state.page) {
-      case 'new_document':
-        content = newDocument;
-        break;
-      case 'new_role':
-        content = newRole;
-        break;
-      case 'edit_document':
-        content = editDocument;
-        break;
-      case 'edit_profile':
-        content = editProfile;
-        break;
-      case 'edit_role':
-        content = editRole;
-        break;
-      case 'public_documents':
-        content = (
-          <div>
-            <DocumentList
-              onEdit={this.editDocument}
-              onDelete={this.deleteDocumentAlert}
-              userId={user.id}
-              documents={this.props.publicDocuments}
-            />
-            <Pagination
-              onChange={this.onPaginateChange}
-              defaultPageSize={defaultPageSize}
-              current={currentPage}
-              total={total}
-            />
-          </div>
-        );
-        break;
-      case 'role_documents':
-        content = (
-          <div>
-            <DocumentList
-              onEdit={this.editDocument}
-              onDelete={this.deleteDocumentAlert}
-              userId={user.id}
-              documents={this.props.roleDocuments}
-            />
-            <Pagination
-              onChange={this.onPaginateChange}
-              defaultPageSize={defaultPageSize}
-              current={currentPage}
-              total={total}
-            />
-          </div>
-        );
-        break;
-      case 'my_documents':
-        content = (
-          <div>
-            <DocumentList
-              onEdit={this.editDocument}
-              onDelete={this.deleteDocumentAlert}
-              userId={user.id}
-              documents={this.props.user.documents}
-            />
-            <Pagination
-              onChange={this.onPaginateChange}
-              defaultPageSize={defaultPageSize}
-              current={currentPage}
-              total={total}
-            />
-          </div>
-        );
-        break;
-      case 'search_documents':
-        content = (
-          <div>
-            <DocumentList
-              onEdit={this.editDocument}
-              onDelete={this.deleteDocumentAlert}
-              userId={user.id}
-              documents={this.props.searchItems}
-            />
-          </div>);
-        break;
-      case 'all_users':
-        content = (
-          <div>
-            <AllUsers
-              users={this.props.all.users}
-              count={this.props.pagination.offset}
-              roleId={this.props.user.roleId}
-              onChange={this.searchForUsers}
-              onDelete={this.deleteUserAlert}
-            />
-            <Pagination
-              onChange={this.onPaginateChange}
-              defaultPageSize={defaultPageSize}
-              current={currentPage}
-              total={total}
-            />
-          </div>
-        );
-        break;
-      case 'search_users':
-        content = (<AllUsers
-          users={this.props.searchItems}
-          roleId={this.props.user.roleId}
-          onChange={this.searchForUsers}
-          onDelete={this.deleteUserAlert}
-        />);
-        break;
-      case 'all_roles':
-        content = (<AllRoles roles={this.props.all.roles} />);
-        break;
-      case 'dashboard':
-      default:
-        content = dashboard;
-    }
+    const content = this.getCurrentPage();
 
     return (
       <div className="main-container">
@@ -713,7 +725,12 @@ class Dashboard extends Component {
                 </li>
                 <li className="collection-item">
                   <div>
-                    <button className="waves-effect waves-light btn-flat">Edit Profile</button>
+                    <button
+                      onClick={this.editProfile}
+                      className="waves-effect waves-light btn-flat"
+                    >
+                      Edit Profile
+                    </button>
                   </div>
                 </li>
               </ul>

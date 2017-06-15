@@ -177,7 +177,6 @@ class EditDocument extends Component {
                   name="submit"
                 >
                   Send
-                  <i className="fa fa-right">send</i>
                 </button>
 
               </form>

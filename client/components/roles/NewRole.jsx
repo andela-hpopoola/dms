@@ -68,7 +68,6 @@ class NewRole extends Component {
                 name="submit"
               >
                 Submit
-                <i className="fa fa-right">send</i>
               </button>
 
             </form>
