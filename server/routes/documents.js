@@ -7,8 +7,6 @@ module.exports = (app) => {
    * definitions:
    *   Documents:
    *     properties:
-   *       id:
-   *         type: integer
    *       userId:
    *         type: integer
    *       title:
