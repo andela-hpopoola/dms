@@ -3,6 +3,13 @@ import model from './../utils/model';
 import { DOCUMENTS } from './../../constants';
 
 module.exports = {
+
+  /**
+   * @desc Create a new document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   create(req, res) {
     return Documents
       .findOne({
@@ -21,6 +28,12 @@ module.exports = {
       );
   },
 
+  /**
+   * @desc Get all documents
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   getAll(req, res) {
     const whereQuery = {
       access: {
@@ -31,11 +44,23 @@ module.exports = {
     return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
+  /**
+   * @desc Get one document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   getOne(req, res) {
     const id = req.params.id;
     return model.getOne(req, res, 'Document', Documents, { id });
   },
 
+  /**
+   * @desc Gets all public documents
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   public(req, res) {
     const whereQuery = {
       access: {
@@ -45,6 +70,12 @@ module.exports = {
     return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
+  /**
+   * @desc Gets all role documents
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   role(req, res) {
     const roleId = parseInt(res.locals.user.roleId, 10);
     const whereQuery = {
@@ -55,16 +86,34 @@ module.exports = {
     return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
+  /**
+   * @desc Updates document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   update(req, res) {
     const id = req.params.id;
     return model.update(req, res, 'Document', Documents, { id });
   },
 
+  /**
+   * @desc Deletes document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   delete(req, res) {
     const id = req.params.id;
     return model.remove(req, res, 'Document', Documents, { id });
   },
 
+  /**
+   * @desc Search for document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   search(req, res) {
     const query = req.query.q;
     const userId = res.locals.user.id;

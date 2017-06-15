@@ -7,6 +7,8 @@ module.exports = (app) => {
    * definitions:
    *   Roles:
    *     properties:
+   *       id:
+   *         type: integer
    *       title:
    *         type: string
    */

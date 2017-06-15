@@ -7,6 +7,8 @@ module.exports = (app) => {
    * definitions:
    *   Users:
    *     properties:
+   *       id:
+   *         type: integer
    *       name:
    *         type: string
    *       password:
@@ -160,7 +162,7 @@ module.exports = (app) => {
    *       - application/json
    *     responses:
    *       200:
-   *        Logout Successful
+   *         description: Logout Successful
    */
   app.get('/users/logout', users.logout);
 

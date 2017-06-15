@@ -7,6 +7,8 @@ module.exports = (app) => {
    * definitions:
    *   Documents:
    *     properties:
+   *       id:
+   *         type: integer
    *       userId:
    *         type: integer
    *       title:
@@ -14,6 +16,26 @@ module.exports = (app) => {
    *       content:
    *         type: string
    *       access:
+   *         type: integer
+   *
+   *   Pagination:
+   *     properties:
+   *       data:
+   *         type: array
+   *       pagination:
+   *         $ref: '#/definitions/PaginationList'
+   *
+   *   PaginationList:
+   *     properties:
+   *       total:
+   *         type: integer
+   *       currentPage:
+   *         type: integer
+   *       totalPage:
+   *         type: integer
+   *       limit:
+   *         type: integer
+   *       offset:
    *         type: integer
    */
 
@@ -39,26 +61,6 @@ module.exports = (app) => {
    *         description: Successfully created
    *       412:
    *         description: Document cannot be created
-   *
-   *   Pagination:
-   *     properties:
-   *       data:
-   *         type: array
-   *       pagination:
-   *         $ref: '#/definitions/PaginationList'
-   *
-   *   PaginationList:
-   *     properties:
-   *       total:
-   *         type: integer
-   *       currentPage:
-   *         type: integer
-   *       totalPage:
-   *         type: integer
-   *       limit:
-   *         type: integer
-   *       offset:
-   *         type: integer
    */
   app.post('/documents', users.authenticate, documents.create);
 
@@ -153,7 +155,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    */
-  app.get('/documents/roles', users.authenticate, documents.role);
+  app.get('/documents/role', users.authenticate, documents.role);
 
   /**
    * @swagger
