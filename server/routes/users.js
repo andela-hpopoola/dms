@@ -7,6 +7,8 @@ module.exports = (app) => {
    * definitions:
    *   Users:
    *     properties:
+   *       id:
+   *         type: integer
    *       name:
    *         type: string
    *       password:
@@ -58,19 +60,9 @@ module.exports = (app) => {
    *       totalPage:
    *         type: integer
    *       limit:
-   *         limit: integer
+   *         type: integer
    *       offset:
    *         type: integer
-   */
-
-  // Security Schema definition
-  /**
-   * @swagger
-   * securityDefinitions:
-   *  x-auth:
-   *    type: apiKey
-   *    in: header
-   *    name: JWT-TOKEN
    */
 
   /**
@@ -155,8 +147,6 @@ module.exports = (app) => {
    *         description: Invalid Username or Password
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth:
    */
   app.get('/users/login/token', users.authenticate, users.loginByToken);
 
@@ -172,9 +162,7 @@ module.exports = (app) => {
    *       - application/json
    *     responses:
    *       200:
-   *        Logout Successful
-   *     security:
-   *     - x-auth:
+   *         description: Logout Successful
    */
   app.get('/users/logout', users.logout);
 
@@ -199,8 +187,6 @@ module.exports = (app) => {
    *         description: Users not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth:
    */
   app.get('/users', users.authenticate, users.isAdmin, users.getAll);
 
@@ -225,8 +211,6 @@ module.exports = (app) => {
    *         description: Users not found
    *       412:
    *         description: Exception Error
-   *     security:
-   *     - x-auth:
    */
   app.get('/users', users.authenticate, users.isAdmin, users.getAll);
 
@@ -253,8 +237,6 @@ module.exports = (app) => {
    *           $ref: '#/definitions/Users'
    *       404:
    *         description: User not found
-   *     security:
-   *     - x-auth:
    */
   app.get('/users/:id', users.authenticate, users.isAdminOrOwner, users.getOne);
 
@@ -279,8 +261,6 @@ module.exports = (app) => {
    *         description: Successfully updated
    *       404:
    *         description: User cannot be found
-   *     security:
-   *     - x-auth:
    */
   app.put('/users/:id', users.authenticate, users.isAdminOrOwner, users.update);
   /**
@@ -304,8 +284,6 @@ module.exports = (app) => {
    *         description: Successfully deleted
    *       404:
    *         description: User cannot be found
-   *     security:
-   *     - x-auth:
    */
   app.delete('/users/:id', users.authenticate, users.isSuperAdmin, users.delete);
 
@@ -328,8 +306,6 @@ module.exports = (app) => {
    *     responses:
    *       200:
    *         description: An array of all users document
-   *     security:
-   *     - x-auth:
    */
   app.get('/users/:id/documents', users.authenticate, users.isAdminOrOwner, users.getDocuments);
 
@@ -354,8 +330,6 @@ module.exports = (app) => {
    *         description: An array of all users
    *       404:
    *         description: No user found
-   *     security:
-   *     - x-auth:
    */
   app.get('/search/users/', users.authenticate, users.isAdmin, users.search);
 };

@@ -6,31 +6,67 @@ import { ROLES, DEFAULT } from './../../constants';
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 module.exports = {
+  /**
+   * @desc Create a new user
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   create(req, res) {
     return model.create(req, res, 'User', Users);
   },
 
+  /**
+   * @desc Get all Users
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   getAll(req, res) {
     const limit = req.query.limit || DEFAULT.LIMIT;
     const offset = req.query.offset || DEFAULT.OFFSET;
     return model.getAll(req, res, 'User', Users, {}, { limit, offset });
   },
 
+  /**
+   * @desc Get one user
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   getOne(req, res) {
     const id = req.params.id;
     return model.getOne(req, res, 'User', Users, { id });
   },
 
+  /**
+   * @desc Updates User
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   update(req, res) {
     const id = req.params.id;
     return model.update(req, res, 'User', Users, { id });
   },
 
+  /**
+   * @desc Deletes User
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   delete(req, res) {
     const id = req.params.id;
     return model.remove(req, res, 'User', Users, { id });
   },
 
+  /**
+   * @desc Search for User
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   search(req, res) {
     const query = req.query.q;
     return Users
@@ -61,6 +97,12 @@ module.exports = {
       );
   },
 
+  /**
+   * @desc Login User
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   login(req, res) {
     if (req.body.email && req.body.password) {
       const email = req.body.email;
@@ -92,10 +134,22 @@ module.exports = {
     }
   },
 
+  /**
+   * @desc Logout User
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   logout(req, res) {
     return res.json({ msg: 'You have successfully logged out' });
   },
 
+  /**
+   * @desc Login User by JWT TOKEN
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   loginByToken(req, res) {
     const token = req.header('x-auth');
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
@@ -120,6 +174,13 @@ module.exports = {
       .catch(error => res.status(404).json({ msg: error.message }));
   },
 
+  /**
+   * @desc Authenticates User by JWT Token
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   authenticate(req, res, next) {
     const token = req.header('x-auth');
     let decoded = { };
@@ -145,6 +206,14 @@ module.exports = {
     return res.status(401).json({ msg: 'Invalid Token' });
   },
 
+
+  /**
+   * @desc Checks if User is an Administrator
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   isAdmin(req, res, next) {
     const roleId = parseInt(res.locals.user.roleId, 10);
     if ((roleId === ROLES.SUPERADMIN) || (roleId === ROLES.ADMIN)) {
@@ -154,6 +223,14 @@ module.exports = {
     }
   },
 
+
+  /**
+   * @desc Checks if User is a Super Administrator
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   isSuperAdmin(req, res, next) {
     const roleId = parseInt(res.locals.user.roleId, 10);
     if (roleId === ROLES.SUPERADMIN) {
@@ -163,6 +240,14 @@ module.exports = {
     }
   },
 
+
+  /**
+   * @desc Check if User is the owner of accessed resources
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   isOwner(req, res, next) {
     const userId = parseInt(res.locals.user.id, 10);
     const requestId = parseInt(req.params.id, 10);
@@ -174,6 +259,14 @@ module.exports = {
     return res.status(403).json({ msg: 'Unauthorized Access ' });
   },
 
+
+  /**
+   * @desc Check if User is an Admin or Owner of resources
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   isAdminOrOwner(req, res, next) {
     const userId = parseInt(res.locals.user.id, 10);
     const requestId = parseInt(req.params.id, 10);
@@ -187,6 +280,14 @@ module.exports = {
     }
   },
 
+
+  /**
+   * @desc Check if a User can manage a document
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {object} next - Move to the next action
+   * @return {object} json response
+   */
   canManageDocument(req, res, next) {
     const userId = parseInt(res.locals.user.id, 10);
     const roleId = parseInt(res.locals.user.roleId, 10);
@@ -211,6 +312,13 @@ module.exports = {
       );
   },
 
+
+  /**
+   * @desc Gets all User Documents
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
   getDocuments(req, res) {
     return Users
       .find({

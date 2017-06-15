@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const salt = bcrypt.genSaltSync();
 
+// Test Seeders
 module.exports = {
   SuperAdmin: {
     name: 'SuperAdmin',

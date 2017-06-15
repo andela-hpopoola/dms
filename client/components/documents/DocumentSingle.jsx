@@ -14,6 +14,7 @@ const DocumentSingle = (props) => {
   const { document } = props;
   const documentExtract = strip(document.content.slice(0, 200));
   let access = 'Role';
+  let color = 'blue';
   let userDocument = false;
 
   if (document.userId === props.userId) {
@@ -22,15 +23,18 @@ const DocumentSingle = (props) => {
   switch (document.access) {
     case DOCUMENTS.PRIVATE:
       access = 'Private';
+      color = 'red';
       break;
 
     case DOCUMENTS.PUBLIC:
       access = 'Public';
+      color = 'green darken-2';
       break;
 
     default:
       // no default
   }
+  const accessClass = `card ${color} darken-2 card__top ${access}`;
   const handleClick = (event) => {
     event.preventDefault();
     props.onEdit(event.target.id);
@@ -41,9 +45,9 @@ const DocumentSingle = (props) => {
   };
   return (
     <div className="col m6 l4 s12">
-      <div className="card red darken-1 card__top">
+      <div className={accessClass}>
         <div className="card-content">
-          <div className="document__access">
+          <div className="document__access white-text">
             {access}
             <div className="right">
               {userDocument &&
@@ -51,37 +55,40 @@ const DocumentSingle = (props) => {
                   onClick={handleDelete}
                   id={document.id}
                   href="/#!"
-                  className="document__delete"
+                  className="document__delete white-text"
                 >
-                  Delete
+                  <i className="fa fa-trash" />
                 </a>
               }
             </div>
           </div>
-          <span className="card-title">{document.title}</span>
-          <div className="document__date">
+          <span className="card-title white-text document__title  truncate">{document.title}</span>
+          <div className="document__dated white-text">
             Published: {document.createdAt.slice(0, 10)}
           </div>
         </div>
       </div>
       <div className="card white darken-1 card__bottom">
         <div className="card-content">
-          <div className="document__content">
+          <div className="document__content truncate">
             {documentExtract}
           </div>
         </div>
         <div className="card-action">
-          {userDocument &&
-          <a
-            onClick={handleClick}
-            id={document.id}
-            href="/#!"
-            className="document__edit waves-effect waves-teal btn-flat"
-          >
-            Edit
-          </a>
-          }
-          <div className="right">
+          <div className="left">
+            &nbsp;
+            {userDocument &&
+              <a
+                onClick={handleClick}
+                id={document.id}
+                href="/#!"
+                className="document__edit waves-effect waves-teal btn-flat"
+              >
+                Edit
+              </a>
+            }
+          </div>
+          <div className="right-align">
             <Modal
               header={document.title}
               trigger={<Button waves="light">Read</Button>}

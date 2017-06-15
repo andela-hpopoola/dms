@@ -2,6 +2,15 @@
 import { DEFAULT } from './../../constants';
 
 module.exports = {
+  /**
+   * @desc Gets all items from model
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {string} name - The name to use for messages
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {object} json response
+   */
   getAll(req, res, name, Model, where = {}) {
     /**
      * Calculate the pagination
@@ -42,6 +51,15 @@ module.exports = {
     }
   },
 
+  /**
+   * @desc Gets one item from model
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {string} name - The name to use for messages
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {object} json response
+   */
   getOne(req, res, name, Model, where = {}) {
     Model
       .findOne({ where })
@@ -57,21 +75,14 @@ module.exports = {
       });
   },
 
-  get(req, res, name, Model, where = {}) {
-    Model
-      .find({ where })
-      .then((result) => {
-        if (result) {
-          res.json(result);
-        } else {
-          res.status(404).json({ msg: `${name} not found` });
-        }
-      })
-      .catch((error) => {
-        res.status(412).json({ msg: error.message });
-      });
-  },
-
+  /**
+   * @desc Create item from model
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {string} name - The name to use for messages
+   * @param {object} Model - The model to perform action on
+   * @return {object} json response
+   */
   create(req, res, name, Model) {
     Model
       .create(req.body)
@@ -87,6 +98,15 @@ module.exports = {
       });
   },
 
+  /**
+   * @desc Update item from model
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {string} name - The name to use for messages
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {object} json response
+   */
   update(req, res, name, Model, where = {}) {
     Model
       .findOne({ where }).then((result) => {
@@ -105,6 +125,15 @@ module.exports = {
       });
   },
 
+  /**
+   * @desc Removes item from model
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @param {string} name - The name to use for messages
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {object} json response
+   */
   remove(req, res, name, Model, where = {}) {
     Model
       .findOne({ where }).then((result) => {

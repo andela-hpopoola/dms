@@ -36,9 +36,19 @@ body {
 }
 
 .collection-header h4{
-  font-size: 18px !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
   margin: 5px !important;
+}
+
+.collection-item a, .collection-item span {
+  color: #555;
+  font-size: 13px;
+}
+
+.search-card {
+  padding: 10px 20px;
+  border: 1px solid #e0e0e0;
 }
 
 .card {
@@ -52,7 +62,7 @@ body {
     border-radius: 0 0 2px 2px;
   }
   .card-title {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     color: black;
   }
@@ -81,4 +91,13 @@ body {
 
 .top__space {
   margin-top: 50px !important;
+}
+
+.document__title {
+  height: 150px;
+  padding-top: 20px;
+  line-height: 1.6 !important;
+  overflow: hidden;
+  color: white;
+  vertical-align: bottom;
 }
