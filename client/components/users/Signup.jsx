@@ -62,7 +62,8 @@ class Signup extends Component {
     return (
       <div className="container">
         <div className="row">
-          <div className="card col s12">
+          <div><br /><br /></div>
+          <div className="card col s12 offset-l3 l6 offset-m2 m8">
             <div className="card-content">
               <span className="card-title">Signup</span><br />
               <div className="row">

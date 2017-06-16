@@ -685,7 +685,7 @@ class Dashboard extends Component {
                 <li className="collection-item">
                   <div>
                     <a onClick={this.loadNewDocument} href="/!#">
-                      New Documents
+                      New Document
                     </a>
                   </div>
                 </li>
