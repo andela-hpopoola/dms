@@ -36,13 +36,12 @@ Users can perform the following actions with the application
   - View All Documents (All Documents)
 
 Admin can perform all users actions and the following actions
-  - Edit public documents
   - Search for Users
   - Search for documents
 
 Super Admin can perform all admin and users actions and the following actions
-  - Create roles
-  - Edit roles
+  - Create Roles
+  - View Roles
 
 #### Documents
 A single document has the following properties
@@ -56,6 +55,9 @@ The application contains 3 roles by default
   - SuperAdmin
   - Admin
   - User
+
+#### API Documentation
+The API has been documented with swagger. You can view the online doucumention via [https://haruna-dms.herokuapp.com/api-docs/](https://haruna-dms.herokuapp.com/api-docs/)
 
 #### Authentication
 The api endpoints are protected from authorized access. The unprotected endpoint are the signup and login endpoint. JWT token is used to protect the application against unauthorized access. Some of the endpoints are also protected by roles.
@@ -101,8 +103,11 @@ https://github.com/andela-hpopoola/dms.git
 ```
 $ npm install
 ```
+4.  Create Postgresql database and run migrations `npm run db:migrations`.
 
-4. Start the application:
+5. Create a `.env` file by using the sample env file `.env.sample` in the root directory of the application. Use a different Database for your testing and development.
+
+6. Start the application:
 
 ```
 http://localhost:8000/
@@ -126,8 +131,7 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 ## Limitations
 
 1. Superadmin cannot customize a new role
-2. A notification is not send to the user when his public document is edited
-3. A number of people that have view a public document is tracked.
+2. The number of people that view a public document is tracked.
 
 
 ## Licence

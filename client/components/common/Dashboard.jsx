@@ -653,7 +653,7 @@ class Dashboard extends Component {
 
             <div className="card white">
               <ul className="collection with-header">
-                <li className="collection-header"><h4>Menu</h4></li>
+                <li className="collection-header"><h4>Quick Links</h4></li>
                 <li className="collection-item">
                   <div>
                     <a onClick={this.getDashboard} href="/!#">
@@ -706,7 +706,7 @@ class Dashboard extends Component {
 
             <div className="card white">
               <ul className="collection with-header">
-                <li className="collection-header"><h4>Menu</h4></li>
+                <li className="collection-header"><h4>User Profile</h4></li>
                 <li className="collection-item">
                   <div>
                     Name: {user.name}
@@ -741,20 +741,6 @@ class Dashboard extends Component {
                   <li className="collection-header"><h4>ADMINISTRATOR</h4></li>
                   <li className="collection-item">
                     <div>
-                      <a onClick={this.loadNewRole} href="/!#">
-                        New Roles
-                      </a>
-                    </div>
-                  </li>
-                  <li className="collection-item">
-                    <div>
-                      <a onClick={this.getAllRoles} href="/!#">
-                        All Roles
-                      </a>
-                    </div>
-                  </li>
-                  <li className="collection-item">
-                    <div>
                       <a onClick={this.getAllUsers} href="/!#">
                         All Users
                       </a>
@@ -772,6 +758,13 @@ class Dashboard extends Component {
                     <div>
                       <a onClick={this.loadNewRole} href="/!#">
                         New Roles
+                      </a>
+                    </div>
+                  </li>
+                  <li className="collection-item">
+                    <div>
+                      <a onClick={this.getAllRoles} href="/!#">
+                        All Roles
                       </a>
                     </div>
                   </li>
