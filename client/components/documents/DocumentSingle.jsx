@@ -14,7 +14,7 @@ const DocumentSingle = (props) => {
   const { document } = props;
   const documentExtract = strip(document.content.slice(0, 200));
   let access = 'Role';
-  let color = 'blue';
+  let color = 'blue role';
   let userDocument = false;
 
   if (document.userId === props.userId) {
@@ -23,12 +23,12 @@ const DocumentSingle = (props) => {
   switch (document.access) {
     case DOCUMENTS.PRIVATE:
       access = 'Private';
-      color = 'red';
+      color = 'red private';
       break;
 
     case DOCUMENTS.PUBLIC:
       access = 'Public';
-      color = 'green darken-2';
+      color = 'green public darken-2';
       break;
 
     default:

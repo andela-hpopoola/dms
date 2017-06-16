@@ -20,6 +20,45 @@ export const LIMIT = {
   DOCUMENTS: 10
 };
 
+export const MOCK_DOCUMENTS = {
+  PRIVATE: {
+    id: 1,
+    title: 'Private Document',
+    content: 'Private Content',
+    userId: 1,
+    roleId: ROLES.SUPERADMIN,
+    access: DOCUMENTS.PRIVATE,
+    createdAt: '2017-12-30'
+  },
+  PUBLIC: {
+    id: 2,
+    title: 'Public Document',
+    content: 'Public Content',
+    userId: 2,
+    roleId: ROLES.ADMIN,
+    access: DOCUMENTS.PUBLIC,
+    createdAt: '2017-12-30'
+  },
+  ROLE: {
+    id: 3,
+    title: 'ROLE Document',
+    content: 'ROLE Content',
+    userId: 2,
+    roleId: ROLES.USER,
+    access: 3,
+    createdAt: '2017-12-30'
+  },
+  ANOTHER_USER: {
+    id: 3,
+    title: 'Another User Document',
+    content: 'Another User Content',
+    userId: 2,
+    roleId: ROLES.USER,
+    access: 3,
+    createdAt: '2017-12-30'
+  },
+};
+
 export const EDITOR_CONFIG = {
   height: 350,
   toolbarButtons: [

@@ -15,7 +15,7 @@ const progressBarContainer = (
  * @param {object} props default properties
  * @returns {jsx} the page ProgressBar
  */
-const ProgressBar = (props) => {
+export const ProgressBar = (props) => {
   const { showProgressBar } = props;
   return (
     <div className="progressBarContainer">

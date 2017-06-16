@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Nav from './../layout/Nav';
+import Footer from './../layout/Footer';
 
 /**
  * @desc Set the PropTypes for Main
@@ -11,6 +12,7 @@ const Main = props => (
   <div className="main">
     <Nav />
     { props.children }
+    <Footer />
   </div>
 );
 
@@ -18,7 +20,15 @@ const Main = props => (
  * Set the PropTypes for Main
  */
 Main.propTypes = {
-  children: PropTypes.element.isRequired
+  children: PropTypes.element
 };
+
+/**
+ * Sets default values for Main Prototype
+ */
+Main.defaultProps = {
+  children: null
+};
+
 
 export default Main;

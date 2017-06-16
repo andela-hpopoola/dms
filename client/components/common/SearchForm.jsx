@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 /**
  * @class SearchForm
@@ -37,7 +36,7 @@ class SearchForm extends Component {
    */
   render() {
     return (
-      <form onSubmit={this.handleSearch}>
+      <form className="searchForm" onSubmit={this.handleSearch}>
         <div className="row">
           <div className="input-field col s12">
             <input
@@ -71,16 +70,5 @@ SearchForm.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-/**
- * @desc maps state to properties
- * @param {object} state - the current state of application
- * @return {object} mapped properties
- */
-function mapStateToProps(state) {
-  return {
-    roleId: state.user.roleId,
-  };
-}
-
-export default connect(mapStateToProps)(SearchForm);
+export default SearchForm;
 
