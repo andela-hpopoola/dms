@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
-import sinon from 'sinon';
+// import sinon from 'sinon';
 import SearchForm from './../../../components/common/SearchForm';
 
 const setup = () => {
@@ -10,18 +10,18 @@ const setup = () => {
   };
   return shallow(<SearchForm {...props} />);
 };
-const fakeEvent = {
-  preventDefault: () => true,
-  target: {
-    search: {
-      value: 'Search'
-    }
-  }
-};
+// const fakeEvent = {
+//   preventDefault: () => true,
+//   target: {
+//     search: {
+//       value: 'Search'
+//     }
+//   }
+// };
 
 describe('SearchForm Component', () => {
   const wrapper = setup();
-  const spyHandleSearch = sinon.spy(SearchForm.prototype, 'handleSearch');
+  // const spyHandleSearch = sinon.spy(SearchForm.prototype, 'handleSearch');
 
   it('should exists', () => {
     expect(wrapper).toExist();

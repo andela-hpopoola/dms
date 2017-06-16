@@ -12,7 +12,7 @@ import { DOCUMENTS } from './../../../constants';
  */
 const DocumentSingle = (props) => {
   const { document } = props;
-  const documentExtract = strip(document.content.slice(0, 200));
+  const documentExtract = strip(document.content.slice(0, 180));
   let access = 'Role';
   let color = 'blue role';
   let userDocument = false;
@@ -35,13 +35,25 @@ const DocumentSingle = (props) => {
       // no default
   }
   const accessClass = `card ${color} darken-2 card__top ${access}`;
+
+  /**
+   * @desc Sends back the edit document id
+   * @param {event} event - event handler
+   * @return {event} - event
+   */
   const handleClick = (event) => {
     event.preventDefault();
     props.onEdit(event.target.id);
   };
+
+  /**
+   * @desc Sends back the delete document id
+   * @param {event} event - event handler
+   * @return {event} - event
+   */
   const handleDelete = (event) => {
     event.preventDefault();
-    props.onDelete(event.target.id, 'Document');
+    props.onDelete(event.target.id);
   };
   return (
     <div className="col m6 l4 s12">
@@ -53,25 +65,27 @@ const DocumentSingle = (props) => {
               {userDocument &&
                 <a
                   onClick={handleDelete}
-                  id={document.id}
                   href="/#!"
-                  className="document__delete white-text"
+                  className="white-text"
                 >
-                  <i className="fa fa-trash" />
+                  <i
+                    id={document.id}
+                    className="fa fa-trash document__delete"
+                  />
                 </a>
               }
             </div>
           </div>
-          <span className="card-title white-text document__title  truncate">{document.title}</span>
-          <div className="document__dated white-text">
-            Published: {document.createdAt.slice(0, 10)}
-          </div>
+          <span className="card-title white-text document__title">{document.title}</span>
         </div>
       </div>
       <div className="card white darken-1 card__bottom">
         <div className="card-content">
-          <div className="document__content truncate">
+          <div className="document__content">
             {documentExtract}
+          </div>
+          <div className="document__dated">
+            Published: {document.createdAt.slice(0, 10)}
           </div>
         </div>
         <div className="card-action">
@@ -82,7 +96,7 @@ const DocumentSingle = (props) => {
                 onClick={handleClick}
                 id={document.id}
                 href="/#!"
-                className="document__edit waves-effect waves-teal btn-flat"
+                className="document__edit"
               >
                 Edit
               </a>

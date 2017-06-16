@@ -5,8 +5,8 @@ import React from 'react';
  * @return {jsx} returns jsx page component
  */
 const Footer = () => (
-  <footer className="page-footer">
-    <div className="footer-copyright">
+  <footer className="page-footer red darken-2">
+    <div className="footer-copyright red darken-2">
       <div className="container">
       Copyright &copy; 2017 Haruna Popoola
       </div>

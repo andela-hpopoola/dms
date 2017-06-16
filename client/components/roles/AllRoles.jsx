@@ -18,10 +18,12 @@ const AllRoles = (props) => {
     />)
   );
   return (
-    <div className="row">
-      <table>
-        { allRoles }
-      </table>
+    <div className="row card">
+      <div className="card-content">
+        <table className="bordered highlight responsive-table">
+          { allRoles }
+        </table>
+      </div>
     </div>
   );
 };

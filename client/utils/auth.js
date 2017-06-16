@@ -1,5 +1,4 @@
-// make localstorage a global variable
-const localStorage = global.window.localStorage;
+/* eslint-disable */
 const tokenName = 'dms_token';
 // save token in the localstorage
 export const setToken = (token) => {

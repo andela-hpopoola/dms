@@ -8,11 +8,11 @@ import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 import DocumentList from './../documents/DocumentList';
 import NewDocument from './../documents/NewDocument';
-import EditDocument from './../documents/EditDocument';
+import EditDocument from './../documents/EditDocument'; // eslint-disable-line
 import EditProfile from './../users/EditProfile';
 import NewRole from './../roles/NewRole';
 import EditRole from './../roles/EditRole';
-import ProgressBar from './../../components/common/ProgressBar';
+import ProgressBar from './../../components/common/ProgressBar'; // eslint-disable-line
 import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
 import AllUsers from './../users/AllUsers';
@@ -46,6 +46,7 @@ class Dashboard extends Component {
     this.state = {
       id: 0,
       page: 'dashboard',
+      username: '',
       search: false,
       offset: 0,
       total: {
@@ -79,8 +80,6 @@ class Dashboard extends Component {
     this.getAllRoles = this.getAllRoles.bind(this);
     this.getCurrentPage = this.getCurrentPage.bind(this);
 
-    this.props.actions.publicDocumentsDispatcher();
-    this.props.actions.roleDocumentsDispatcher();
     this.props.actions.getRoles();
   }
 
@@ -100,7 +99,12 @@ class Dashboard extends Component {
         }
       }
     }
+
+    if (this.props.user.name !== nextProps.user.name) {
+      this.setState({ username: nextProps.user.name });
+    }
   }
+
   /**
    * @desc Get items when pagination change
    * @param {number} page - the current page
@@ -287,12 +291,6 @@ class Dashboard extends Component {
               userId={user.id}
               documents={this.props.user.documents}
             />
-            <Pagination
-              onChange={this.onPaginateChange}
-              defaultPageSize={defaultPageSize}
-              current={currentPage}
-              total={total}
-            />
           </div>
         );
         break;
@@ -355,7 +353,6 @@ class Dashboard extends Component {
     this.props.actions.publicDocumentsDispatcher();
     this.props.actions.roleDocumentsDispatcher();
     this.setState({
-      pageTitle: `Welcome back ${this.props.user.name}`,
       search: false,
       page: 'dashboard'
     });
@@ -429,7 +426,7 @@ class Dashboard extends Component {
     event.preventDefault();
     this.setState({
       page: 'new_document',
-      page_title: 'New Document'
+      pageTitle: 'New Document'
     });
   }
 
@@ -453,8 +450,7 @@ class Dashboard extends Component {
   createNewDocument(data) {
     this.props.actions.createDocument(data);
     this.setState({
-      page: 'dashboard',
-      pageTitle: `Welcome back ${this.props.user.name}`,
+      page: 'dashboard'
     });
   }
 
@@ -466,8 +462,7 @@ class Dashboard extends Component {
   createNewRole(data) {
     this.props.actions.createRole(data);
     this.setState({
-      page: 'dashboard',
-      pageTitle: `Welcome back ${this.props.user.name}`,
+      page: 'dashboard'
     });
   }
 
@@ -479,6 +474,7 @@ class Dashboard extends Component {
   editDocument(id) {
     this.setState({
       page: 'edit_document',
+      pageTitle: 'Edit Document',
       id
     });
   }
@@ -517,8 +513,7 @@ class Dashboard extends Component {
     // Validation
     this.props.actions.updateDocument(updatedDocument, currentDocument);
     this.setState({
-      page: 'dashboard',
-      pageTitle: `Welcome back ${this.props.user.name}`
+      page: 'dashboard'
     });
   }
 
@@ -531,8 +526,7 @@ class Dashboard extends Component {
   editUserProfile(updatedProfile, currentProfile) {
     this.props.actions.updateProfile(updatedProfile, currentProfile);
     this.setState({
-      page: 'dashboard',
-      pageTitle: `Welcome back ${this.props.user.name}`,
+      page: 'dashboard'
     });
   }
 
@@ -546,7 +540,6 @@ class Dashboard extends Component {
     this.props.actions.updateRole(updatedRole, currentRole);
     this.setState({
       page: 'dashboard',
-      pageTitle: `Welcome back ${this.props.user.name}`
     });
   }
 
@@ -645,6 +638,12 @@ class Dashboard extends Component {
    */
   render() {
     const { user } = this.props;
+    if (this.state.page === 'dashboard') {
+      if (this.state.username === '') {
+        this.state.username = this.props.user.name;
+      }
+      this.state.pageTitle = `Welcome back ${this.state.username}`;
+    }
     const content = this.getCurrentPage();
 
     return (
@@ -786,7 +785,7 @@ class Dashboard extends Component {
             <div className="row">
               <div className="col s12">
                 <h3 className="document__number">
-                  {this.state.pageTitle || `Welcome back ${this.props.user.name}`}
+                  {this.state.pageTitle || `Welcome back ${this.state.username}`}
                 </h3>
               </div>
             </div>

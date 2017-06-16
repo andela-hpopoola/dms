@@ -111,11 +111,10 @@ export class EditDocument extends Component {
       <div className="row">
         <div className="card col s12">
           <div className="card-content">
-            <span className="card-title">EditDocument</span><br />
             <div className="row">
               <form className="col s12" onSubmit={this.updateExistingDocument}>
 
-                <h4>{currentDocument.title}</h4>
+                <h4 className="card-title">{currentDocument.title}</h4>
 
                 {/* Title */}
                 <div className="row">

@@ -79,6 +79,7 @@ class AllUsers extends Component {
                 <th>S/N</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Date Created</th>
                 <th />
               </tr>
             </thead>
