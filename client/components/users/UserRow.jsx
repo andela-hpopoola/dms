@@ -24,6 +24,7 @@ const UserRow = (props) => {
       <td>{index}</td>
       <td>{user.name}</td>
       <td>{user.email}</td>
+      <td>{user.createdAt.slice(0, 10)}</td>
       <td>
         {
           superAccess &&

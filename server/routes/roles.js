@@ -32,7 +32,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    */
-  app.get('/roles', users.authenticate, roles.getAll);
+  app.get('/roles', roles.getAll);
 
   /**
    * @swagger

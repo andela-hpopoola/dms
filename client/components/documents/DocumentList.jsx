@@ -25,7 +25,7 @@ const DocumentList = (props) => {
   }
 
   return (
-    <div className="row">
+    <div className="row document__list">
       { allDocuments }
     </div>
   );

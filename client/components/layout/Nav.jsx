@@ -29,11 +29,11 @@ const notloggedInList = (
  * @param {object} props default properties
  * @returns {jsx} the page navigation
  */
-const Nav = (props) => {
+export const Nav = (props) => {
   const { userIsLoggedIn } = props;
   return (
     <div className="navbar-fixed">
-      <nav className="row  red darken-2">
+      <nav className="row red darken-2">
         <div className="nav-wrapper col s12">
           <div className="main-container">
             { userIsLoggedIn }

@@ -141,7 +141,7 @@ module.exports = {
    * @return {object} json response
    */
   logout(req, res) {
-    return res.json({ msg: 'You have successfully logged out' });
+    return res.header('x-auth', '').json({ msg: 'You have successfully logged out' });
   },
 
   /**
@@ -197,7 +197,7 @@ module.exports = {
         .findOne({ where: { email } })
         .then((user) => {
           if (!user) {
-            res.status(404).json({ msg: 'User not found' });
+            res.status(404).json({ msg: 'Token cannot be verified' });
           }
           res.locals.user = user;
           next();

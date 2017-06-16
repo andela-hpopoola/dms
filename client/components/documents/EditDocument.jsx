@@ -4,7 +4,6 @@ import toastr from 'toastr';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getDocument } from './../../actions/documentActions';
-import ProgressBar from './../../components/common/ProgressBar';
 import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
 // Require Editor JS files.
@@ -23,7 +22,7 @@ const FroalaEditor = require('react-froala-wysiwyg');
  * @desc Class to display the EditDocument Page
  * @extends React.Component
  */
-class EditDocument extends Component {
+export class EditDocument extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the EditDocument Page
@@ -112,11 +111,10 @@ class EditDocument extends Component {
       <div className="row">
         <div className="card col s12">
           <div className="card-content">
-            <span className="card-title">EditDocument</span><br />
             <div className="row">
               <form className="col s12" onSubmit={this.updateExistingDocument}>
 
-                <h4>{currentDocument.title}</h4>
+                <h4 className="card-title">{currentDocument.title}</h4>
 
                 {/* Title */}
                 <div className="row">
@@ -167,8 +165,6 @@ class EditDocument extends Component {
                     </select>
                   </div>
                 </div>
-
-                <ProgressBar />
 
                 {/* Submit Button */}
                 <button

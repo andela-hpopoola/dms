@@ -111,9 +111,9 @@ export function login(user) {
     dispatch(ajaxCallStart());
     api.post('/users/login', user).then((result) => {
       if (result.status === 200) {
+        dispatch(authenticateUser(result.data.token));
         dispatch(setCurrentUser(result.data));
         dispatch(setCurrentRole(result.data.roleId));
-        dispatch(authenticateUser(result.data.token));
         browserHistory.push('/dashboard');
       } else {
         toastr.error(result.data.msg);
@@ -143,8 +143,8 @@ export function loginByToken() {
   return (dispatch) => {
     api.get('/users/login/token').then((result) => {
       if (result.status === 200) {
-        dispatch(setCurrentUser(result.data));
         dispatch(authenticateUser(result.data.token));
+        dispatch(setCurrentUser(result.data));
         browserHistory.push('/dashboard');
         // toastr.success('Authomatically logged in');
       } else {

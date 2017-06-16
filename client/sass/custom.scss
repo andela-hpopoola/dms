@@ -83,21 +83,35 @@ body {
     color: gray !important;
   }
 
+  .document__delete {
+    font-size: 16px;
+  }
+
+  .document__title {
+    height: 90px;
+    padding-top: 20px;
+    line-height: 1.6 !important;
+    overflow: hidden;
+    color: white;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+  }
+
+  .document__dated {
+    margin-top: 15px;
+    font-size: 11px;
+    font-weight: bold;
+  }
   .document__content{
     height: 120px;
+    text-overflow: ellipsis;
     overflow: hidden;
   }
 }
-
 .top__space {
   margin-top: 50px !important;
 }
 
-.document__title {
-  height: 150px;
-  padding-top: 20px;
-  line-height: 1.6 !important;
-  overflow: hidden;
-  color: white;
-  vertical-align: bottom;
+.page-footer {
+  margin-top: 150px;
 }

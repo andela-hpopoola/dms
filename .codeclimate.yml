@@ -4,8 +4,6 @@ engines:
     checks:
       import/extensions:
         enabled: false
-      similar code:
-        enabled: false
 
 ratings:
   paths:
