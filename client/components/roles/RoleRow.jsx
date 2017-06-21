@@ -16,6 +16,7 @@ const RoleRow = (props) => {
       <tr>
         <td>{index}</td>
         <td>{role.title}</td>
+        <td>{role.usersCount || 0}</td>
       </tr>
     </tbody>
   );

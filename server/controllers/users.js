@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Users, Documents } from '../models';
+import { Users, Documents, Roles } from '../models';
 import model from './../utils/model';
 import { ROLES, DEFAULT } from './../../constants';
 
@@ -23,9 +23,42 @@ module.exports = {
    * @return {object} json response
    */
   getAll(req, res) {
-    const limit = req.query.limit || DEFAULT.LIMIT;
-    const offset = req.query.offset || DEFAULT.OFFSET;
-    return model.getAll(req, res, 'User', Users, {}, { limit, offset });
+    const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
+    const offset = parseInt(req.query.offset, 10) || DEFAULT.OFFSET;
+    /**
+     * Calculate the pagination
+     * if the limits or offset is given in the request
+     * calculate the pagination
+     */
+    Users
+      .findAndCountAll({
+        limit: Math.abs(limit),
+        offset: Math.abs(offset),
+        order: [['name', 'ASC']],
+        include: [{ model: Roles }]
+      })
+      .then((result) => {
+        const data = result.rows.map(user =>
+          // tidy up user
+          Object.assign(
+            {},
+            {
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: user.Role.title,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+            }
+          )
+        );
+        const total = result.count;
+        const pagination = model.paginate(total, limit, offset);
+        res.json({ data, pagination });
+      })
+      .catch((error) => {
+        res.status(412).json({ msg: error.message });
+      });
   },
 
   /**
@@ -84,7 +117,7 @@ module.exports = {
               }
             }
           ]
-        }
+        },
       })
       .then((users) => {
         if (users) {

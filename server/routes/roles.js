@@ -31,6 +31,8 @@ module.exports = (app) => {
    *         description: Roles not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth:
    */
   app.get('/roles', roles.getAll);
 

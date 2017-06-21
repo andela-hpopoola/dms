@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { Col } from 'react-materialize';
 
 /**
@@ -10,23 +11,12 @@ import { Col } from 'react-materialize';
  */
 class DashboardCard extends Component {
   /**
-   * @desc Set the Initial conditions for showing the SearchForm Page
-   * @param {object} props - The property of the SearchForm Page
+   * @desc Set the Initial conditions for showing the DashboardCard Page
+   * @param {object} props - The property of the DashboardCard Page
    * @constructor
    */
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  /**
-   * @desc Returns the clicked card
-   * @param {function} event - event of the field
-   * @return {event} event
-   */
-  handleClick(event) {
-    event.preventDefault();
-    this.props.onClick();
   }
 
   /**
@@ -36,38 +26,31 @@ class DashboardCard extends Component {
   render() {
     const card = this.props;
     const cardTitle = card.title;
-    const cardCount = card.count;
+    const cardLink = card.link;
+    const cardDetails = card.details;
     const cardClass = `card-content ${card.color}-text`;
     const cardIcon = `fa fa-${card.icon} fa-3x dashboard__icon`;
     return (
       <Col l={4} m={6} s={12} key="1">
-        <a
+        <Link
           name="card"
-          onClick={this.handleClick}
           className="card white"
-          href="/#!"
+          to={cardLink}
         >
           <div className={cardClass}>
             <span className="card-title dashboard__title">{cardTitle}</span>
-            <strong className="dashboard__count">
-              {cardCount}
+            <strong className="dashboard__detail">
+              {cardDetails}
               <div className="right">
                 <i className={cardIcon} />
               </div>
             </strong>
           </div>
-        </a>
+        </Link>
       </Col>
     );
   }
 }
-
-/**
- * Set the PropTypes for DashboardCard
- */
-DashboardCard.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
 
 export default DashboardCard;
 

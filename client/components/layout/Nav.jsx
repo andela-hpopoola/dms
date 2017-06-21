@@ -37,7 +37,7 @@ export const Nav = (props) => {
         <div className="nav-wrapper col s12">
           <div className="main-container">
             { userIsLoggedIn }
-            <a href="#!" className="brand-logo">DMS</a>
+            <Link to="/" className="brand-logo">DMS</Link>
             <ul className="right">
               { userIsLoggedIn ? loggedInList : notloggedInList }
             </ul>

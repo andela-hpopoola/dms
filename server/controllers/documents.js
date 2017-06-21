@@ -1,4 +1,4 @@
-import { Documents } from '../models';
+import { Documents, Roles } from '../models';
 import model from './../utils/model';
 import { DOCUMENTS } from './../../constants';
 
@@ -11,6 +11,8 @@ module.exports = {
    * @return {object} json response
    */
   create(req, res) {
+    const access = parseInt(req.body.access, 10);
+    req.body.userId = res.locals.user.id;
     return Documents
       .findOne({
         where: {
@@ -22,7 +24,18 @@ module.exports = {
           return res.status(409)
             .json({ msg: 'Document name exists' });
         }
-        return model.create(req, res, 'Document', Documents);
+        if ((access !== DOCUMENTS.PRIVATE) &&
+          (access !== DOCUMENTS.PUBLIC)) {
+          model.exists(Roles, { id: req.body.access }).then((roleExists) => {
+            if (!roleExists) {
+              return res.status(409)
+                .json({ msg: 'Invalid Document Access' });
+            }
+            return model.create(req, res, 'Document', Documents);
+          });
+        } else {
+          return model.create(req, res, 'Document', Documents);
+        }
       }).catch(error =>
         res.status(412).json({ msg: error.message })
       );
@@ -53,6 +66,22 @@ module.exports = {
   getOne(req, res) {
     const id = req.params.id;
     return model.getOne(req, res, 'Document', Documents, { id });
+  },
+
+  /**
+   * @desc Gets all private documents
+   * @param {object} req - The request sent to the route
+   * @param {object} res - The response sent back
+   * @return {object} json response
+   */
+  private(req, res) {
+    const userId = res.locals.user.id;
+    const whereQuery = {
+      userId: {
+        $eq: userId
+      }
+    };
+    return model.getAll(req, res, 'Document', Documents, whereQuery);
   },
 
   /**
@@ -94,8 +123,39 @@ module.exports = {
    */
   update(req, res) {
     const id = req.params.id;
-    return model.update(req, res, 'Document', Documents, { id });
+    const access = parseInt(req.body.access, 10);
+    req.body.userId = res.locals.user.id;
+    return Documents
+      .findOne({
+        where: {
+          title: req.body.title,
+          userId: req.body.userId,
+          $and: [
+            { id: { $ne: id } },
+          ]
+        }
+      }).then((result) => {
+        if (result) {
+          return res.status(409)
+            .json({ msg: 'Document name exists' });
+        }
+        if ((access !== DOCUMENTS.PRIVATE) &&
+          (access !== DOCUMENTS.PUBLIC)) {
+          model.exists(Roles, { id: req.body.access }).then((roleExists) => {
+            if (!roleExists) {
+              return res.status(409)
+                .json({ msg: 'Invalid Document Access' });
+            }
+            return model.update(req, res, 'Document', Documents, { id });
+          });
+        } else {
+          return model.update(req, res, 'Document', Documents, { id });
+        }
+      }).catch(error =>
+        res.status(412).json({ msg: error.message })
+      );
   },
+
 
   /**
    * @desc Deletes document
@@ -123,25 +183,14 @@ module.exports = {
         { msg: 'Your search term must exceed 2 characters' }
       );
     }
-    return Documents
-      .findAll({
-        where: {
-          title: { $iLike: `%${query}%` },
-          $or: [
-            { userId: { $eq: userId } },
-            { access: { $eq: roleId } },
-            { access: { $eq: DOCUMENTS.PUBLIC } },
-          ]
-        }
-      })
-      .then((documents) => {
-        if (documents) {
-          return res.json(documents);
-        }
-        return res.status(404).json({ msg: 'No document found' });
-      })
-      .catch(error =>
-        res.status(412).json({ msg: error.message })
-      );
+    const whereQuery = {
+      title: { $iLike: `%${query}%` },
+      $or: [
+        { userId: { $eq: userId } },
+        { access: { $eq: roleId } },
+        { access: { $eq: DOCUMENTS.PUBLIC } },
+      ]
+    };
+    return model.getAll(req, res, 'Search Result(s)', Documents, whereQuery);
   },
 };

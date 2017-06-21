@@ -1,8 +1,9 @@
 import { browserHistory } from 'react-router';
 import * as toastr from 'toastr';
+import api from './../utils/api';
 import * as types from './actionTypes';
 import { deauthenticateUser, authenticateUser } from './authActions';
-import api from './../utils/api';
+import setAuthToken from './../utils/setAuthToken';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
 
 /**
@@ -87,15 +88,10 @@ export function updateProfile(updatedProfile, currentProfile) {
     api.put(`/users/${id}`, updatedProfile).then(() => {
       updatedProfile = { ...currentProfile, ...updatedProfile };
       dispatch(updateUserProfile(updatedProfile));
-      toastr.success('Profile updated successfully');
+      toastr.info('Profile updated successfully');
+      browserHistory.push('/dashboard');
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
@@ -111,6 +107,7 @@ export function login(user) {
     dispatch(ajaxCallStart());
     api.post('/users/login', user).then((result) => {
       if (result.status === 200) {
+        setAuthToken(result.data.token);
         dispatch(authenticateUser(result.data.token));
         dispatch(setCurrentUser(result.data));
         dispatch(setCurrentRole(result.data.roleId));
@@ -120,43 +117,10 @@ export function login(user) {
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
-      dispatch(ajaxCallEnd());
+      toastr.error(error.response || error);
     });
   };
 }
-
-
-/**
- * login by Token
- * @desc Logs a user into the application
- * @param {object} token saved token in LocalStorage
- * @returns {object} action
- */
-export function loginByToken() {
-  return (dispatch) => {
-    api.get('/users/login/token').then((result) => {
-      if (result.status === 200) {
-        dispatch(authenticateUser(result.data.token));
-        dispatch(setCurrentUser(result.data));
-        browserHistory.push('/dashboard');
-        // toastr.success('Authomatically logged in');
-      } else {
-        dispatch(deauthenticateUser());
-      }
-    }).catch((error) => {
-      dispatch(deauthenticateUser());
-      toastr.error(error);
-    });
-  };
-}
-
 
 /**
  * logout
@@ -171,7 +135,7 @@ export function logout() {
       browserHistory.push('/');
       toastr.info('You have successfully signed out');
     }).catch((error) => {
-      toastr.error(error);
+      toastr.error(error.response || error);
     });
   };
 }
@@ -191,60 +155,16 @@ export function signup(user) {
         dispatch(login(user));
         toastr.success('Your Account has been successfully created');
       } else {
-        toastr.error(result.data.msg);
+        dispatch(displayError(result.data.msg));
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
   };
 }
 
-/**
- * addNewDocument
- * @desc adds a new document to users list of document
- * @param {object} document details
- * @returns {object} action
- */
-export function addNewDocument(document) {
-  return {
-    type: types.ADD_NEW_DOCUMENT,
-    document
-  };
-}
-
-/**
- * Update Existing Document
- * @desc Update a Single Document
- * @param {object} updatedDocument - the updated Document
- * @returns {object} action
- */
-export function updateExistingDocument(updatedDocument) {
-  return {
-    type: types.UPDATE_EXISTING_DOCUMENT,
-    updatedDocument
-  };
-}
-
-/**
- * Delete Existing Document
- * @desc Delete a Single Document
- * @param {number} id - the deleted Document
- * @returns {object} action
- */
-export function deleteExistingDocument(id) {
-  return {
-    type: types.DELETE_EXISTING_DOCUMENT,
-    id
-  };
-}
 
 /**
  * Delete Existing User
@@ -271,13 +191,7 @@ export function deleteUser(id) {
       dispatch(deleteExistingUser(id));
       toastr.success('User deleted successfully');
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
@@ -310,19 +224,12 @@ export function searchUsersDispatcher(userTitle) {
     api.get(`/search/users/?q=${userTitle}`).then((result) => {
       if (result.data.length === 0) {
         toastr.info('No search result found');
-        dispatch(ajaxCallEnd());
       } else {
         dispatch(searchForUsers(result.data));
-        dispatch(ajaxCallEnd());
       }
+      dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
   };

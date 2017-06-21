@@ -17,7 +17,7 @@ export const DEFAULT = {
 
 export const LIMIT = {
   USERS: 10,
-  DOCUMENTS: 9
+  DOCUMENTS: 6
 };
 
 export const MOCK_DOCUMENTS = {

@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getDocument } from './../../actions/documentActions';
+import Sidebar from './../layout/Sidebar';
+import { getDocument, updateDocument } from './../../actions/documentActions';
 import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
 // Require Editor JS files.
@@ -32,7 +33,6 @@ export class EditDocument extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.id,
       form: {},
       model: 'starting text'
     };
@@ -46,7 +46,9 @@ export class EditDocument extends Component {
    * @return {void} returns nothing
    */
   componentDidMount() {
-    this.props.actions.getDocument(this.state.id);
+    this.props.actions.getDocument(this.props.params.id).then(() => {
+        console.log(this.props.currentDocument);
+    });
   }
 
   /**
@@ -71,6 +73,7 @@ export class EditDocument extends Component {
     form.content = content;
     return this.setState({ form });
   }
+
   /**
    * @desc maps state to properties
    * @param {object} event - form event
@@ -83,7 +86,7 @@ export class EditDocument extends Component {
       (form.content.length < 6)) {
       toastr.error('Document content must be greater than 6');
     } else {
-      this.props.onUpdate(form, this.props.currentDocument);
+      this.props.actions.updateDocument(form, this.props.currentDocument);
     }
   }
 
@@ -108,74 +111,82 @@ export class EditDocument extends Component {
     }
 
     return (
-      <div className="row">
-        <div className="card col s12">
-          <div className="card-content">
+      <div className="main-container">
+        <div className="row">
+          <Sidebar />
+
+          <div className="col l9 top__space">
             <div className="row">
-              <form className="col s12" onSubmit={this.updateExistingDocument}>
+              <div className="card col s12">
+                <div className="card-content">
+                  <div className="row">
+                    <form className="col s12" onSubmit={this.updateExistingDocument}>
 
-                <h4 className="card-title">{currentDocument.title}</h4>
+                      <h4 className="card-title">{currentDocument.title}</h4>
 
-                {/* Title */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="title"
-                      name="title"
-                      type="text"
-                      className="validate"
-                      value={this.state.form.title || currentDocument.title}
-                      required="required"
-                      onChange={this.handleFormChange}
-                      pattern=".{6,}"
-                      title="6 characters minimum"
-                    />
-                    <label htmlFor="title" className="active">Title</label>
+                      {/* Title */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            className="validate"
+                            value={this.state.form.title || currentDocument.title}
+                            required="required"
+                            onChange={this.handleFormChange}
+                            pattern=".{6,}"
+                            title="6 characters minimum"
+                          />
+                          <label htmlFor="title" className="active">Title</label>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <FroalaEditor
+                        tag="textarea"
+                        config={EDITOR_CONFIG}
+                        model={this.state.form.content || currentDocument.content}
+                        onModelChange={this.handleModelChange}
+                      />
+                      {/* Access */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <h6><strong>Access</strong></h6>
+                          <select
+                            name="access"
+                            className="browser-default"
+                            onChange={this.handleFormChange}
+                          >
+                            <option value={currentDocument.access}>
+                              Current Access Level ({access})
+                            </option>
+                            <option value="0">
+                              Document can be viewed by only me (Private)
+                            </option>
+                            <option value="-1">
+                              Document can be viewed by everyone (Public)
+                            </option>
+                            <option value={this.props.roleId}>
+                              Document can be viewed by same role (Role)
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Submit Button */}
+                      <button
+                        className="btn waves-effect waves-light"
+                        type="submit"
+                        name="submit"
+                      >
+                        Send
+                      </button>
+
+                    </form>
                   </div>
                 </div>
-
-                {/* Content */}
-                <FroalaEditor
-                  tag="textarea"
-                  config={EDITOR_CONFIG}
-                  model={this.state.form.content || currentDocument.content}
-                  onModelChange={this.handleModelChange}
-                />
-                {/* Access */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <h6><strong>Access</strong></h6>
-                    <select
-                      name="access"
-                      className="browser-default"
-                      onChange={this.handleFormChange}
-                    >
-                      <option value={currentDocument.access}>
-                        Current Access Level ({access})
-                      </option>
-                      <option value="0">
-                        Document can be viewed by only me (Private)
-                      </option>
-                      <option value="-1">
-                        Document can be viewed by everyone (Public)
-                      </option>
-                      <option value={this.props.roleId}>
-                        Document can be viewed by same role (Role)
-                      </option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* Submit Button */}
-                <button
-                  className="btn waves-effect waves-light"
-                  type="submit"
-                  name="submit"
-                >
-                  Send
-                </button>
-
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -188,12 +199,11 @@ export class EditDocument extends Component {
  * Set the PropTypes for EditDocument
  */
 EditDocument.propTypes = {
-  id: PropTypes.string.isRequired,
   roleId: PropTypes.number,
   actions: PropTypes.shape({
     getDocument: PropTypes.func,
+    updateDocument: PropTypes.func,
   }),
-  onUpdate: PropTypes.func.isRequired,
   currentDocument: PropTypes.shape({
     id: PropTypes.number,
     userId: PropTypes.number,
@@ -211,8 +221,7 @@ EditDocument.propTypes = {
 EditDocument.defaultProps = {
   actions: {},
   currentDocument: {},
-  roleId: 0,
-  ajaxStatus: false,
+  roleId: 0
 };
 
 /**
@@ -224,11 +233,9 @@ function mapStateToProps(state) {
   return {
     currentDocument: state.documents.current,
     roleId: state.user.roleId,
-    userId: state.user.id,
-    ajaxStatus: state.ajaxStatus,
+    userId: state.user.id
   };
 }
-
 
 /**
  * @desc maps dispatch to actions
@@ -237,7 +244,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ getDocument }, dispatch)
+    actions: bindActionCreators({ updateDocument, getDocument }, dispatch)
   };
 }
 

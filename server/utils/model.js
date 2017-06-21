@@ -1,5 +1,6 @@
 
 import { DEFAULT } from './../../constants';
+import { Users, Documents, Roles } from '../models';
 
 module.exports = {
   /**
@@ -11,7 +12,7 @@ module.exports = {
    * @param {object} where - Sequelize WHERE value to filter items
    * @return {object} json response
    */
-  getAll(req, res, name, Model, where = {}) {
+  getAll(req, res, name, Model, where = {}, include) {
     /**
      * Calculate the pagination
      * if the limits or offset is given in the request
@@ -24,7 +25,7 @@ module.exports = {
       const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
       const offset = parseInt(req.query.offset, 10) || DEFAULT.OFFSET;
       Model
-        .findAndCountAll({ where, limit, offset })
+        .findAndCountAll({ where, limit, offset, order: [['updatedAt', 'DESC']], include })
         .then((result) => {
           const total = result.count;
           const data = result.rows;
@@ -41,7 +42,7 @@ module.exports = {
         });
     } else {
       Model
-        .findAll({ where })
+        .findAll({ where, include })
         .then((result) => {
           res.json(result);
         })
@@ -151,4 +152,30 @@ module.exports = {
         res.status(412).json({ msg: error.message });
       });
   },
+
+  /**
+   * @desc Gets one item from model
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {boolean} Checks if data exists
+   */
+  exists(Model, where = {}) {
+    return Model
+      .count({ where })
+      .then((count) => {
+        if (count !== 0) {
+          return true;
+        }
+        return false;
+      }).catch(() => false);
+  },
+
+  paginate(total, limit, offset) {
+    const totalPage = Math.ceil(total / limit);
+    let currentPage = Math.floor((offset / limit) + 1);
+    if (currentPage > totalPage) {
+      currentPage = totalPage;
+    }
+    return { total, currentPage, totalPage, limit, offset };
+  }
 };

@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
+import { autoRehydrate } from 'redux-persist';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers';
 
@@ -20,7 +21,8 @@ const configureStore = initialState =>
       applyMiddleware(
         thunk,
         reduxImmutableStateInvariant()
-      )
+      ),
+      autoRehydrate()
     )
   );
 

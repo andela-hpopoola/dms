@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import strip from 'strip';
+import { Link } from 'react-router';
 import { Button, Modal } from 'react-materialize';
 import { DOCUMENTS } from './../../../constants';
 
@@ -37,22 +38,11 @@ const DocumentSingle = (props) => {
   const accessClass = `card ${color} darken-2 card__top ${access}`;
 
   /**
-   * @desc Sends back the edit document id
-   * @param {event} event - event handler
-   * @return {event} - event
-   */
-  const handleClick = (event) => {
-    event.preventDefault();
-    props.onEdit(event.target.id);
-  };
-
-  /**
    * @desc Sends back the delete document id
    * @param {event} event - event handler
    * @return {event} - event
    */
   const handleDelete = (event) => {
-    event.preventDefault();
     props.onDelete(event.target.id);
   };
   return (
@@ -63,16 +53,15 @@ const DocumentSingle = (props) => {
             {access}
             <div className="right">
               {userDocument &&
-                <a
+                <Link
                   onClick={handleDelete}
-                  href="/#!"
                   className="white-text"
                 >
                   <i
                     id={document.id}
                     className="fa fa-trash document__delete"
                   />
-                </a>
+                </Link>
               }
             </div>
           </div>
@@ -92,14 +81,13 @@ const DocumentSingle = (props) => {
           <div className="left">
             &nbsp;
             {userDocument &&
-              <a
-                onClick={handleClick}
+              <Link
                 id={document.id}
-                href="/#!"
+                to={`/document/edit/${document.id}`}
                 className="document__edit"
               >
                 Edit
-              </a>
+              </Link>
             }
           </div>
           <div className="right-align">
@@ -124,6 +112,7 @@ const DocumentSingle = (props) => {
  */
 DocumentSingle.propTypes = {
   document: PropTypes.shape({
+    id: PropTypes.number,
     title: PropTypes.string,
     content: PropTypes.string,
   }),

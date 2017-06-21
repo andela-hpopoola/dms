@@ -1,5 +1,6 @@
-import { Roles } from '../models';
+import { Users, Roles } from '../models';
 import model from './../utils/model';
+const Sequelize = require('sequelize');
 
 module.exports = {
   /**
@@ -32,7 +33,24 @@ module.exports = {
    * @return {object} json response
    */
   getAll(req, res) {
-    return model.getAll(req, res, 'Role', Roles);
+    // return model.getAll(req, res, 'Role', Roles);
+    Roles.findAll({
+      attributes: {
+        include: [[Sequelize.fn('COUNT', Sequelize.col('Users.id')), 'usersCount']]
+      },
+      include: [
+        {
+          model: Users,
+          attributes: []
+        }
+      ],
+      order: [['title', 'ASC']],
+      group: ['Roles.id']
+    }).then((roles) => {
+      res.json(roles);
+    }).catch((error) => {
+      res.status(412).json({ msg: error.message });
+    });
   },
 
   /**
