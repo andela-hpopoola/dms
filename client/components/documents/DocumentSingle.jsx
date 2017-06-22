@@ -112,7 +112,7 @@ const DocumentSingle = (props) => {
  */
 DocumentSingle.propTypes = {
   document: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
     title: PropTypes.string,
     content: PropTypes.string,
   }),

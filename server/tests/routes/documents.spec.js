@@ -137,20 +137,6 @@ describe('Document Routes', () => {
       });
     });
 
-    describe('GET /documents/private', () => {
-      it('should get all private documents', (done) => {
-        request.get('/documents/private')
-          .set('x-auth', adminToken)
-          .expect(200)
-          .end((err, res) => {
-            const expected = res.body.length;
-            const actual = 1;
-            expect(expected).toEqual(actual);
-            done(err);
-          });
-      });
-    });
-
     describe('GET /documents/public', () => {
       it('should get all public documents', (done) => {
         request.get('/documents/public')

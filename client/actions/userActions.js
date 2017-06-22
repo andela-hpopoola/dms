@@ -155,7 +155,7 @@ export function signup(user) {
         dispatch(login(user));
         toastr.success('Your Account has been successfully created');
       } else {
-        dispatch(displayError(result.data.msg));
+        toastr.error(result.data.msg);
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
