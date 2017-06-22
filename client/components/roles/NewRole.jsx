@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Sidebar from './../layout/Sidebar';
+import { createRole } from './../../actions/roleActions';
+import toastr from 'toastr';
 
 /**
  * @class NewRole
@@ -28,7 +33,6 @@ class NewRole extends Component {
    */
   createNewRole(event) {
     event.preventDefault();
-
     const title = event.target.title.value;
     this.props.onSubmit({ title });
   }
@@ -39,15 +43,14 @@ class NewRole extends Component {
    */
   render() {
     return (
-      <div className="card col s12">
-        <div className="card-content">
-          <span className="card-title">NewRole</span><br />
+      <div className="row">
+        <div className="col s12">
           <div className="row">
             <form className="col s12" onSubmit={this.createNewRole}>
 
               {/* Title */}
               <div className="row">
-                <div className="input-field col s12">
+                <div className="input-field col s9">
                   <input
                     id="title"
                     name="title"
@@ -57,19 +60,19 @@ class NewRole extends Component {
                     pattern=".{3,}"
                     title="3 characters minimum"
                   />
-                  <label htmlFor="title">Title</label>
+                  <label htmlFor="title">Add a New Role</label>
+                </div>
+                {/* Submit Button */}
+                <div className="input-field col s3">
+                  <button
+                    className="btn waves-effect waves-light"
+                    type="submit"
+                    name="submit"
+                  >
+                    Submit
+                  </button>
                 </div>
               </div>
-
-              {/* Submit Button */}
-              <button
-                className="btn waves-effect waves-light"
-                type="submit"
-                name="submit"
-              >
-                Submit
-              </button>
-
             </form>
           </div>
         </div>
@@ -85,5 +88,12 @@ NewRole.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
 
-export default NewRole;
+/**
+ * Sets default values for Dashboard Prototype
+ */
+NewRole.defaultProps = {
+  actions: {}
+};
 
+
+export default NewRole;

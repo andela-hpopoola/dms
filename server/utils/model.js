@@ -1,8 +1,7 @@
-
 import { DEFAULT } from './../../constants';
 
 module.exports = {
-  /**
+   /**
    * @desc Gets all items from model
    * @param {object} req - The request sent to the route
    * @param {object} res - The response sent back
@@ -24,7 +23,7 @@ module.exports = {
       const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
       const offset = parseInt(req.query.offset, 10) || DEFAULT.OFFSET;
       Model
-        .findAndCountAll({ where, limit, offset })
+        .findAndCountAll({ where, limit, offset, order: [['updatedAt', 'DESC']] })
         .then((result) => {
           const total = result.count;
           const data = result.rows;
@@ -150,5 +149,31 @@ module.exports = {
       }).catch((error) => {
         res.status(412).json({ msg: error.message });
       });
+  },
+
+  /**
+   * @desc Gets one item from model
+   * @param {object} Model - The model to perform action on
+   * @param {object} where - Sequelize WHERE value to filter items
+   * @return {boolean} Checks if data exists
+   */
+  exists(Model, where = {}) {
+    return Model
+      .count({ where })
+      .then((count) => {
+        if (count !== 0) {
+          return true;
+        }
+        return false;
+      }).catch(() => false);
+  },
+
+  paginate(total, limit, offset) {
+    const totalPage = Math.ceil(total / limit);
+    let currentPage = Math.floor((offset / limit) + 1);
+    if (currentPage > totalPage) {
+      currentPage = totalPage;
+    }
+    return { total, currentPage, totalPage, limit, offset };
   },
 };

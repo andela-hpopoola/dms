@@ -38,16 +38,6 @@ export default function all(state = initialState.all, action) {
       );
     }
 
-    case types.SEARCH_FOR_DOCUMENTS: {
-      return Object.assign(
-        {},
-        state,
-        {
-          search: action.documents
-        }
-      );
-    }
-
     case types.SEARCH_FOR_USERS: {
       return Object.assign(
         {},
@@ -58,15 +48,12 @@ export default function all(state = initialState.all, action) {
       );
     }
 
-    case types.SET_PAGINATION: {
+    case types.ADD_NEW_ROLE:
       return Object.assign(
         {},
         state,
-        {
-          pagination: action.pagination
-        }
+        { roles: [action.role, ...state.roles] }
       );
-    }
 
     default:
       return state;

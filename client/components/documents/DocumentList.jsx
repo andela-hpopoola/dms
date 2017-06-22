@@ -13,7 +13,6 @@ const DocumentList = (props) => {
   if (documents.length > 0) {
     allDocuments = documents.map(
       document => (<DocumentSingle
-        onEdit={props.onEdit}
         onDelete={props.onDelete}
         userId={props.userId}
         document={document}

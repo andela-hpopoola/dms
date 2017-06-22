@@ -1,8 +1,6 @@
 import * as toastr from 'toastr';
 import * as types from './actionTypes';
 import * as auth from '../utils/auth';
-import { publicDocumentsDispatcher, roleDocumentsDispatcher
- } from './../actions/documentActions';
 /**
  * authenticateUser
  * @desc Saves the token upon successful login
@@ -17,8 +15,6 @@ export function authenticateUser(token) {
       type: types.AUTHENTICATE_USER,
       token
     });
-    dispatch(publicDocumentsDispatcher());
-    dispatch(roleDocumentsDispatcher());
   };
 }
 

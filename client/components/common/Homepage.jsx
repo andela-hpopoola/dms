@@ -20,7 +20,7 @@ class Homepage extends Component {
    */
   componentWillMount() {
     if (auth.getToken()) {
-      this.props.actions.loginByToken;
+      this.props.actions.loginByToken();
       this.loggedIn = true;
     }
   }

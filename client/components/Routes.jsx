@@ -9,7 +9,12 @@ import Main from './common/Main';
 import Logout from './users/Logout';
 import Signup from './users/Signup';
 import NewDocument from './documents/NewDocument';
-import editDocument from './documents/EditDocument';
+import EditDocument from './documents/EditDocument';
+import ViewDocuments from './documents/ViewDocuments';
+import NewRole from './roles/NewRole';
+import AllRoles from './roles/AllRoles';
+import EditProfile from './users/EditProfile';
+import AllUsers from './users/AllUsers';
 import * as auth from './../utils/auth';
 import { unauthorized } from './../actions/authActions';
 
@@ -27,7 +32,6 @@ class Routes extends Component {
    */
   constructor(props) {
     super(props);
-
     this.requireAuth = this.requireAuth.bind(this);
   }
 
@@ -66,12 +70,36 @@ class Routes extends Component {
             component={Signup}
           />
           <Route
-            path="new-document"
+            path="document/new"
             component={NewDocument}
           />
           <Route
-            path="edit-document/:id"
-            component={editDocument}
+            path="document/edit/:id"
+            component={EditDocument}
+          />
+          <Route
+            path="/document/:access"
+            component={ViewDocuments}
+          />
+          <Route
+            path="new-role"
+            component={NewRole}
+          />
+          <Route
+            path="all-roles"
+            component={AllRoles}
+          />
+          <Route
+            path="edit-profile"
+            component={EditProfile}
+          />
+          <Route
+            path="all-users"
+            component={AllUsers}
+          />
+          <Route
+            path="search"
+            component={AllUsers}
           />
           <Route
             path="logout"

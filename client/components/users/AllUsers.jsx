@@ -1,92 +1,202 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import UserRow from './UserRow';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import sweetAlert from 'sweetalert';
+import Pagination from 'rc-pagination';
+import 'rc-pagination/assets/index.css';
+import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
+import { getUsers, getRoles } from './../../actions/allActions';
+import { LIMIT } from './../../../constants';
+import ProgressBar from './../common/ProgressBar';
+import Sidebar from './../layout/Sidebar';
+import UserList from './UserList';
 
 /**
- * All Users
- * @class
- * @desc List of Users
- * @param {array} props current user documents
- * @returns {jsx} the listed document
+ * @class AllUsers
+ * @desc Class to display the all users
+ * @extends React.Component
  */
 class AllUsers extends Component {
+
   /**
-   * @desc Set the Initial conditions for showing the SearchForm Page
-   * @param {object} props - The property of the SearchForm Page
+   * @desc Set the Initial conditions for showing the AllUsers
+   * @param {object} props - The property of the News Class
    * @constructor
    */
   constructor(props) {
     super(props);
-    this.handleSearch = this.handleSearch.bind(this);
+    this.state = {
+      id: 0,
+      search: false,
+      offset: 0,
+      pagination: {
+        currentPage: 0,
+        limit: 0,
+        offset: 0,
+        total: 0,
+        totalPage: 0
+      }
+    };
+
+
+    this.searchForUsers = this.searchForUsers.bind(this);
+    this.viewAllUsers = this.viewAllUsers.bind(this);
+    this.onPaginateChange = this.onPaginateChange.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.deleteUserAlert = this.deleteUserAlert.bind(this);
+
+    this.props.actions.getUsers();
   }
 
   /**
-   * @desc Returns the value in the Search Field
-   * @param {function} event - event of the field
-   * @return {string} Value in String Field
+   * @desc Invoked immediately after a props is passed to document
+   * @param {object} nextProps - the next props the component receives
+   * @return {void} returns nothing
    */
-  handleSearch(event) {
-    event.preventDefault();
-    this.props.onChange(event.target.search.value);
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.searchItems.length !== 0) {
+      if (this.props.searchItems !== nextProps.searchItems) {
+        if (this.state.search) {
+          this.setState({
+            currentItems: nextProps.searchItems,
+            search: true
+          });
+        }
+      }
+    }
+    if (this.props.user.name !== nextProps.user.name) {
+      this.setState({ username: nextProps.user.name });
+    }
   }
 
   /**
-   * @desc Displays the SearchForm Page
-   * @return {any} The SearchForm form
+   * @desc Get items when pagination change
+   * @param {number} page - the current page
+   * @return {void} returns nothing
+   */
+  onPaginateChange(page) {
+    this.props.actions.getUsers((page - 1) * LIMIT.USERS);
+  }
+
+  /**
+   * @desc View all users
+   * @return {void} sets search state to false
+   */
+  viewAllUsers() {
+    this.setState({ search: false });
+  }
+
+  /**
+   * The method is used to search for users
+   * @param {string} query - get the users to search
+   * @param {string} filter - get the users access
+   * @return {object} sets the state based on user
+   */
+  searchForUsers(query) {
+    console.log(query, 'query search');
+    this.props.actions.searchUsersDispatcher(query);
+    this.setState({
+      pageTitle: 'Search Results',
+      search: true,
+      page: 'search_users'
+    });
+  }
+
+  /**
+   * @desc Displays an alert to delete user
+   * @param {integer} id - id of user to delete
+   * @return {boolean} - cancel / confirmation
+   */
+  deleteUserAlert(id) {
+    this.state.id = id;
+    sweetAlert({
+      title: 'Delete User',
+      text: 'You are about to delete this user',
+      type: 'error',
+      showCancelButton: true,
+      closeOnConfirm: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#ec6c62'
+    }, this.deleteUser);
+  }
+
+  /**
+   * @desc Deletes a user
+   * @param {booleam} isConfirm - Confirmation to  user
+   * @return {any} The document to user
+   */
+  deleteUser(isConfirm) {
+    if (isConfirm) {
+      this.props.actions.deleteUser(this.state.id);
+    }
+    this.setState({ search: false });
+  }
+
+  /**
+   * @desc Displays the AllUsers
+   * @return {any} The AllUsers Content
    */
   render() {
-    let allUsers = [];
-    const { users, count } = this.props;
-    allUsers = users.map(
-      (user, index) => (<UserRow
-        index={count + index + 1}
-        user={user}
-        roleId={this.props.roleId}
-        key={user.id}
-        onDelete={this.props.onDelete}
-      />)
+    let userList = this.props.all.users;
+    let offset = this.props.pagination.offset;
+    let userCount = this.props.pagination.total;
+    if (this.state.search) {
+      userList = this.props.all.search;
+      userCount = userList.length;
+      offset = 0;
+    }
+    const pagination = this.props.pagination.total > 1 ?
+      (
+        <div className="col s12">
+          <Pagination
+            onChange={this.onPaginateChange}
+            defaultPageSize={LIMIT.USERS}
+            current={this.props.pagination.currentPage}
+            total={this.props.pagination.total}
+          />
+        </div>
+      )
+    : '';
+    const backToAllUsers = (
+      <button
+        onClick={this.viewAllUsers}
+        className="btn red darken-2 waves-effect waves-light"
+        type="submit"
+      >
+        Back to Users
+      </button>
     );
     return (
-      <div className="row card">
-        <div className="card-content">
-          <form onSubmit={this.handleSearch}>
-            <div className="col s12">
-              <div className="input-field col s9">
-                <input
-                  name="search"
-                  type="text"
-                  className="validate white"
-                  required="required"
-                  pattern=".{3,}"
-                  title="3 characters minimum"
-                />
-                <label htmlFor="search">Search for Users</label>
-              </div>
-              <div className="input-field col s3">
-                <button
-                  className="btn red darken-2 waves-effect waves-light"
-                  type="submit"
-                >
-                  Search Users
-                </button>
+      <div className="main-container">
+        <div className="row">
+         <Sidebar />
+
+          {/* main content */}
+          <div className="col l9 top__space">
+            <div className="row">
+              <div className="col s12">
+                <h3 className="document__number">
+                  {userCount} User(s) Found
+                </h3>
               </div>
             </div>
-          </form>
-
-          <table className="bordered highlight responsive-table">
-            <thead>
-              <tr>
-                <th>S/N</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Date Created</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              { allUsers }
-            </tbody>
-          </table>
+            <div className="row">
+              <ProgressBar />
+              <div>
+                {!this.state.search && pagination}
+                <UserList
+                  users={userList}
+                  count={offset}
+                  roleId={this.props.user.roleId}
+                  onChange={this.searchForUsers}
+                  onDelete={this.deleteUserAlert}
+                />
+                {!this.state.search && pagination}
+                {this.state.search && backToAllUsers}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -94,22 +204,78 @@ class AllUsers extends Component {
 }
 
 /**
- * Set the PropTypes for UserList
+ * Set the PropTypes for AllUsers
  */
 AllUsers.propTypes = {
-  roleId: PropTypes.number.isRequired,
-  count: PropTypes.number,
-  users: PropTypes.arrayOf(PropTypes.object),
-  onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired
+  actions: PropTypes.shape({
+    getUsers: PropTypes.func,
+    createRole: PropTypes.func,
+    updateProfile: PropTypes.func,
+    deleteUser: PropTypes.func,
+    searchUsersDispatcher: PropTypes.func.isRequired,
+  }),
+  pagination: PropTypes.shape({
+    total: PropTypes.number,
+    currentPage: PropTypes.number,
+    offset: PropTypes.number,
+    limit: PropTypes.number
+  }),
+  user: PropTypes.shape({
+    name: PropTypes.string,
+    token: PropTypes.string,
+    email: PropTypes.string,
+    documents: PropTypes.array,
+    roleId: PropTypes.number
+  }),
+  all: PropTypes.shape({
+    users: PropTypes.arrayOf(PropTypes.object),
+  }),
+  searchItems: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**
- * Set default values for UserList
+ * Sets default values for AllUsers Prototype
  */
 AllUsers.defaultProps = {
-  users: [],
-  count: 0
+  user: {},
+  all: [],
+  pagination: {},
+  searchItems: [],
+  actions: {}
 };
 
-export default AllUsers;
+/**
+ * @desc maps state to properties
+ * @param {object} state - the current state of application
+ * @return {object} mapped properties
+ */
+function mapStateToProps(state) {
+  return {
+    all: state.all,
+    user: state.user,
+    roles: state.roles,
+    searchItems: state.all.search,
+    pagination: state.pagination,
+  };
+}
+
+
+/**
+ * @desc maps dispatch to actions
+ * @param {object} dispatch - the action to dispatch
+ * @return {object} actions
+ */
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({
+      getUsers,
+      updateProfile,
+      deleteUser,
+      getRoles,
+      searchUsersDispatcher,
+    }, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AllUsers);
+

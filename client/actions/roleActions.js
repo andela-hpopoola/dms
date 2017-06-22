@@ -1,7 +1,7 @@
 import { browserHistory } from 'react-router';
 import * as toastr from 'toastr';
-import * as types from './actionTypes';
 import api from './../utils/api';
+import * as types from './actionTypes';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
 
 
@@ -36,13 +36,7 @@ export function createRole(role) {
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
   };
@@ -103,13 +97,7 @@ export function updateRole(updatedRole, currentRole) {
       browserHistory.push('/dashboard');
       toastr.success('Role updated successfully');
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
@@ -127,13 +115,7 @@ export function deleteRole(id) {
       browserHistory.push('/dashboard');
       toastr.success('Role deleted successfully');
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }

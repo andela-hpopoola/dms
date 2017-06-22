@@ -1,4 +1,5 @@
-import { users, documents } from '../controllers';
+import { documents } from '../controllers';
+import authenticate from './../utils/authenticate';
 
 module.exports = (app) => {
   // Document Schema definition
@@ -37,6 +38,16 @@ module.exports = (app) => {
    *         type: integer
    */
 
+  // Security Schema definition
+  /**
+   * @swagger
+   * securityDefinitions:
+   *  x-auth:
+   *    type: apiKey
+   *    in: header
+   *    name: JWT-TOKEN
+   */
+
   /**
    * @swagger
    * /documents:
@@ -60,7 +71,7 @@ module.exports = (app) => {
    *       412:
    *         description: Document cannot be created
    */
-  app.post('/documents', users.authenticate, documents.create);
+  app.post('/documents', authenticate.verify, documents.create);
 
   // Get all Documents Routes
   /**
@@ -82,8 +93,10 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth:
    */
-  app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
 
 
   // Get all Documents Pagination
@@ -106,8 +119,33 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth:
    */
-  app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
+
+// Get all private documents
+  /**
+   * @swagger
+   * /documents/private:
+   *   get:
+   *     tags:
+   *       - Documents
+   *     description: Returns all private documents
+   *     summary: Get All Private Documents
+   *     produces:
+   *       - application/json
+   *     responses:
+   *       200:
+   *         description: An array of all private documents
+   *         schema:
+   *           $ref: '#/definitions/Documents'
+   *       404:
+   *         description: Documents not found
+   *       412:
+   *         description: Exception Error
+   */
+  app.get('/documents/private', authenticate.verify, documents.private);
 
 // Get all public documents
   /**
@@ -129,8 +167,10 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth:
    */
-  app.get('/documents/public', users.authenticate, documents.public);
+  app.get('/documents/public', authenticate.verify, documents.public);
 
   // Get all roles documents
   /**
@@ -152,8 +192,10 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth:
    */
-  app.get('/documents/role', users.authenticate, documents.role);
+  app.get('/documents/role', authenticate.verify, documents.role);
 
   /**
    * @swagger
@@ -178,8 +220,10 @@ module.exports = (app) => {
    *           $ref: '#/definitions/Documents'
    *       404:
    *         description: Document not found
+   *     security:
+   *     - x-auth:
    */
-  app.get('/documents/:id', users.authenticate, users.canManageDocument, documents.getOne);
+  app.get('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.getOne);
 
   /**
    * @swagger
@@ -202,8 +246,10 @@ module.exports = (app) => {
    *         description: Successfully updated
    *       404:
    *         description: Document cannot be found
+   *     security:
+   *     - x-auth:
    */
-  app.put('/documents/:id', users.authenticate, users.canManageDocument, documents.update);
+  app.put('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.update);
 
   /**
    * @swagger
@@ -226,8 +272,10 @@ module.exports = (app) => {
    *         description: Successfully deleted
    *       404:
    *         description: Document cannot be found
+   *     security:
+   *     - x-auth:
    */
-  app.delete('/documents/:id', users.authenticate, users.canManageDocument, documents.delete);
+  app.delete('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.delete);
 
   /**
    * @swagger
@@ -250,6 +298,8 @@ module.exports = (app) => {
    *         description: An array of all documents
    *       404:
    *         description: No document found
+   *     security:
+   *     - x-auth:
    */
-  app.get('/search/documents/', users.authenticate, documents.search);
+  app.get('/search/documents/', authenticate.verify, documents.getAll);
 };

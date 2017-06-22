@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import ProgressBar from './../../components/common/ProgressBar';
 import { login, loginByToken } from './../../actions/userActions';
@@ -19,20 +20,33 @@ class Login extends Component {
    */
   constructor(props) {
     super(props);
-
     this.authenticateUser = this.authenticateUser.bind(this);
   }
 
+  componentDidMount() {
+    if (this.props.userIsLoggedIn) {
+      this.redirectToDashboard();
+    }
+  }
 
   /**
-   * @desc Invoked before a component is mounted
+   * @desc Invoked immediately after a props is passed to document
+   * @param {object} nextProps - the next props the component receives
    * @return {void} returns nothing
    */
-  // componentWillMount() {
-  //   if (auth.getToken()) {
-  //     browserHistory.push('/dashboard');
-  //   }
-  // }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userIsLoggedIn) {
+      browserHistory.push('/dashboard');
+    }
+  }
+
+  /**
+   * @desc Checks if a user is logged in or not
+   * @return {any} redirects user to dashboard or show error
+   */
+  redirectToDashboard() {
+    browserHistory.push('/dashboard');
+  }
 
   /**
    * @desc Authenticate the user
@@ -57,7 +71,7 @@ class Login extends Component {
           <div><br /><br /></div>
           <div className="card col s12 offset-l3 l6 offset-m2 m8">
             <div className="card-content">
-              <span className="card-title">Login</span><br />
+              <h4 className="card-title">Login</h4>
               <div className="row">
                 <form className="col s12" onSubmit={this.authenticateUser}>
                   <ProgressBar />
@@ -92,6 +106,7 @@ class Login extends Component {
 
                   {/* Submit Button */}
                   <button
+                    id="loginbutton"
                     className="btn waves-effect waves-light"
                     type="submit"
                     name="submit"
@@ -117,13 +132,15 @@ Login.propTypes = {
     login: PropTypes.func,
     loginByToken: PropTypes.func,
   }),
+  userIsLoggedIn: PropTypes.bool,
 };
 
 /**
  * Sets default values for Login Prototype
  */
 Login.defaultProps = {
-  actions: {}
+  actions: {},
+  userIsLoggedIn: false,
 };
 
 /**
@@ -133,6 +150,7 @@ Login.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
+    userIsLoggedIn: state.auth,
     errorMessage: state.errorMessage
   };
 }
@@ -145,7 +163,7 @@ function mapStateToProps(state) {
  */
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators({ login, loginByToken }, dispatch)
+    actions: bindActionCreators({ login }, dispatch)
   };
 }
 

@@ -1,6 +1,7 @@
 import * as toastr from 'toastr';
-import * as types from './actionTypes';
 import api from './../utils/api';
+import * as types from './actionTypes';
+import setPagination from './paginationActions';
 import { LIMIT } from './../../constants';
 
 /**
@@ -13,19 +14,6 @@ export function getAllUsers(users) {
   return {
     type: types.GET_ALL_USERS,
     users
-  };
-}
-
-/**
- * Get All Users
- * @desc Sets the current pagination
- * @param {array} pagination - list of all users
- * @returns {object} action
- */
-export function setPagination(pagination) {
-  return {
-    type: types.SET_PAGINATION,
-    pagination
   };
 }
 
@@ -47,13 +35,7 @@ export function getUsers(offset = 0) {
         toastr.error(result.data.msg);
       }
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
@@ -86,13 +68,7 @@ export function getRoles() {
         toastr.error(result.data.msg);
       }
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }

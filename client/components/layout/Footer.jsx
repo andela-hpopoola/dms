@@ -7,7 +7,7 @@ import React from 'react';
 const Footer = () => (
   <footer className="page-footer red darken-2">
     <div className="footer-copyright red darken-2">
-      <div className="container">
+      <div className="main-container">
       Copyright &copy; 2017 Haruna Popoola
       </div>
     </div>

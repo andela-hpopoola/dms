@@ -1,11 +1,29 @@
 import { browserHistory } from 'react-router';
 import * as toastr from 'toastr';
-import * as types from './actionTypes';
-import { addNewDocument, updateExistingDocument, deleteExistingDocument } from './userActions';
 import api from './../utils/api';
+import * as types from './actionTypes';
 import { ajaxCallStart, ajaxCallEnd } from './ajaxStatusActions';
-import { setPagination } from './allActions';
+import setPagination from './paginationActions';
 import { LIMIT } from './../../constants';
+import setAuthToken from './../utils/setAuthToken';
+import * as auth from './../utils/auth';
+
+// Set the Authentication Token
+setAuthToken(auth.getToken());
+
+/**
+ * addNewDocument
+ * @desc adds a new document to users list of document
+ * @param {object} document details
+ * @returns {object} action
+ */
+export function addNewDocument(document) {
+  return {
+    type: types.ADD_NEW_DOCUMENT,
+    document
+  };
+}
+
 
 /**
  * create Document
@@ -20,21 +38,41 @@ export function createDocument(document) {
       if (result.status === 200) {
         dispatch(addNewDocument(result.data));
         toastr.success('Document successfully created');
-        browserHistory.push('/dashboard');
+        browserHistory.push('/document/private');
       } else {
         toastr.error(result.data.msg);
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
+  };
+}
+
+/**
+ * Update Existing Document
+ * @desc Update a Single Document
+ * @param {object} updatedDocument - the updated Document
+ * @returns {object} action
+ */
+export function updateExistingDocument(updatedDocument) {
+  return {
+    type: types.UPDATE_EXISTING_DOCUMENT,
+    updatedDocument
+  };
+}
+
+/**
+ * Delete Existing Document
+ * @desc Delete a Single Document
+ * @param {number} id - the deleted Document
+ * @returns {object} action
+ */
+export function deleteExistingDocument(id) {
+  return {
+    type: types.DELETE_EXISTING_DOCUMENT,
+    id
   };
 }
 
@@ -64,13 +102,7 @@ export function getDocument(id) {
     api.get(`/documents/${id}`).then((result) => {
       dispatch(getDocumentDetails(result.data));
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
@@ -85,19 +117,17 @@ export function getDocument(id) {
 export function updateDocument(updatedDocument, currentDocument) {
   return (dispatch) => {
     const id = currentDocument.id;
-    api.put(`/documents/${id}`, updatedDocument).then(() => {
-      updatedDocument = { ...currentDocument, ...updatedDocument };
-      dispatch(updateExistingDocument(updatedDocument));
-      browserHistory.push('/dashboard');
-      toastr.success('Document updated successfully');
-    }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
+    api.put(`/documents/${id}`, updatedDocument).then((result) => {
+      if (result.status === 200) {
+        updatedDocument = { ...currentDocument, ...updatedDocument };
+        dispatch(updateExistingDocument(updatedDocument));
+        browserHistory.push('/document/private');
+        toastr.success('Document updated successfully');
       } else {
-        toastr.error(error);
+        toastr.error(result.data.msg);
       }
+    }).catch((error) => {
+      toastr.error(error.response || error);
     });
   };
 }
@@ -112,20 +142,64 @@ export function deleteDocument(id) {
   return (dispatch) => {
     api.delete(`/documents/${id}`).then(() => {
       dispatch(deleteExistingDocument(id));
-      browserHistory.push('/dashboard');
       toastr.success('Document deleted successfully');
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
     });
   };
 }
 
+
+/**
+ * Get Private Documents
+ * @param {array} documents - all returned private documents
+ * @desc Get all private documents
+ * @returns {object} action
+ */
+export function getPrivateDocuments(documents) {
+  return {
+    type: types.GET_PRIVATE_DOCUMENTS,
+    documents
+  };
+}
+
+
+/**
+ * Private Documents Dispatcher
+ * @desc Get all private documents
+ * @param {number} offset - the starting point for pagination
+ * @returns {object} action
+ */
+export function privateDocumentsDispatcher(offset = null) {
+  let paginate = false;
+  const limit = LIMIT.DOCUMENTS;
+  let privateURL = '/documents/private';
+  if (offset !== null) {
+    paginate = true;
+    privateURL = `/documents/private/?limit=${limit}&offset=${offset}`;
+  }
+
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    return api.get(privateURL).then((result) => {
+      if (result.status === 200) {
+        const documents = result.data;
+        if (paginate) {
+          dispatch(getPrivateDocuments(documents.data));
+          dispatch(setPagination(documents.pagination));
+        } else {
+          dispatch(getPrivateDocuments(documents));
+        }
+      } else {
+        dispatch(getPrivateDocuments([]));
+      }
+      dispatch(ajaxCallEnd());
+    }).catch((error) => {
+      toastr.error(error.response || error);
+      dispatch(ajaxCallEnd());
+    });
+  };
+}
 
 /**
  * Get Public Documents
@@ -140,6 +214,69 @@ export function getPublicDocuments(documents) {
   };
 }
 
+
+/**
+ * Get Role Documents
+ * @param {array} documents - all returned role documents
+ * @desc Get all role documents
+ * @returns {object} action
+ */
+export function getRoleDocuments(documents) {
+  return {
+    type: types.GET_ROLE_DOCUMENTS,
+    documents
+  };
+}
+
+/**
+ * Get Role Documents
+ * @param {array} documents - all returned role documents
+ * @desc Get all role documents
+ * @returns {object} action
+ */
+export function getCurrentDocuments(documents) {
+  return {
+    type: types.GET_CURRENT_DOCUMENTS,
+    documents
+  };
+}
+
+
+/**
+ * Public Documents Dispatcher
+ * @desc Get all public documents
+ * @param {string} access - the access type
+ * @param {string} query - the search query
+ * @param {number} offset - the starting point for pagination
+ * @returns {object} action
+ */
+export function getDocuments(access, query = '', offset = 0) {
+  const limit = LIMIT.DOCUMENTS;
+  let URL = `/documents/private/?limit=${limit}&offset=${offset}`;
+
+  if (access === 'public') {
+    URL = `/documents/public/?limit=${limit}&offset=${offset}`;
+  } else if (access === 'role') {
+    URL = `/documents/role/?limit=${limit}&offset=${offset}`;
+  } else if (access === 'search') {
+    URL = `/search/documents/?q=${query}&limit=${limit}&offset=${offset}`;
+  }
+
+  return (dispatch) => {
+    dispatch(ajaxCallStart());
+    api.get(URL).then((result) => {
+      if (result.status === 200) {
+        dispatch(getCurrentDocuments(result.data));
+      } else {
+        toastr.info(`No ${access} documents found`);
+      }
+      dispatch(ajaxCallEnd());
+    }).catch((error) => {
+      toastr.error(error.response || error);
+      dispatch(ajaxCallEnd());
+    });
+  };
+}
 
 /**
  * Public Documents Dispatcher
@@ -158,12 +295,11 @@ export function publicDocumentsDispatcher(offset = null) {
 
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(publicURL).then((result) => {
+    return api.get(publicURL).then((result) => {
       if (result.status === 200) {
         const documents = result.data;
         if (paginate) {
-          dispatch(getPublicDocuments(documents.data));
-          dispatch(setPagination(documents.pagination));
+          dispatch(getPublicDocuments(documents));
         } else {
           dispatch(getPublicDocuments(documents));
         }
@@ -172,29 +308,9 @@ export function publicDocumentsDispatcher(offset = null) {
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
-  };
-}
-
-
-/**
- * Get Role Documents
- * @param {array} documents - all returned role documents
- * @desc Get all role documents
- * @returns {object} action
- */
-export function getRoleDocuments(documents) {
-  return {
-    type: types.GET_ROLE_DOCUMENTS,
-    documents
   };
 }
 
@@ -229,13 +345,7 @@ export function roleDocumentsDispatcher(offset = null) {
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
   };
@@ -274,13 +384,7 @@ export function searchDocumentsDispatcher(documentTitle) {
         dispatch(ajaxCallEnd());
       }
     }).catch((error) => {
-      if (error.response) {
-        // if the server responded with a status code
-        // that falls out of the range of 2xx
-        toastr.error(error.response);
-      } else {
-        toastr.error(error);
-      }
+      toastr.error(error.response || error);
       dispatch(ajaxCallEnd());
     });
   };

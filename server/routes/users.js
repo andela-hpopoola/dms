@@ -1,4 +1,5 @@
 import { users } from '../controllers';
+import authenticate from './../utils/authenticate';
 
 module.exports = (app) => {
   // Users Schema definition
@@ -63,6 +64,16 @@ module.exports = (app) => {
    *         type: integer
    */
 
+  // Security Schema definition
+  /**
+   * @swagger
+   * securityDefinitions:
+   *  x-auth:
+   *    type: apiKey
+   *    in: header
+   *    name: JWT-TOKEN
+   */
+
   /**
    * @swagger
    * /users:
@@ -123,33 +134,6 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * /users/login/token:
-   *   get:
-   *     tags:
-   *       - Users
-   *     description: Logs in a user with the x-auth token
-   *     summary: Logs in a user by using the header token
-   *     produces:
-   *       - application/json
-   *     parameters:
-   *       - name: token
-   *         description: Users authorization token
-   *         in: token
-   *         required: true
-   *     responses:
-   *       200:
-   *         description: Login Successful
-   *         schema:
-   *           $ref: '#/definitions/UserLogin'
-   *       401:
-   *         description: Invalid Username or Password
-   *       412:
-   *         description: Exception Error
-   */
-  app.get('/users/login/token', users.authenticate, users.loginByToken);
-
-  /**
-   * @swagger
    * /users/logout:
    *   get:
    *     tags:
@@ -185,32 +169,10 @@ module.exports = (app) => {
    *         description: Users not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth: []
    */
-  app.get('/users', users.authenticate, users.isAdmin, users.getAll);
-
-
-  // Get all Users Pagination
-  /**
-   * @swagger
-   * /users/?limit={integer}&offset={integer}:
-   *   get:
-   *     tags:
-   *       - Users
-   *     description: Returns all users in a pagination format
-   *     summary: Get all Users Pagination
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: An array of all users (data) with pagination
-   *         schema:
-   *           $ref: '#/definitions/Pagination'
-   *       404:
-   *         description: Users not found
-   *       412:
-   *         description: Exception Error
-   */
-  app.get('/users', users.authenticate, users.isAdmin, users.getAll);
+  app.get('/users', authenticate.verify, authenticate.isAdmin, users.getAll);
 
   /**
    * @swagger
@@ -235,8 +197,10 @@ module.exports = (app) => {
    *           $ref: '#/definitions/Users'
    *       404:
    *         description: User not found
+   *     security:
+   *     - x-auth: []
    */
-  app.get('/users/:id', users.authenticate, users.isAdminOrOwner, users.getOne);
+  app.get('/users/:id', authenticate.verify, authenticate.isOwner, users.getOne);
 
   /**
    * @swagger
@@ -259,8 +223,10 @@ module.exports = (app) => {
    *         description: Successfully updated
    *       404:
    *         description: User cannot be found
+   *     security:
+   *     - x-auth: []
    */
-  app.put('/users/:id', users.authenticate, users.isAdminOrOwner, users.update);
+  app.put('/users/:id', authenticate.verify, authenticate.isOwner, users.update);
   /**
    * @swagger
    * /users/{id}:
@@ -282,8 +248,10 @@ module.exports = (app) => {
    *         description: Successfully deleted
    *       404:
    *         description: User cannot be found
+   *     security:
+   *     - x-auth: []
    */
-  app.delete('/users/:id', users.authenticate, users.isSuperAdmin, users.delete);
+  app.delete('/users/:id', authenticate.verify, authenticate.isSuperAdmin, users.delete);
 
   /**
    * @swagger
@@ -304,8 +272,10 @@ module.exports = (app) => {
    *     responses:
    *       200:
    *         description: An array of all users document
+   *     security:
+   *     - x-auth:[]
    */
-  app.get('/users/:id/documents', users.authenticate, users.isAdminOrOwner, users.getDocuments);
+  app.get('/users/:id/documents', authenticate.verify, authenticate.isOwner, users.getDocuments);
 
   /**
    * @swagger
@@ -328,6 +298,8 @@ module.exports = (app) => {
    *         description: An array of all users
    *       404:
    *         description: No user found
+   *     security:
+   *     - x-auth:[]
    */
-  app.get('/search/users/', users.authenticate, users.isAdmin, users.search);
+  app.get('/search/users/', authenticate.verify, authenticate.isAdmin, users.getAll);
 };

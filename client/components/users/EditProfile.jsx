@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import toastr from 'toastr';
+import Sidebar from './../layout/Sidebar';
+import { updateProfile } from './../../actions/userActions';
 
 /**
  * @class EditProfile
@@ -47,7 +51,7 @@ class EditProfile extends Component {
       (form.password !== form.confirmPassword)) {
       toastr.error('Password do not match');
     } else {
-      this.props.onUpdate(form, this.props.user);
+      this.props.actions.updateProfile(form, this.props.user);
     }
   }
 
@@ -56,95 +60,103 @@ class EditProfile extends Component {
    * @return {any} The EditProfile form
    */
   render() {
-    const { user } = this.props;
+    const user = this.props.user;
 
     return (
-      <div className="row">
-        <div className="card col s12">
-          <div className="card-content">
-            <span className="card-title">EditProfile</span><br />
+      <div className="main-container">
+        <div className="row">
+          <Sidebar />
+
+          <div className="col l9 top__space">
             <div className="row">
-              <form className="col s12" onSubmit={this.updateProfile}>
+              <div className="card col s12">
+                <div className="card-content">
+                  <span className="card-title">EditProfile</span><br />
+                  <div className="row">
+                    <form className="col s12" onSubmit={this.updateProfile}>
 
-                <h4>{user.name}</h4>
+                      <h4>{user.name}</h4>
 
-                {/* Name */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      className="validate"
-                      value={this.state.form.name || user.name}
-                      required="required"
-                      onChange={this.handleFormChange}
-                      pattern=".{3,}"
-                      title="3 characters minimum"
-                    />
-                    <label htmlFor="name" className="active">Name</label>
+                      {/* Name */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="name"
+                            name="name"
+                            type="text"
+                            className="validate"
+                            value={this.state.form.name || user.name}
+                            required="required"
+                            onChange={this.handleFormChange}
+                            pattern=".{3,}"
+                            title="3 characters minimum"
+                          />
+                          <label htmlFor="name" className="active">Name</label>
+                        </div>
+                      </div>
+
+
+                      {/* Email */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            className="validate"
+                            value={this.state.form.email || user.email}
+                            required="required"
+                            onChange={this.handleFormChange}
+                          />
+                          <label htmlFor="email" className="active">Email</label>
+                        </div>
+                      </div>
+
+                      {/* New Password */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="password"
+                            name="password"
+                            type="password"
+                            className="validate"
+                            onChange={this.handleFormChange}
+                            pattern=".{0}|.{6,}"
+                            title="Either 0 OR (6 chars minimum)"
+                          />
+                          <label htmlFor="password">New Password</label>
+                        </div>
+                      </div>
+
+                      {/* Confirm New Password */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            className="validate"
+                            onChange={this.handleFormChange}
+                            pattern=".{0}|.{6,}"
+                            title="Either 0 OR (6 chars minimum)"
+                          />
+                          <label htmlFor="password">Confirm New Password</label>
+                        </div>
+                      </div>
+
+
+                      {/* Submit Button */}
+                      <button
+                        className="btn waves-effect waves-light"
+                        type="submit"
+                        name="submit"
+                      >
+                        Update
+                      </button>
+                    </form>
                   </div>
                 </div>
-
-
-                {/* Email */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      className="validate"
-                      value={this.state.form.email || user.email}
-                      required="required"
-                      onChange={this.handleFormChange}
-                    />
-                    <label htmlFor="email" className="active">Email</label>
-                  </div>
-                </div>
-
-                {/* New Password */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      className="validate"
-                      onChange={this.handleFormChange}
-                      pattern=".{0}|.{6,}"
-                      title="Either 0 OR (6 chars minimum)"
-                    />
-                    <label htmlFor="password">New Password</label>
-                  </div>
-                </div>
-
-                {/* Confirm New Password */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      className="validate"
-                      onChange={this.handleFormChange}
-                      pattern=".{0}|.{6,}"
-                      title="Either 0 OR (6 chars minimum)"
-                    />
-                    <label htmlFor="password">Confirm New Password</label>
-                  </div>
-                </div>
-
-
-                {/* Submit Button */}
-                <button
-                  className="btn waves-effect waves-light"
-                  type="submit"
-                  name="submit"
-                >
-                  Update
-                </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -164,15 +176,42 @@ EditProfile.propTypes = {
     createdAt: PropTypes.string,
     updatedAt: PropTypes.string,
   }),
-  onUpdate: PropTypes.func.isRequired
+  actions: PropTypes.shape({
+    updateProfile: PropTypes.func.isRequired, 
+  }),
+
 };
 
 /**
  * Sets default values for EditProfile Prototype
  */
 EditProfile.defaultProps = {
-  user: {}
+  user: {},
+  actions: {}
 };
 
-export default EditProfile;
+/**
+ * @desc maps state to properties
+ * @param {object} state - the current state of application
+ * @return {object} mapped properties
+ */
+function mapStateToProps(state) {
+  return {
+    user: state.user,
+  };
+}
+
+/**
+ * @desc maps dispatch to actions
+ * @param {object} dispatch - the action to dispatch
+ * @return {object} actions
+ */
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators({
+      updateProfile
+    }, dispatch)
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);
 

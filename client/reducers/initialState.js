@@ -4,6 +4,7 @@
  */
 export default {
   documents: {
+    private: [],
     public: [],
     role: [],
     current: {}
@@ -12,15 +13,14 @@ export default {
     documents: [],
     roleName: 'Unknown'
   },
+  pagination: {},
   all: {
     users: [],
     documents: [],
     roles: [],
-    search: [],
-    pagination: {}
+    search: []
   },
   roles: [],
   ajaxStatus: false,
-  auth: false,
-  errorMessage: ''
+  auth: false
 };
