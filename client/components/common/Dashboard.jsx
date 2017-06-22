@@ -72,7 +72,7 @@ class Dashboard extends Component {
           <div className="col l9 top__space">
             <div className="row">
               <div className="col s12">
-                <h3 className="document__number">
+                <h3 id="dashboard" className="document__number">
                   Welcome back {this.state.username}
                 </h3>
               </div>

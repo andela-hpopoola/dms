@@ -71,7 +71,7 @@ class Login extends Component {
           <div><br /><br /></div>
           <div className="card col s12 offset-l3 l6 offset-m2 m8">
             <div className="card-content">
-              <span className="card-title">Login</span><br />
+              <h4 className="card-title">Login</h4>
               <div className="row">
                 <form className="col s12" onSubmit={this.authenticateUser}>
                   <ProgressBar />
@@ -106,6 +106,7 @@ class Login extends Component {
 
                   {/* Submit Button */}
                   <button
+                    id="loginbutton"
                     className="btn waves-effect waves-light"
                     type="submit"
                     name="submit"
