@@ -1,9 +1,7 @@
-
 import { DEFAULT } from './../../constants';
-import { Users, Documents, Roles } from '../models';
 
 module.exports = {
-  /**
+   /**
    * @desc Gets all items from model
    * @param {object} req - The request sent to the route
    * @param {object} res - The response sent back
@@ -12,7 +10,7 @@ module.exports = {
    * @param {object} where - Sequelize WHERE value to filter items
    * @return {object} json response
    */
-  getAll(req, res, name, Model, where = {}, include) {
+  getAll(req, res, name, Model, where = {}) {
     /**
      * Calculate the pagination
      * if the limits or offset is given in the request
@@ -25,7 +23,7 @@ module.exports = {
       const limit = parseInt(req.query.limit, 10) || DEFAULT.LIMIT;
       const offset = parseInt(req.query.offset, 10) || DEFAULT.OFFSET;
       Model
-        .findAndCountAll({ where, limit, offset, order: [['updatedAt', 'DESC']], include })
+        .findAndCountAll({ where, limit, offset, order: [['updatedAt', 'DESC']] })
         .then((result) => {
           const total = result.count;
           const data = result.rows;
@@ -42,7 +40,7 @@ module.exports = {
         });
     } else {
       Model
-        .findAll({ where, include })
+        .findAll({ where })
         .then((result) => {
           res.json(result);
         })
@@ -177,5 +175,5 @@ module.exports = {
       currentPage = totalPage;
     }
     return { total, currentPage, totalPage, limit, offset };
-  }
+  },
 };

@@ -1,4 +1,5 @@
-import { users, documents } from '../controllers';
+import { documents } from '../controllers';
+import authenticate from './../utils/authenticate';
 
 module.exports = (app) => {
   // Document Schema definition
@@ -70,7 +71,7 @@ module.exports = (app) => {
    *       412:
    *         description: Document cannot be created
    */
-  app.post('/documents', users.authenticate, documents.create);
+  app.post('/documents', authenticate.verify, documents.create);
 
   // Get all Documents Routes
   /**
@@ -95,7 +96,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
 
 
   // Get all Documents Pagination
@@ -121,7 +122,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/documents', users.authenticate, users.isAdmin, documents.getAll);
+  app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
 
 // Get all private documents
   /**
@@ -144,7 +145,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    */
-  app.get('/documents/private', users.authenticate, documents.private);
+  app.get('/documents/private', authenticate.verify, documents.private);
 
 // Get all public documents
   /**
@@ -169,7 +170,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/documents/public', users.authenticate, documents.public);
+  app.get('/documents/public', authenticate.verify, documents.public);
 
   // Get all roles documents
   /**
@@ -194,7 +195,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/documents/role', users.authenticate, documents.role);
+  app.get('/documents/role', authenticate.verify, documents.role);
 
   /**
    * @swagger
@@ -222,7 +223,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/documents/:id', users.authenticate, users.canManageDocument, documents.getOne);
+  app.get('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.getOne);
 
   /**
    * @swagger
@@ -248,7 +249,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.put('/documents/:id', users.authenticate, users.canManageDocument, documents.update);
+  app.put('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.update);
 
   /**
    * @swagger
@@ -274,7 +275,7 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.delete('/documents/:id', users.authenticate, users.canManageDocument, documents.delete);
+  app.delete('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.delete);
 
   /**
    * @swagger
@@ -300,5 +301,5 @@ module.exports = (app) => {
    *     security:
    *     - x-auth:
    */
-  app.get('/search/documents/', users.authenticate, documents.search);
+  app.get('/search/documents/', authenticate.verify, documents.getAll);
 };

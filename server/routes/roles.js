@@ -1,4 +1,5 @@
-import { users, roles } from '../controllers';
+import { roles } from '../controllers';
+import authenticate from './../utils/authenticate';
 
 module.exports = (app) => {
   // Roles Schema definition
@@ -59,7 +60,7 @@ module.exports = (app) => {
    *       412:
    *         description: Role cannot be created
    */
-  app.post('/roles', users.authenticate, users.isSuperAdmin, roles.create);
+  app.post('/roles', authenticate.verify, authenticate.isSuperAdmin, roles.create);
 
 
   /**
@@ -110,7 +111,7 @@ module.exports = (app) => {
    *       404:
    *         description: Role cannot be found
    */
-  app.put('/roles/:id', users.authenticate, users.isSuperAdmin, roles.update);
+  app.put('/roles/:id', authenticate.verify, authenticate.isSuperAdmin, roles.update);
 
   /**
    * @swagger
@@ -134,5 +135,5 @@ module.exports = (app) => {
    *       404:
    *         description: Role cannot be found
    */
-  app.delete('/roles/:id', users.authenticate, users.isSuperAdmin, roles.delete);
+  app.delete('/roles/:id', authenticate.verify, authenticate.isSuperAdmin, roles.delete);
 };

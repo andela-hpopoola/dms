@@ -1,5 +1,6 @@
 import { Users, Roles } from '../models';
 import model from './../utils/model';
+
 const Sequelize = require('sequelize');
 
 module.exports = {

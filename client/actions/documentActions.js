@@ -40,7 +40,7 @@ export function createDocument(document) {
         toastr.success('Document successfully created');
         browserHistory.push('/document/private');
       } else {
-        toastr.error(errorHandler(result.data.msg));
+        toastr.error(result.data.msg);
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {
@@ -99,7 +99,7 @@ export function getDocumentDetails(document) {
  */
 export function getDocument(id) {
   return (dispatch) => {
-    return api.get(`/documents/${id}`).then((result) => {
+    api.get(`/documents/${id}`).then((result) => {
       dispatch(getDocumentDetails(result.data));
     }).catch((error) => {
       toastr.error(error.response || error);
@@ -142,7 +142,6 @@ export function deleteDocument(id) {
   return (dispatch) => {
     api.delete(`/documents/${id}`).then(() => {
       dispatch(deleteExistingDocument(id));
-      browserHistory.push('/document/private');
       toastr.success('Document deleted successfully');
     }).catch((error) => {
       toastr.error(error.response || error);

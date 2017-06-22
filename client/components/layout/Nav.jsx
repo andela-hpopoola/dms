@@ -7,8 +7,8 @@ import { connect } from 'react-redux';
 const loggedInList = (
   <li>
     <Link to="logout">
+      Logout &nbsp;
       <i className="fa fa-sign-out" />
-      Logout
     </Link>
   </li>
 );
@@ -17,8 +17,8 @@ const loggedInList = (
 const notloggedInList = (
   <li>
     <Link to="signup">
+      Signup &nbsp;
       <i className="fa fa-user" />
-      Signup
     </Link>
   </li>
 );

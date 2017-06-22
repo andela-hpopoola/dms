@@ -32,7 +32,7 @@ export function getUsers(offset = 0) {
         dispatch(getAllUsers(users.data));
         dispatch(setPagination(users.pagination));
       } else {
-        toastr.error(errorHandler(result.data.msg));
+        toastr.error(result.data.msg);
       }
     }).catch((error) => {
       toastr.error(error.response || error);

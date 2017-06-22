@@ -29,21 +29,29 @@ export default function document(state = initialState.documents, action) {
         {},
         state,
         {
-          private: [action.updatedDocument, ...filteredDocuments]
-        },
+          current: {
+            data: filteredDocuments,
+            pagination: state.current.pagination
+          }
+        }
       );
     }
 
     case types.DELETE_EXISTING_DOCUMENT: {
-      const filteredDocuments = state.private.filter(
+      const filteredDocuments = state.current.data.filter(
         deletedDocument => deletedDocument.id !== parseInt(action.id, 10)
       );
+      const total = state.current.pagination.total - 1;
+      const pagination = Object.assign({}, state.current.pagination, { total });
       return Object.assign(
         {},
         state,
         {
-          private: filteredDocuments
-        },
+          current: {
+            data: filteredDocuments,
+            pagination
+          }
+        }
       );
     }
 

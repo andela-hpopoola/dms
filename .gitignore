@@ -5,6 +5,8 @@
 *.woff2
 *.ttf
 *.svg
+**/bin/
+**/reports
 
 # Logs
 logs

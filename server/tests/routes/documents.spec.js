@@ -88,18 +88,38 @@ describe('Document Routes', () => {
       });
     });
     describe('POST /documents/', () => {
-      it('should not create for an existing document', (done) => {
+      it('should not create for an existing document title', (done) => {
         request.post('/documents')
           .send({
-            userId: adminId,
             title: InputDocuments.Public.title,
             content: InputDocuments.Public.content,
-            access: InputDocuments.Public.access,
+            access: InputDocuments.Role.access,
             createdAt: InputDocuments.Public.createdAt,
             updatedAt: InputDocuments.Public.updatedAt
           })
           .set('x-auth', adminToken)
           .expect(409, done);
+      });
+    });
+    describe('POST /documents/', () => {
+      it('should not create for an invalid document', (done) => {
+        request.post('/documents')
+          .send({
+            access: InputDocuments.Role.access,
+          })
+          .set('x-auth', adminToken)
+          .expect(409, done);
+      });
+    });
+
+    describe('POST /documents/', () => {
+      it('should not create for an invalid document format', (done) => {
+        request.post('/documents')
+          .send({
+            wrongfield: InputDocuments.Role.access,
+          })
+          .set('x-auth', adminToken)
+          .expect(412, done);
       });
     });
 
@@ -109,11 +129,47 @@ describe('Document Routes', () => {
           .set('x-auth', adminToken)
           .expect(200)
           .end((err, res) => {
-            const expected = res.body.length;
+            const expected = res.body.pagination.total;
             const actual = 2; // can only get 2 documents
             expect(expected).toEqual(actual);
             done(err);
           });
+      });
+    });
+
+    describe('GET /documents/private', () => {
+      it('should get all private documents', (done) => {
+        request.get('/documents/private')
+          .set('x-auth', adminToken)
+          .expect(200)
+          .end((err, res) => {
+            const expected = res.body.length;
+            const actual = 1;
+            expect(expected).toEqual(actual);
+            done(err);
+          });
+      });
+    });
+
+    describe('GET /documents/public', () => {
+      it('should get all public documents', (done) => {
+        request.get('/documents/public')
+          .set('x-auth', adminToken)
+          .expect(200)
+          .end((err, res) => {
+            const expected = res.body.length;
+            const actual = 1;
+            expect(expected).toEqual(actual);
+            done(err);
+          });
+      });
+    });
+
+    describe('GET /documents/role', () => {
+      it('should get all role documents', (done) => {
+        request.get('/documents/roles')
+          .set('x-auth', adminToken)
+          .expect(200, done());
       });
     });
 
@@ -133,17 +189,6 @@ describe('Document Routes', () => {
       });
     });
 
-    describe('SEARCH search/users/', () => {
-      it('should be able to search for users', (done) => {
-        request.get('/search/users/?q=admin')
-          .set('x-auth', adminToken)
-          .expect(200)
-          .end((err) => {
-            done(err);
-          });
-      });
-    });
-
     describe('SEARCH /users/documents', () => {
       it('should be able to retrieve documents', (done) => {
         request.get('/search/documents/?q=document')
@@ -157,10 +202,13 @@ describe('Document Routes', () => {
 
     describe('SEARCH /users/documents', () => {
       it('should not retrieve unsaved documents', (done) => {
-        request.get('/search/documents/?q=')
+        request.get('/search/documents/?q=nottsavedcdocsss')
           .set('x-auth', adminToken)
-          .expect(401)
-          .end((err) => {
+          .expect(200)
+          .end((err, res) => {
+            const expected = res.body.pagination.total;
+            const actual = 0; // Document not found
+            expect(expected).toEqual(actual);
             done(err);
           });
       });
@@ -168,9 +216,9 @@ describe('Document Routes', () => {
 
     describe('SEARCH /users/:id/documents', () => {
       it('should not search when character is less than 3', (done) => {
-        request.get('/search/documents/?q=')
+        request.get('/search/documents/?q=12')
           .set('x-auth', adminToken)
-          .expect(401)
+          .expect(412)
           .end((err) => {
             done(err);
           });
@@ -178,7 +226,7 @@ describe('Document Routes', () => {
     });
 
     describe('PUT /documents/', () => {
-      it('should be updated by user', (done) => {
+      it('should be updated by user only', (done) => {
         const updatedDetails = {
           title: 'Updated Name',
         };
@@ -186,6 +234,42 @@ describe('Document Routes', () => {
           .set('x-auth', adminToken)
           .send(updatedDetails)
           .expect(200, done());
+      });
+    });
+
+    describe('PUT /documents/', () => {
+      it('should not updated invalid documents', (done) => {
+        const updatedDetails = {
+          title: 'Updated Name',
+        };
+        request.put('/documents/invalid')
+          .set('x-auth', adminToken)
+          .send(updatedDetails)
+          .expect(403, done());
+      });
+    });
+
+    describe('PUT /documents/', () => {
+      it('should not be updated by another user', (done) => {
+        const updatedDetails = {
+          title: 'Updated Name',
+        };
+        request.put(`/documents/${documentId}`)
+          .set('x-auth', 'wrongtoken')
+          .send(updatedDetails)
+          .expect(403, done());
+      });
+    });
+
+    describe('PUT /documents/', () => {
+      it('should not updated invalid information', (done) => {
+        const updatedDetails = {
+          notExistence: 'Updated Name',
+        };
+        request.put(`/documents/${documentId}`)
+          .set('x-auth', adminToken)
+          .send(updatedDetails)
+          .expect(403, done());
       });
     });
 
@@ -201,15 +285,15 @@ describe('Document Routes', () => {
       it('should be unable to delete document', (done) => {
         request.delete(`/documents/${documentId}`)
           .set('x-auth', adminToken)
-          .expect(403, done());
+          .expect(202, done());
       });
     });
 
     describe('DELETE /documents/:id', () => {
-      it('should not delete invalid document', (done) => {
-        request.delete('/documents/0')
+      it('should return an error when no data is given', (done) => {
+        request.delete('/documents/')
           .set('x-auth', adminToken)
-          .expect(404, done());
+          .expect(412, done());
       });
     });
 
@@ -222,7 +306,15 @@ describe('Document Routes', () => {
     });
 
     describe('DELETE /documents/:id', () => {
-      it('should not delete invalid document', (done) => {
+      it('should delete a valid document', (done) => {
+        request.delete(`/documents/${documentId}`)
+          .set('x-auth', adminToken)
+          .expect(202, done());
+      });
+    });
+
+    describe('DELETE /documents/:id', () => {
+      it('should not delete an invalid document', (done) => {
         request.delete('/documents/0')
           .set('x-auth', adminToken)
           .expect(404, done());

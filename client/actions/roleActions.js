@@ -32,7 +32,7 @@ export function createRole(role) {
         dispatch(addNewRole(result.data));
         toastr.success('Role successfully created');
       } else {
-        toastr.error(errorHandler(result.data.msg));
+        toastr.error(result.data.msg);
       }
       dispatch(ajaxCallEnd());
     }).catch((error) => {

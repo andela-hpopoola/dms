@@ -46,9 +46,7 @@ export class EditDocument extends Component {
    * @return {void} returns nothing
    */
   componentDidMount() {
-    this.props.actions.getDocument(this.props.params.id).then(() => {
-        console.log(this.props.currentDocument);
-    });
+    this.props.actions.getDocument(this.props.params.id);
   }
 
   /**
@@ -213,6 +211,9 @@ EditDocument.propTypes = {
     createdAt: PropTypes.string,
     updatedAt: PropTypes.string,
   }),
+  params: PropTypes.shape({
+    id: PropTypes.number,
+  }),
 };
 
 /**
@@ -221,7 +222,10 @@ EditDocument.propTypes = {
 EditDocument.defaultProps = {
   actions: {},
   currentDocument: {},
-  roleId: 0
+  roleId: 0,
+  params: {
+    id: 0
+  }
 };
 
 /**
