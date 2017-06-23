@@ -26,7 +26,7 @@ export function getAllUsers(users) {
 export function getUsers(offset = 0) {
   const limit = LIMIT.USERS;
   return (dispatch) => {
-    api.get(`/users/?limit=${limit}&offset=${offset}`).then((result) => {
+    return api.get(`/users/?limit=${limit}&offset=${offset}`).then((result) => {
       if (result.status === 200) {
         const users = result.data;
         dispatch(getAllUsers(users.data));

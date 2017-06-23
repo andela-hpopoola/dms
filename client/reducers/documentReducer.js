@@ -22,7 +22,7 @@ export default function document(state = initialState.documents, action) {
       );
 
     case types.UPDATE_EXISTING_DOCUMENT: {
-      const filteredDocuments = state.private.filter(
+      const filteredDocuments = state.current.data.filter(
         updatedDocument => updatedDocument.id !== action.updatedDocument.id
       );
       return Object.assign(
@@ -30,7 +30,7 @@ export default function document(state = initialState.documents, action) {
         state,
         {
           current: {
-            data: filteredDocuments,
+            data: [action.updatedDocument, ...filteredDocuments],
             pagination: state.current.pagination
           }
         }
