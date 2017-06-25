@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import sweetAlert from 'sweetalert';
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
-import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
+import { updateProfile, deleteUser, getSearchedUsers } from './../../actions/userActions';
 import { getUsers, getRoles } from './../../actions/allActions';
 import { LIMIT } from './../../../constants';
 import ProgressBar from './../common/ProgressBar';
@@ -94,8 +94,7 @@ class AllUsers extends Component {
    * @return {object} sets the state based on user
    */
   searchForUsers(query) {
-    console.log(query, 'query search');
-    this.props.actions.searchUsersDispatcher(query);
+    this.props.actions.getSearchedUsers(query);
     this.setState({
       pageTitle: 'Search Results',
       search: true,
@@ -142,7 +141,7 @@ class AllUsers extends Component {
     let offset = this.props.pagination.offset;
     let userCount = this.props.pagination.total;
     if (this.state.search) {
-      userList = this.props.all.search;
+      userList = this.props.all.search.data;
       userCount = userList.length;
       offset = 0;
     }
@@ -170,8 +169,7 @@ class AllUsers extends Component {
     return (
       <div className="main-container">
         <div className="row">
-         <Sidebar />
-
+          <Sidebar />
           {/* main content */}
           <div className="col l9 top__space">
             <div className="row">
@@ -212,7 +210,7 @@ AllUsers.propTypes = {
     createRole: PropTypes.func,
     updateProfile: PropTypes.func,
     deleteUser: PropTypes.func,
-    searchUsersDispatcher: PropTypes.func.isRequired,
+    getSearchedUsers: PropTypes.func.isRequired,
   }),
   pagination: PropTypes.shape({
     total: PropTypes.number,
@@ -229,6 +227,7 @@ AllUsers.propTypes = {
   }),
   all: PropTypes.shape({
     users: PropTypes.arrayOf(PropTypes.object),
+    search: PropTypes.object,
   }),
   searchItems: PropTypes.arrayOf(PropTypes.object)
 };
@@ -254,8 +253,8 @@ function mapStateToProps(state) {
     all: state.all,
     user: state.user,
     roles: state.roles,
-    searchItems: state.all.search,
-    pagination: state.pagination,
+    searchItems: state.all.search.data,
+    pagination: state.all.search.pagination,
   };
 }
 
@@ -272,7 +271,7 @@ function mapDispatchToProps(dispatch) {
       updateProfile,
       deleteUser,
       getRoles,
-      searchUsersDispatcher,
+      getSearchedUsers,
     }, dispatch)
   };
 }

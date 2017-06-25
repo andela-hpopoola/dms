@@ -70,12 +70,12 @@ module.exports = {
           { access: { $eq: DOCUMENTS.PUBLIC } },
         ]
       };
+    } else {
+      // Ignore Private Documents
+      whereQuery.access = {
+        $ne: DOCUMENTS.PRIVATE
+      };
     }
-
-    // Ignore Private Documents
-    whereQuery.access = {
-      $ne: DOCUMENTS.PRIVATE
-    };
 
     Documents
       .findAndCountAll({

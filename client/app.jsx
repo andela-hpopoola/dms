@@ -12,7 +12,6 @@ import * as auth from './utils/auth';
 import './sass/main.scss';
 
 setAuthToken(auth.getToken());
-console.log(auth.getToken(), 'auth get token');
 persistStore(store, { whitelist: ['user', 'auth', 'documents'] });
 render(
   <Provider store={store}>

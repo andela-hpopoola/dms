@@ -27,7 +27,7 @@ export function addNewRole(role) {
 export function createRole(role) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.post('/roles', role).then((result) => {
+    return api.post('/roles', role).then((result) => {
       if (result.status === 200) {
         dispatch(addNewRole(result.data));
         toastr.success('Role successfully created');
@@ -91,7 +91,7 @@ export function getAllRoles(role) {
 export function updateRole(updatedRole, currentRole) {
   return (dispatch) => {
     const id = currentRole.id;
-    api.put(`/roles/${id}`, updatedRole).then(() => {
+    return api.put(`/roles/${id}`, updatedRole).then(() => {
       updatedRole = { ...currentRole, ...updatedRole };
       dispatch(updateExistingRole(updatedRole));
       browserHistory.push('/dashboard');
@@ -110,7 +110,8 @@ export function updateRole(updatedRole, currentRole) {
  */
 export function deleteRole(id) {
   return (dispatch) => {
-    api.delete(`/roles/${id}`).then(() => {
+    const roleId = id;
+    return api.delete(`/roles/${roleId}`).then(() => {
       dispatch(deleteExistingRole(id));
       browserHistory.push('/dashboard');
       toastr.success('Role deleted successfully');

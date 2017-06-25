@@ -24,8 +24,8 @@ export function getAllUsers(users) {
  * @returns {object} action
  */
 export function getUsers(offset = 0) {
-  const limit = LIMIT.USERS;
   return (dispatch) => {
+    const limit = LIMIT.USERS;
     return api.get(`/users/?limit=${limit}&offset=${offset}`).then((result) => {
       if (result.status === 200) {
         const users = result.data;
@@ -61,7 +61,8 @@ export function getAllRoles(roles) {
  */
 export function getRoles() {
   return (dispatch) => {
-    api.get('/roles').then((result) => {
+    const url = '/roles';
+    return api.get(url).then((result) => {
       if (result.status === 200) {
         dispatch(getAllRoles(result.data));
       } else {

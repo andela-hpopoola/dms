@@ -19,37 +19,37 @@ export function setCurrentUser(user) {
   };
 }
 
-/**
- * setCurrentUser Role
- * @desc Set the role of current user
- * @param {number} roleName - the role id of current user
- * @returns {object} action
- */
-export function setCurrentUserRole(roleName) {
-  return {
-    type: types.SET_CURRENT_USER_ROLE,
-    roleName
-  };
-}
-/**
- * setCurrentUser Role
- * @desc Set the role of current user
- * @param {number} roleId - the role id of current user
- * @returns {object} action
- */
-export function setCurrentRole(roleId) {
-  return (dispatch) => {
-    api.get(`/roles/${roleId}`).then((result) => {
-      if (result.status === 200) {
-        dispatch(setCurrentUserRole(result.data.title));
-      } else {
-        dispatch(setCurrentUserRole('User'));
-      }
-    }).catch(() => {
-      dispatch(setCurrentUserRole('Unknown'));
-    });
-  };
-}
+// /**
+//  * setCurrentUser Role
+//  * @desc Set the role of current user
+//  * @param {number} roleName - the role id of current user
+//  * @returns {object} action
+//  */
+// export function setCurrentUserRole(roleName) {
+//   return {
+//     type: types.SET_CURRENT_USER_ROLE,
+//     roleName
+//   };
+// }
+// /**
+//  * setCurrentUser Role
+//  * @desc Set the role of current user
+//  * @param {number} roleId - the role id of current user
+//  * @returns {object} action
+//  */
+// export function setCurrentRole(roleId) {
+//   return (dispatch) => {
+//     api.get(`/roles/${roleId}`).then((result) => {
+//       if (result.status === 200) {
+//         dispatch(setCurrentUserRole(result.data.title));
+//       } else {
+//         dispatch(setCurrentUserRole('User'));
+//       }
+//     }).catch(() => {
+//       dispatch(setCurrentUserRole('Unknown'));
+//     });
+//   };
+// }
 
 /**
  * Logout Current User
@@ -85,7 +85,7 @@ export function updateUserProfile(updatedProfile) {
 export function updateProfile(updatedProfile, currentProfile) {
   return (dispatch) => {
     const id = currentProfile.id;
-    api.put(`/users/${id}`, updatedProfile).then(() => {
+    return api.put(`/users/${id}`, updatedProfile).then(() => {
       updatedProfile = { ...currentProfile, ...updatedProfile };
       dispatch(updateUserProfile(updatedProfile));
       toastr.info('Profile updated successfully');
@@ -105,12 +105,11 @@ export function updateProfile(updatedProfile, currentProfile) {
 export function login(user) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.post('/users/login', user).then((result) => {
+    return api.post('/users/login', user).then((result) => {
       if (result.status === 200) {
         setAuthToken(result.data.token);
         dispatch(authenticateUser(result.data.token));
         dispatch(setCurrentUser(result.data));
-        dispatch(setCurrentRole(result.data.roleId));
         browserHistory.push('/dashboard');
       } else {
         toastr.error(result.data.msg);
@@ -129,13 +128,16 @@ export function login(user) {
  */
 export function logout() {
   return (dispatch) => {
-    api.get('/users/logout').then(() => {
+    dispatch(ajaxCallStart());
+    return api.get('/users/logout').then(() => {
       dispatch(logoutCurrentUser());
       dispatch(deauthenticateUser());
       browserHistory.push('/');
       toastr.info('You have successfully signed out');
+      dispatch(ajaxCallEnd());
     }).catch((error) => {
       toastr.error(error.response || error);
+      dispatch(ajaxCallEnd());
     });
   };
 }
@@ -150,7 +152,7 @@ export function logout() {
 export function signup(user) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.post('/users', user).then((result) => {
+    return api.post('/users', user).then((result) => {
       if (result.status === 200) {
         dispatch(login(user));
         toastr.success('Your Account has been successfully created');
@@ -187,7 +189,8 @@ export function deleteExistingUser(id) {
  */
 export function deleteUser(id) {
   return (dispatch) => {
-    api.delete(`/users/${id}`).then(() => {
+    const url = `/users/${id}`;
+    return api.delete(url).then(() => {
       dispatch(deleteExistingUser(id));
       toastr.success('User deleted successfully');
     }).catch((error) => {
@@ -215,14 +218,14 @@ export function searchForUsers(users) {
  * Search Users Dispatcher
  * @param {string} userTitle the title of the user to search for
  * @param {number} usersType type of user to search for
- * @desc Get all users
+ * @desc Get all searched users
  * @returns {object} action
  */
-export function searchUsersDispatcher(userTitle) {
+export function getSearchedUsers(userTitle) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(`/search/users/?q=${userTitle}`).then((result) => {
-      if (result.data.length === 0) {
+    return api.get(`/search/users/?q=${userTitle}`).then((result) => {
+      if (result.data.data.length === 0) {
         toastr.info('No search result found');
       } else {
         dispatch(searchForUsers(result.data));
