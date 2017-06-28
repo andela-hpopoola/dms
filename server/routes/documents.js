@@ -279,7 +279,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * /documents/search:
+   * /search/documents/:
    *   get:
    *     tags:
    *       - Documents
@@ -301,5 +301,5 @@ module.exports = (app) => {
    *     security:
    *     - x-auth: []
    */
-  app.get('/search/documents/?q={q}', authenticate.verify, documents.getAll);
+  app.get('/search/documents/', authenticate.verify, documents.getAll);
 };

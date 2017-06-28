@@ -68,7 +68,9 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'roleId'
         });
         Users.hasMany(models.Documents, {
-          foreignKey: 'userId'
+          foreignKey: 'userId',
+          onDelete: 'CASCADE',
+          hooks: true
         });
       },
       isPassword: (encodedPassword, password) =>
