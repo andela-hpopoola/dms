@@ -63,7 +63,7 @@ describe('Document Reducer', () => {
     const actionType = documentActions.getDocumentDetails(document);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = document.name;
-    const actual = newState.current.name;
+    const actual = newState.currentDocument.name;
     expect(actual).toEqual(expected);
   });
 

@@ -104,6 +104,8 @@ module.exports = {
               title: document.title,
               content: document.content,
               owner: username,
+              userId: document.userId,
+              access: document.access,
               createdAt: document.createdAt,
               updatedAt: document.updatedAt,
             }

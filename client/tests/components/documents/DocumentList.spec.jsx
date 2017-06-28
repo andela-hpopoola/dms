@@ -16,18 +16,27 @@ const setup = (documents) => {
 
 describe('DocumentList Component', () => {
   const documents = [
-    { id: 'A' },
-    { id: 'B' },
-    { id: 'C' },
+    { id: 1 },
+    { id: 2 },
+    { id: 3 },
   ];
-  const wrapper = setup(documents);
+  const emptyDocuments = [];
 
   it('should exists', () => {
+    const wrapper = setup(documents);
     expect(wrapper).toExist();
   });
 
   it('has a class name of `document__list`', () => {
+    const wrapper = setup(documents);
     const actual = wrapper.find('.document__list').exists();
+    const expected = true;
+    expect(actual).toEqual(expected);
+  });
+
+  it('should output `No Document found` with empty document', () => {
+    const wrapper = setup(emptyDocuments);
+    const actual = wrapper.find('.not-found').exists();
     const expected = true;
     expect(actual).toEqual(expected);
   });

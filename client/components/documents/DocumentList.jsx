@@ -22,7 +22,6 @@ const DocumentList = (props) => {
   } else {
     allDocuments = <h3 className="not-found"> No Document found </h3>;
   }
-
   return (
     <div className="row document__list">
       { allDocuments }

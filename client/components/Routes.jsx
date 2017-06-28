@@ -70,7 +70,7 @@ class Routes extends Component {
             component={Signup}
           />
           <Route
-            path="document/new"
+            path="new-document"
             component={NewDocument}
           />
           <Route

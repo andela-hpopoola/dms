@@ -10,7 +10,7 @@ import ProgressBar from './../../components/common/ProgressBar';
  * @desc Class to display the EditRole Page
  * @extends React.Component
  */
-class EditRole extends Component {
+export class EditRole extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the EditRole Page
@@ -72,7 +72,7 @@ class EditRole extends Component {
             <div className="row">
               <form className="col s12" onSubmit={this.updateExistingRole}>
 
-                <h4>{currentRole.title}</h4>
+                <h4 className="role__title">{currentRole.title}</h4>
 
                 {/* Title */}
                 <div className="row">

@@ -10,13 +10,29 @@ import PropTypes from 'prop-types';
 const RoleRow = (props) => {
   const { role } = props;
   const { index } = props;
-
+  const usersCount = role.usersCount || 0;
+  const handleDelete = (event) => {
+    event.preventDefault();
+    props.onDelete(event.target.id);
+  };
   return (
     <tbody>
-      <tr>
+      <tr className="role__list">
         <td>{index}</td>
         <td>{role.title}</td>
-        <td>{role.usersCount || 0}</td>
+        <td>{usersCount}</td>
+        <td>
+          {usersCount < 1 ?
+            <a
+              href="/#!"
+              id={role.id}
+              className="waves-effect waves-light btn-flat"
+              onClick={handleDelete}
+            >
+              Delete
+            </a>
+          : '' }
+        </td>
       </tr>
     </tbody>
   );
@@ -30,6 +46,7 @@ RoleRow.propTypes = {
     title: PropTypes.string,
   }),
   index: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired
 };
 
 /**

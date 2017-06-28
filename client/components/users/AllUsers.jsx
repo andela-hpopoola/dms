@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sweetAlert from 'sweetalert';
 import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
 import { updateProfile, deleteUser, getSearchedUsers } from './../../actions/userActions';
 import { getUsers, getRoles } from './../../actions/allActions';
 import { LIMIT } from './../../../constants';
@@ -17,7 +16,7 @@ import UserList from './UserList';
  * @desc Class to display the all users
  * @extends React.Component
  */
-class AllUsers extends Component {
+export class AllUsers extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the AllUsers
@@ -64,9 +63,6 @@ class AllUsers extends Component {
           });
         }
       }
-    }
-    if (this.props.user.name !== nextProps.user.name) {
-      this.setState({ username: nextProps.user.name });
     }
   }
 
@@ -174,7 +170,7 @@ class AllUsers extends Component {
           <div className="col l9 top__space">
             <div className="row">
               <div className="col s12">
-                <h3 className="document__number">
+                <h3 className="user__number">
                   {userCount} User(s) Found
                 </h3>
               </div>
@@ -207,8 +203,6 @@ class AllUsers extends Component {
 AllUsers.propTypes = {
   actions: PropTypes.shape({
     getUsers: PropTypes.func,
-    createRole: PropTypes.func,
-    updateProfile: PropTypes.func,
     deleteUser: PropTypes.func,
     getSearchedUsers: PropTypes.func.isRequired,
   }),
@@ -254,7 +248,7 @@ function mapStateToProps(state) {
     user: state.user,
     roles: state.roles,
     searchItems: state.all.search.data,
-    pagination: state.all.search.pagination,
+    pagination: state.pagination,
   };
 }
 

@@ -94,7 +94,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
 
@@ -102,7 +102,7 @@ module.exports = (app) => {
   // Get all Documents Pagination
   /**
    * @swagger
-   * /documents/?limit={integer}&offset={integer}:
+   * /documents:
    *   get:
    *     tags:
    *       - Documents
@@ -120,7 +120,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
 
@@ -168,7 +168,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/documents/public', authenticate.verify, documents.public);
 
@@ -193,13 +193,13 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/documents/role', authenticate.verify, documents.role);
 
   /**
    * @swagger
-   * documents/{id}:
+   * /documents/{id}:
    *   get:
    *     tags:
    *       - Documents
@@ -221,13 +221,13 @@ module.exports = (app) => {
    *       404:
    *         description: Document not found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.getOne);
 
   /**
    * @swagger
-   * documents/{id}:
+   * /documents/{id}:
    *   put:
    *     tags:
    *       - Documents
@@ -247,7 +247,7 @@ module.exports = (app) => {
    *       404:
    *         description: Document cannot be found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.put('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.update);
 
@@ -273,7 +273,7 @@ module.exports = (app) => {
    *       404:
    *         description: Document cannot be found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.delete('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.delete);
 
@@ -290,7 +290,7 @@ module.exports = (app) => {
    *     parameters:
    *       - name: q
    *         description: The search term to search for
-   *         in: path
+   *         in: query
    *         required: true
    *         type: string
    *     responses:
@@ -299,7 +299,7 @@ module.exports = (app) => {
    *       404:
    *         description: No document found
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
-  app.get('/search/documents/', authenticate.verify, documents.getAll);
+  app.get('/search/documents/?q={q}', authenticate.verify, documents.getAll);
 };

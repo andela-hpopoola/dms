@@ -55,7 +55,7 @@ class AllUsers extends Component {
                 <input
                   name="search"
                   type="text"
-                  className="validate white"
+                  className="validate white search__user"
                   required="required"
                   pattern=".{3,}"
                   title="3 characters minimum"

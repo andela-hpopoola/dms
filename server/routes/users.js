@@ -19,8 +19,6 @@ module.exports = (app) => {
    *
    *   UserLogin:
    *     properties:
-   *       id:
-   *         type: integer
    *       email:
    *         type: string
    *       password:
@@ -112,14 +110,12 @@ module.exports = (app) => {
    *     consumes:
    *       - application/x-www-form-data-urlencoded
    *     parameters:
-   *       - name: email
-   *         description: Registered Email Adderess
+   *       - name: users
+   *         description: contains email and password
    *         in: body
    *         required: true
-   *       - name: password
-   *         description: Registered Password
-   *         in: body
-   *         required: true
+   *         schema:
+   *           $ref: '#/definitions/Users'
    *     responses:
    *       200:
    *         description: Login Successful
@@ -176,7 +172,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * users/{id}:
+   * /users/{id}:
    *   get:
    *     tags:
    *       - Users
@@ -204,7 +200,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * users/{id}:
+   * /users/{id}:
    *   put:
    *     tags:
    *       - Users
@@ -273,7 +269,7 @@ module.exports = (app) => {
    *       200:
    *         description: An array of all users document
    *     security:
-   *     - x-auth:[]
+   *     - x-auth: []
    */
   app.get('/users/:id/documents', authenticate.verify, authenticate.isOwner, users.getDocuments);
 
@@ -290,7 +286,7 @@ module.exports = (app) => {
    *     parameters:
    *       - name: q
    *         description: The search term to search for
-   *         in: path
+   *         in: query
    *         required: true
    *         type: string
    *     responses:
@@ -299,7 +295,7 @@ module.exports = (app) => {
    *       404:
    *         description: No user found
    *     security:
-   *     - x-auth:[]
+   *     - x-auth: []
    */
-  app.get('/search/users/', authenticate.verify, authenticate.isAdmin, users.getAll);
+  app.get('/search/users/?q={q}', authenticate.verify, authenticate.isAdmin, users.getAll);
 };

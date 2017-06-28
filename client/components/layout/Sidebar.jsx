@@ -1,22 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import SearchForm from './../common/SearchForm';
-import {
-  searchDocumentsDispatcher
- } from './../../actions/documentActions';
 
-
-/**
- * The method is used to search for documents
- * @param {string} query - get the documents to search
- * @return {object} redirects to the search page
- */
-const searchForDocuments = (query) => {
-  browserHistory.push(`/document/search?q=${query}`);
-};
 
 /**
  * Sidebar
@@ -32,6 +17,20 @@ class Sidebar extends Component {
    */
   constructor(props) {
     super(props);
+    this.searchForDocuments = this.searchForDocuments.bind(this);
+  }
+
+
+  /**
+   * The method is used to search for documents
+   * @param {string} query - get the documents to search
+   * @return {object} redirects to the search page
+   */
+  searchForDocuments(query) {
+    this.query = query;
+    if (this.query) {
+      browserHistory.push(`/document/search?q=${query}`);
+    }
   }
 
   /**
@@ -48,7 +47,7 @@ class Sidebar extends Component {
               <Link to="/dashboard"> Dashboard </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/new"> New Documents </Link>
+              <Link to="/new-document"> New Documents </Link>
             </li>
             <li className="collection-item">
               <Link to="/document/private"> Private Documents </Link>
@@ -75,7 +74,7 @@ class Sidebar extends Component {
             <li className="collection-item">
               <div>
                 <SearchForm
-                  onChange={searchForDocuments}
+                  onChange={this.searchForDocuments}
                 />
               </div>
             </li>
@@ -86,34 +85,4 @@ class Sidebar extends Component {
   }
 }
 
-/**
- * Set the PropTypes for Sidebar
- */
-Sidebar.propTypes = {
-  actions: PropTypes.shape({
-    searchDocumentsDispatcher: PropTypes.func.isRequired,
-  }),
-};
-
-
-/**
- * Sets default values for Sidebar Prototype
- */
-Sidebar.defaultProps = {
-  actions: {}
-};
-
-/**
- * @desc maps dispatch to actions
- * @param {object} dispatch - the action to dispatch
- * @return {object} actions
- */
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators({
-      searchDocumentsDispatcher
-    }, dispatch)
-  };
-}
-
-export default connect(null, mapDispatchToProps)(Sidebar);
+export default Sidebar;

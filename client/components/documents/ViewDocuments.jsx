@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Pagination from 'rc-pagination';
 import sweetAlert from 'sweetalert';
-import 'rc-pagination/assets/index.css';
 import Sidebar from './../layout/Sidebar';
 import ProgressBar from './../../components/common/ProgressBar'; // eslint-disable-line
 import DocumentList from './../documents/DocumentList';
@@ -21,7 +20,7 @@ import {
  * @desc Class to display the ViewDocuments
  * @extends React.Component
  */
-class ViewDocuments extends Component {
+export class ViewDocuments extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the ViewDocuments
@@ -84,7 +83,6 @@ class ViewDocuments extends Component {
    * @return {object} Document to display
    */
   getDocumentAccess() {
-    console.log(this.access, this.searchQuery, 'in get aaccess');
     this.props.actions.getDocuments(this.access, this.searchQuery);
   }
 
@@ -124,6 +122,7 @@ class ViewDocuments extends Component {
   render() {
     const documents = this.props.documents.current;
     const currentDocuments = documents.data;
+    const total = documents.pagination.total;
     const pagination = documents.pagination.totalPage > 1 ?
       (
         <div className="col s12">
@@ -146,7 +145,7 @@ class ViewDocuments extends Component {
             <div className="row">
               <div className="col s12">
                 <h3 className="document__number">
-                  {this.access} Document
+                  {total} {this.access} Document(s)
                 </h3>
               </div>
             </div>
@@ -182,6 +181,9 @@ ViewDocuments.propTypes = {
   params: PropTypes.shape({
     access: PropTypes.string,
   }),
+  location: PropTypes.shape({
+    query: PropTypes.object,
+  }),
   documents: PropTypes.shape({
     current: PropTypes.object,
     pagination: PropTypes.object,
@@ -194,8 +196,18 @@ ViewDocuments.propTypes = {
 ViewDocuments.defaultProps = {
   user: {},
   actions: {},
-  documents: {},
-  params: { access: 'private' }
+  documents: {
+    data: [],
+    pagination: {
+      currentPage: 0,
+      limit: 0,
+      offset: 0,
+      total: 0,
+      totalPage: 0
+    }
+  },
+  params: { access: 'private' },
+  location: {}
 };
 
 /**

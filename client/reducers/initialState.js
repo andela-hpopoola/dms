@@ -7,7 +7,8 @@ export default {
     private: [],
     public: [],
     role: [],
-    current: {}
+    current: {},
+    currentDocument: {}
   },
   user: {
     documents: [],

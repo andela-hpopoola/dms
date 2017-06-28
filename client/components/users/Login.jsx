@@ -4,14 +4,14 @@ import { bindActionCreators } from 'redux';
 import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import ProgressBar from './../../components/common/ProgressBar';
-import { login, loginByToken } from './../../actions/userActions';
+import { login } from './../../actions/userActions';
 
 /**
  * @class Login
  * @desc Class to display the Login Page
  * @extends React.Component
  */
-class Login extends Component {
+export class Login extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the Login Page
@@ -23,9 +23,13 @@ class Login extends Component {
     this.authenticateUser = this.authenticateUser.bind(this);
   }
 
+  /**
+   * @desc Invoked immediately when component is mounted
+   * @return {void} returns nothing
+   */
   componentDidMount() {
     if (this.props.userIsLoggedIn) {
-      this.redirectToDashboard();
+      browserHistory.push('/dashboard');
     }
   }
 
@@ -38,14 +42,6 @@ class Login extends Component {
     if (nextProps.userIsLoggedIn) {
       browserHistory.push('/dashboard');
     }
-  }
-
-  /**
-   * @desc Checks if a user is logged in or not
-   * @return {any} redirects user to dashboard or show error
-   */
-  redirectToDashboard() {
-    browserHistory.push('/dashboard');
   }
 
   /**
@@ -130,7 +126,6 @@ class Login extends Component {
 Login.propTypes = {
   actions: PropTypes.shape({
     login: PropTypes.func,
-    loginByToken: PropTypes.func,
   }),
   userIsLoggedIn: PropTypes.bool,
 };

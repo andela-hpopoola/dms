@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import Sidebar from './../layout/Sidebar';
-import { createRole } from './../../actions/roleActions';
-import toastr from 'toastr';
 
 /**
  * @class NewRole
@@ -87,13 +82,5 @@ class NewRole extends Component {
 NewRole.propTypes = {
   onSubmit: PropTypes.func.isRequired,
 };
-
-/**
- * Sets default values for Dashboard Prototype
- */
-NewRole.defaultProps = {
-  actions: {}
-};
-
 
 export default NewRole;

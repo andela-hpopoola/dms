@@ -19,38 +19,6 @@ export function setCurrentUser(user) {
   };
 }
 
-// /**
-//  * setCurrentUser Role
-//  * @desc Set the role of current user
-//  * @param {number} roleName - the role id of current user
-//  * @returns {object} action
-//  */
-// export function setCurrentUserRole(roleName) {
-//   return {
-//     type: types.SET_CURRENT_USER_ROLE,
-//     roleName
-//   };
-// }
-// /**
-//  * setCurrentUser Role
-//  * @desc Set the role of current user
-//  * @param {number} roleId - the role id of current user
-//  * @returns {object} action
-//  */
-// export function setCurrentRole(roleId) {
-//   return (dispatch) => {
-//     api.get(`/roles/${roleId}`).then((result) => {
-//       if (result.status === 200) {
-//         dispatch(setCurrentUserRole(result.data.title));
-//       } else {
-//         dispatch(setCurrentUserRole('User'));
-//       }
-//     }).catch(() => {
-//       dispatch(setCurrentUserRole('Unknown'));
-//     });
-//   };
-// }
-
 /**
  * Logout Current User
  * @desc Logs out the current user

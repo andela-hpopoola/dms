@@ -118,9 +118,9 @@ export function getDocument(id) {
 export function updateDocument(updatedDocument, currentDocument) {
   return (dispatch) => {
     const id = currentDocument.id;
+    updatedDocument = { ...currentDocument, ...updatedDocument };
     return api.put(`/documents/${id}`, updatedDocument).then((result) => {
       if (result.status === 200) {
-        updatedDocument = { ...currentDocument, ...updatedDocument };
         dispatch(updateExistingDocument(updatedDocument));
         browserHistory.push('/document/private');
         toastr.success('Document updated successfully');

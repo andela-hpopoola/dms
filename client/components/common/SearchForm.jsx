@@ -51,7 +51,7 @@ class SearchForm extends Component {
           </div>
           <div className="col s12">
             <button
-              className="btn white-text red darken-2 waves-effect waves-light btn-flat"
+              className="btn btn-search white-text red darken-2 waves-effect waves-light btn-flat"
               type="submit"
             >
               Search

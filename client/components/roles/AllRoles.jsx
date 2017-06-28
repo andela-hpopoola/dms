@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sweetAlert from 'sweetalert';
-import 'rc-pagination/assets/index.css';
 import { createRole, updateProfile, deleteRole, searchRolesDispatcher } from './../../actions/roleActions';
 import { getRoles } from './../../actions/allActions';
 import ProgressBar from './../common/ProgressBar';
@@ -16,7 +15,7 @@ import NewRole from './../roles/NewRole';
  * @desc Class to display the all roles
  * @extends React.Component
  */
-class AllRoles extends Component {
+export class AllRoles extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the AllRoles
@@ -98,16 +97,14 @@ class AllRoles extends Component {
             </div>
             <div className="row">
               <ProgressBar />
-                                 
               <div className="col s12">
                 <NewRole onSubmit={this.createNewRole} />
                 <RoleList
                   roles={roleList}
                   roleId={this.props.role.roleId}
-                  onChange={this.searchForRoles}
                   onDelete={this.deleteRoleAlert}
                 />
-              </div> 
+              </div>
             </div>
           </div>
         </div>
@@ -123,15 +120,7 @@ AllRoles.propTypes = {
   actions: PropTypes.shape({
     getRoles: PropTypes.func,
     createRole: PropTypes.func,
-    updateProfile: PropTypes.func,
     deleteRole: PropTypes.func,
-    searchRolesDispatcher: PropTypes.func.isRequired,
-  }),
-  pagination: PropTypes.shape({
-    total: PropTypes.number,
-    currentPage: PropTypes.number,
-    offset: PropTypes.number,
-    limit: PropTypes.number
   }),
   role: PropTypes.shape({
     name: PropTypes.string,
@@ -143,7 +132,6 @@ AllRoles.propTypes = {
   all: PropTypes.shape({
     roles: PropTypes.arrayOf(PropTypes.object),
   }),
-  searchItems: PropTypes.arrayOf(PropTypes.object)
 };
 
 /**

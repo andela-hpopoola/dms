@@ -60,7 +60,7 @@ export default function document(state = initialState.documents, action) {
         {},
         state,
         {
-          current: action.document
+          currentDocument: action.document
         }
       );
 

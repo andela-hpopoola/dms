@@ -20,7 +20,7 @@ const UserRow = (props) => {
     props.onDelete(event.target.id);
   };
   return (
-    <tr>
+    <tr className="user__row">
       <td>{index}</td>
       <td>{user.name}</td>
       <td>{user.email}</td>
