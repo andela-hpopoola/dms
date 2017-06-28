@@ -10,6 +10,7 @@ import {
   roleDocumentsDispatcher,
   privateDocumentsDispatcher
  } from './../../actions/documentActions';
+import { ROLES } from './../../../constants';
 /**
  * @class Dashboard
  * @desc Class to display the dashboard
@@ -100,6 +101,48 @@ export class Dashboard extends Component {
                   color="green"
                   icon="file"
                   link="document/role"
+                />
+                <DashboardCard
+                  title="Documents"
+                  details="Create New"
+                  color="black"
+                  icon="file-text"
+                  link="/new-document"
+                />
+                <DashboardCard
+                  title="Profile"
+                  details="Edit Details"
+                  color="deep-purple"
+                  icon="user"
+                  link="/edit-profile"
+                />
+
+                { this.props.user.roleId !== ROLES.USER ?
+                  <DashboardCard
+                    title="Users"
+                    details="View All"
+                    color="blue"
+                    icon="users"
+                    link="/all-users"
+                  /> : ''
+                }
+
+                { this.props.user.roleId === ROLES.SUPERADMIN ?
+                  <DashboardCard
+                    title="Roles"
+                    details="All Roles"
+                    color="red"
+                    icon="tasks"
+                    link="/all-roles"
+                  /> : ''
+                }
+
+                <DashboardCard
+                  title="Exit"
+                  details="Log Out"
+                  color="blue-grey"
+                  icon="sign-out"
+                  link="/logout"
                 />
               </div>
             </div>

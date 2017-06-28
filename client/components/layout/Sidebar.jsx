@@ -44,28 +44,25 @@ class Sidebar extends Component {
           <ul className="collection with-header">
             <li className="collection-header"><h4>Quick Links</h4></li>
             <li className="collection-item">
-              <Link to="/dashboard"> Dashboard </Link>
+              <Link to="/dashboard"> <i className="fa fa-dashboard" /> &nbsp; Dashboard </Link>
             </li>
             <li className="collection-item">
-              <Link to="/new-document"> New Documents </Link>
+              <Link to="/new-document"> <i className="fa fa-file-text" /> &nbsp; New Documents </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/private"> Private Documents </Link>
+              <Link to="/document/private"> <i className="fa fa-file" /> &nbsp; Personal Documents </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/public"> Public Documents </Link>
+              <Link to="/document/public"> <i className="fa fa-file" /> &nbsp; Public Documents </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/role"> Role Documents </Link>
+              <Link to="/document/role"> <i className="fa fa-file" /> &nbsp; Role Documents </Link>
             </li>
             <li className="collection-item">
-              <Link to="/all-roles"> All Roles </Link>
+              <Link to="/edit-profile"> <i className="fa fa-user" /> &nbsp;  Edit Profile </Link>
             </li>
             <li className="collection-item">
-              <Link to="/edit-profile"> Edit Profile </Link>
-            </li>
-            <li className="collection-item">
-              <Link to="/all-users"> All Users </Link>
+              <Link to="/sign-out"> <i className="fa fa-sign-out" /> &nbsp; Log Out </Link>
             </li>
           </ul>
         </div>
