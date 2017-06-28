@@ -34,7 +34,7 @@ export function addNewDocument(document) {
 export function createDocument(document) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.post('/documents', document).then((result) => {
+    return api.post('/documents', document).then((result) => {
       if (result.status === 200) {
         dispatch(addNewDocument(result.data));
         toastr.success('Document successfully created');
@@ -99,7 +99,8 @@ export function getDocumentDetails(document) {
  */
 export function getDocument(id) {
   return (dispatch) => {
-    api.get(`/documents/${id}`).then((result) => {
+    const documentId = id;
+    return api.get(`/documents/${documentId}`).then((result) => {
       dispatch(getDocumentDetails(result.data));
     }).catch((error) => {
       toastr.error(error.response || error);
@@ -117,9 +118,9 @@ export function getDocument(id) {
 export function updateDocument(updatedDocument, currentDocument) {
   return (dispatch) => {
     const id = currentDocument.id;
-    api.put(`/documents/${id}`, updatedDocument).then((result) => {
+    updatedDocument = { ...currentDocument, ...updatedDocument };
+    return api.put(`/documents/${id}`, updatedDocument).then((result) => {
       if (result.status === 200) {
-        updatedDocument = { ...currentDocument, ...updatedDocument };
         dispatch(updateExistingDocument(updatedDocument));
         browserHistory.push('/document/private');
         toastr.success('Document updated successfully');
@@ -140,7 +141,8 @@ export function updateDocument(updatedDocument, currentDocument) {
  */
 export function deleteDocument(id) {
   return (dispatch) => {
-    api.delete(`/documents/${id}`).then(() => {
+    const url = `/documents/${id}`;
+    return api.delete(url).then(() => {
       dispatch(deleteExistingDocument(id));
       toastr.success('Document deleted successfully');
     }).catch((error) => {
@@ -186,7 +188,7 @@ export function privateDocumentsDispatcher(offset = null) {
         const documents = result.data;
         if (paginate) {
           dispatch(getPrivateDocuments(documents.data));
-          dispatch(setPagination(documents.pagination));
+          // dispatch(setPagination(documents.pagination));
         } else {
           dispatch(getPrivateDocuments(documents));
         }
@@ -264,7 +266,7 @@ export function getDocuments(access, query = '', offset = 0) {
 
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(URL).then((result) => {
+    return api.get(URL).then((result) => {
       if (result.status === 200) {
         dispatch(getCurrentDocuments(result.data));
       } else {
@@ -331,7 +333,7 @@ export function roleDocumentsDispatcher(offset = null) {
 
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(roleURL).then((result) => {
+    return api.get(roleURL).then((result) => {
       if (result.status === 200) {
         const documents = result.data;
         if (paginate) {
@@ -367,7 +369,7 @@ export function searchForDocuments(documents) {
 
 /**
  * Search Documents Dispatcher
- * @param {string} documentTitle the title of the document to search for
+ * @param {string} documentTitle the title of document to search for
  * @param {number} documentsType type of document to search for
  * @desc Get all documents
  * @returns {object} action
@@ -375,7 +377,7 @@ export function searchForDocuments(documents) {
 export function searchDocumentsDispatcher(documentTitle) {
   return (dispatch) => {
     dispatch(ajaxCallStart());
-    api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
+    return api.get(`/search/documents/?q=${documentTitle}`).then((result) => {
       if (result.data.length === 0) {
         toastr.info('No search result found');
         dispatch(ajaxCallEnd());

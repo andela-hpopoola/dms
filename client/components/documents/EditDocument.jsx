@@ -9,12 +9,6 @@ import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 
 // Require Editor JS files.
 require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
-// Require Editor CSS files.
-require('./../../../node_modules/froala-editor/css/froala_style.min.css');
-require('./../../../node_modules/froala-editor/css/froala_editor.pkgd.min.css');
-
-// Require Font Awesome.
-require('./../../../node_modules/font-awesome/css/font-awesome.css');
 
 const FroalaEditor = require('react-froala-wysiwyg');
 
@@ -212,7 +206,7 @@ EditDocument.propTypes = {
     updatedAt: PropTypes.string,
   }),
   params: PropTypes.shape({
-    id: PropTypes.number,
+    id: PropTypes.string,
   }),
 };
 
@@ -235,7 +229,7 @@ EditDocument.defaultProps = {
  */
 function mapStateToProps(state) {
   return {
-    currentDocument: state.documents.current,
+    currentDocument: state.documents.currentDocument,
     roleId: state.user.roleId,
     userId: state.user.id
   };

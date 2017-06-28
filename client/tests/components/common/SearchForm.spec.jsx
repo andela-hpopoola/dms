@@ -1,27 +1,27 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
-// import sinon from 'sinon';
+import sinon from 'sinon';
 import SearchForm from './../../../components/common/SearchForm';
 
+const spy = sinon.spy(SearchForm.prototype, 'handleSearch');
 const setup = () => {
   const props = {
-    onChange: (() => { })
+    onChange: (() => {})
   };
   return shallow(<SearchForm {...props} />);
 };
-// const fakeEvent = {
-//   preventDefault: () => true,
-//   target: {
-//     search: {
-//       value: 'Search'
-//     }
-//   }
-// };
+const fakeEvent = {
+  preventDefault: () => true,
+  target: {
+    search: {
+      value: 'Search'
+    }
+  }
+};
 
 describe('SearchForm Component', () => {
   const wrapper = setup();
-  // const spyHandleSearch = sinon.spy(SearchForm.prototype, 'handleSearch');
 
   it('should exists', () => {
     expect(wrapper).toExist();
@@ -39,13 +39,8 @@ describe('SearchForm Component', () => {
     expect(actual).toEqual(expected);
   });
 
-  // it('call HandleSearch when form is submitted', () => {
-  //   wrapper.instance().handleSearch(fakeEvent);
-  //   sinon.assert.calledOnce(spyHandleSearch);
-  // });
+  it('should call handleSearch when form is submitted', () => {
+    wrapper.instance().handleSearch(fakeEvent);
+    sinon.assert.calledOnce(spy);
+  });
 });
-    // const wrapper = mount(<ManageCoursePage {...props}/>);
-    // const saveButton = wrapper.find('input').last();
-    // expect(saveButton.prop('type')).toBe('submit'); //assure we found the submit.
-    // saveButton.simulate('click');
-    // expect(wrapper.state().errors.title).toBe('Title must be at least 5 characters.');

@@ -15,7 +15,7 @@ import {
  * @desc Class to display the dashboard
  * @extends React.Component
  */
-class Dashboard extends Component {
+export class Dashboard extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the Dashboard
@@ -85,21 +85,21 @@ class Dashboard extends Component {
                   details={`${this.state.documents.private} Document(s)`}
                   color="red"
                   icon="file"
-                  link="document/view/private"
+                  link="document/private"
                 />
                 <DashboardCard
                   title="Public"
                   details={`${this.state.documents.public} Document(s)`}
                   color="blue"
                   icon="file"
-                  link="document/view/public"
+                  link="document/public"
                 />
                 <DashboardCard
-                  title="Public"
+                  title="Role"
                   details={`${this.state.documents.role} Document(s)`}
                   color="green"
                   icon="file"
-                  link="document/view/role"
+                  link="document/role"
                 />
               </div>
             </div>

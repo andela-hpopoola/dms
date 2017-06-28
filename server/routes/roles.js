@@ -33,7 +33,7 @@ module.exports = (app) => {
    *       412:
    *         description: Exception Error
    *     security:
-   *     - x-auth:
+   *     - x-auth: []
    */
   app.get('/roles', roles.getAll);
 
@@ -65,7 +65,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * roles/{id}:
+   * /roles/{id}:
    *   get:
    *     tags:
    *       - Roles
@@ -91,7 +91,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * roles/{id}:
+   * /roles/{id}:
    *   put:
    *     tags:
    *       - Roles

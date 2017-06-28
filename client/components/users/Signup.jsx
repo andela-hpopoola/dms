@@ -12,7 +12,7 @@ import { signup } from './../../actions/userActions';
  * @desc Class to display the Signup Page
  * @extends React.Component
  */
-class Signup extends Component {
+export class Signup extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the Signup Page

@@ -7,7 +7,8 @@ import { MOCK_DOCUMENTS } from './../../../../constants';
 const setup = (document) => {
   const props = {
     document,
-    userId: 1
+    userId: 1,
+    onDelete: () => {}
   };
   return shallow(<DocumentSingle {...props} />);
 };

@@ -15,6 +15,7 @@ const RoleList = (props) => {
       index={index + 1}
       role={role}
       key={role.id}
+      onDelete={props.onDelete}
     />)
   );
   return (
@@ -33,6 +34,7 @@ const RoleList = (props) => {
  */
 RoleList.propTypes = {
   roles: PropTypes.arrayOf(PropTypes.object),
+  onDelete: PropTypes.func.isRequired
 };
 
 /**

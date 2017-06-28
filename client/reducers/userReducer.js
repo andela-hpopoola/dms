@@ -32,7 +32,7 @@ export default function user(state = initialState.user, action) {
       );
 
     case types.LOGOUT_CURRENT_USER:
-      return Object.assign({}, state, {});
+      return {};
 
     default:
       return state;

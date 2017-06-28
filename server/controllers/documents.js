@@ -70,12 +70,12 @@ module.exports = {
           { access: { $eq: DOCUMENTS.PUBLIC } },
         ]
       };
+    } else {
+      // Ignore Private Documents
+      whereQuery.access = {
+        $ne: DOCUMENTS.PRIVATE
+      };
     }
-
-    // Ignore Private Documents
-    whereQuery.access = {
-      $ne: DOCUMENTS.PRIVATE
-    };
 
     Documents
       .findAndCountAll({
@@ -104,6 +104,8 @@ module.exports = {
               title: document.title,
               content: document.content,
               owner: username,
+              userId: document.userId,
+              access: document.access,
               createdAt: document.createdAt,
               updatedAt: document.updatedAt,
             }

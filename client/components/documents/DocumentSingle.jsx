@@ -17,7 +17,6 @@ const DocumentSingle = (props) => {
   let access = 'Role';
   let color = 'blue role';
   let userDocument = false;
-
   if (document.userId === props.userId) {
     userDocument = true;
   }
@@ -50,7 +49,7 @@ const DocumentSingle = (props) => {
       <div className={accessClass}>
         <div className="card-content">
           <div className="document__access white-text">
-            {access}
+            {access} - {document.userId}
             <div className="right">
               {userDocument &&
                 <Link
@@ -112,7 +111,7 @@ const DocumentSingle = (props) => {
  */
 DocumentSingle.propTypes = {
   document: PropTypes.shape({
-    id: PropTypes.string,
+    id: PropTypes.number,
     title: PropTypes.string,
     content: PropTypes.string,
   }),

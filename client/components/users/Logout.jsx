@@ -10,7 +10,7 @@ import { logout } from './../../actions/userActions';
  * @desc Class to display the Logout Page
  * @extends React.Component
  */
-class Logout extends Component {
+export class Logout extends Component {
 
   /**
    * @desc Invoked before a component is mounted

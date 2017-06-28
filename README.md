@@ -8,20 +8,12 @@ DMS is a modern full stack document management system, complete with roles and p
 
 ## Table of Contents
 
-1. Technologies
-2. Features
+1. Features
+2. Technologies
 2. Installation and Setup
 3. Testing the application
 4. Limitations
 5. How To Contribute
-
-## Technologies
-This project built with React and Redux architecture. Nodejs and Express are used for server side development. The application data is persisted with POSTGRES. The application is styled with SASS and bundled with Webpack.
-1. React & Redux: React is used for rapid front-end web developement. React is the "V" in your MVC, but with the Redux Application Architecture you can add the "M & C" to easily wire up components into a working application. Redux is a predictable state container for JavaScript apps.
-2. NodeJS & Express: NodeJS is a server-side JavaScript runtime engine built on Chrome's V8 JavaScript engine. Express is used as a web development framework. Express is a fast, unopinionated, minimalist web framework for Node.js.
-3. Postgresql & Sequelize: Postgresql is the world's most advanced open source Object-Relational Model (ORM) database.Sequelize is a promise-based ORM for Node.js v4 and up. It supports the dialects PostgreSQL, MySQL, SQLite and MSSQL and features solid transaction support, relations, read replication and more.
-4. Sass: Sass stands for Syntactically Awesome Style Sheets. It is the most mature, stable, and powerful professional grade CSS extension language in the world.
-5. Webpack: Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging modules.
 
 
 ## Features
@@ -62,34 +54,14 @@ The API has been documented with swagger. You can view the online doucumention v
 #### Authentication
 The api endpoints are protected from authorized access. The unprotected endpoint are the signup and login endpoint. JWT token is used to protect the application against unauthorized access. Some of the endpoints are also protected by roles.
 
+## Technologies
+This project built with React and Redux architecture. Nodejs and Express are used for server side development. The application data is persisted with POSTGRES. The application is styled with SASS and bundled with Webpack.
+1. React & Redux: React is used for rapid front-end web developement. React is the "V" in your MVC, but with the Redux Application Architecture you can add the "M & C" to easily wire up components into a working application. Redux is a predictable state container for JavaScript apps.
+2. NodeJS & Express: NodeJS is a server-side JavaScript runtime engine built on Chrome's V8 JavaScript engine. Express is used as a web development framework. Express is a fast, unopinionated, minimalist web framework for Node.js.
+3. Postgresql & Sequelize: Postgresql is the world's most advanced open source Object-Relational Model (ORM) database.Sequelize is a promise-based ORM for Node.js v4 and up. It supports the dialects PostgreSQL, MySQL, SQLite and MSSQL and features solid transaction support, relations, read replication and more.
+4. Sass: Sass stands for Syntactically Awesome Style Sheets. It is the most mature, stable, and powerful professional grade CSS extension language in the world.
+5. Webpack: Webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging modules.
 
-## Endpoints
-
-#### Users
-
-  EndPoint              | Functionality                             | Access
- ----------             | ---------------                           | ------------------ 
-`POST /users/login`     |   Logs in a user.                         |  No Authentication
-`POST /users/logout`    |   Logs out a user.                        |  No Authentication
-`POST /users`           |   Creates a new user.                     |  Admin / SuperAdmin
-`GET /users`            |   Find matching instances of user.        |  Admin / SuperAdmin
-`GET /users/:id`        |   Finds user.                             |  Admin / SuperAdmin
-`PUT /users/:id`        |   Update user attributes.                 |  User
-`DELETE /users/:id`     |   Deletes user                            |  Admin / SuperAdmin
-`GET /users/:id/documents`   | Gets all documents for a particular user | User
-
-#### Documents
-
-  EndPoint              | Functionality                           | Access
- ----------             | ---------------                         | ------------------ 
-`POST /documents`       |   Creates a new document instance.      |  User
-`GET /documents`        |   Find matching instances of document.  |  User
-`GET /documents/:id`    |   Find document.                        |  User
-`PUT /documents/:id`    |   Updates document attributes.          |  User
-`DELETE /documents/:id` |   Delete document.                      |  User
-`GET search/documents/?q=${query}` | Search for a doc             |  User
-
-All roles endpoints can only be accessed by the superadmin.
 
 ## Installation and Setup
 
@@ -105,7 +77,7 @@ $ npm install
 ```
 4.  Create Postgresql database and run migrations `npm run db:migrations`.
 
-5. Create a `.env` file by using the sample env file `.env.sample` in the root directory of the application. Use a different Database for your testing and development.
+5. Create a `.env` file by using the sample env file `.env.sample` in the root directory of the application. Use a different database for your testing and development.
 
 6. Start the application:
 

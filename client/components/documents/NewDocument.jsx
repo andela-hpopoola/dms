@@ -8,12 +8,6 @@ import { DOCUMENTS, EDITOR_CONFIG } from './../../../constants';
 import { createDocument } from './../../actions/documentActions';
 // Require Editor JS files.
 require('./../../../node_modules/froala-editor/js/froala_editor.pkgd.min.js');
-// Require Editor CSS files.
-require('./../../../node_modules/froala-editor/css/froala_style.min.css');
-require('./../../../node_modules/froala-editor/css/froala_editor.pkgd.min.css');
-
-// Require Font Awesome.
-require('./../../../node_modules/font-awesome/css/font-awesome.css');
 
 const FroalaEditor = require('react-froala-wysiwyg');
 
@@ -22,7 +16,7 @@ const FroalaEditor = require('react-froala-wysiwyg');
  * @desc Class to display the NewDocument Page
  * @extends React.Component
  */
-class NewDocument extends Component {
+export class NewDocument extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the NewDocument Page

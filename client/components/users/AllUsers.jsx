@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import sweetAlert from 'sweetalert';
 import Pagination from 'rc-pagination';
-import 'rc-pagination/assets/index.css';
-import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
+import { updateProfile, deleteUser, getSearchedUsers } from './../../actions/userActions';
 import { getUsers, getRoles } from './../../actions/allActions';
 import { LIMIT } from './../../../constants';
 import ProgressBar from './../common/ProgressBar';
@@ -17,7 +16,7 @@ import UserList from './UserList';
  * @desc Class to display the all users
  * @extends React.Component
  */
-class AllUsers extends Component {
+export class AllUsers extends Component {
 
   /**
    * @desc Set the Initial conditions for showing the AllUsers
@@ -65,9 +64,6 @@ class AllUsers extends Component {
         }
       }
     }
-    if (this.props.user.name !== nextProps.user.name) {
-      this.setState({ username: nextProps.user.name });
-    }
   }
 
   /**
@@ -94,8 +90,7 @@ class AllUsers extends Component {
    * @return {object} sets the state based on user
    */
   searchForUsers(query) {
-    console.log(query, 'query search');
-    this.props.actions.searchUsersDispatcher(query);
+    this.props.actions.getSearchedUsers(query);
     this.setState({
       pageTitle: 'Search Results',
       search: true,
@@ -142,7 +137,7 @@ class AllUsers extends Component {
     let offset = this.props.pagination.offset;
     let userCount = this.props.pagination.total;
     if (this.state.search) {
-      userList = this.props.all.search;
+      userList = this.props.all.search.data;
       userCount = userList.length;
       offset = 0;
     }
@@ -170,13 +165,12 @@ class AllUsers extends Component {
     return (
       <div className="main-container">
         <div className="row">
-         <Sidebar />
-
+          <Sidebar />
           {/* main content */}
           <div className="col l9 top__space">
             <div className="row">
               <div className="col s12">
-                <h3 className="document__number">
+                <h3 className="user__number">
                   {userCount} User(s) Found
                 </h3>
               </div>
@@ -209,10 +203,8 @@ class AllUsers extends Component {
 AllUsers.propTypes = {
   actions: PropTypes.shape({
     getUsers: PropTypes.func,
-    createRole: PropTypes.func,
-    updateProfile: PropTypes.func,
     deleteUser: PropTypes.func,
-    searchUsersDispatcher: PropTypes.func.isRequired,
+    getSearchedUsers: PropTypes.func.isRequired,
   }),
   pagination: PropTypes.shape({
     total: PropTypes.number,
@@ -229,6 +221,7 @@ AllUsers.propTypes = {
   }),
   all: PropTypes.shape({
     users: PropTypes.arrayOf(PropTypes.object),
+    search: PropTypes.object,
   }),
   searchItems: PropTypes.arrayOf(PropTypes.object)
 };
@@ -254,7 +247,7 @@ function mapStateToProps(state) {
     all: state.all,
     user: state.user,
     roles: state.roles,
-    searchItems: state.all.search,
+    searchItems: state.all.search.data,
     pagination: state.pagination,
   };
 }
@@ -272,7 +265,7 @@ function mapDispatchToProps(dispatch) {
       updateProfile,
       deleteUser,
       getRoles,
-      searchUsersDispatcher,
+      getSearchedUsers,
     }, dispatch)
   };
 }

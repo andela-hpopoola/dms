@@ -21,6 +21,7 @@
       "requireParamDescription": false,
       "requireReturnDescription": true
     }],
+    "import/no-named-as-default": 0,
     "require-jsdoc": ["error", {
         "require": {
             "FunctionDeclaration": true,

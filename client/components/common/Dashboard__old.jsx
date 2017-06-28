@@ -13,7 +13,7 @@ import EditProfile from './../users/EditProfile';
 import NewRole from './../roles/NewRole';
 import EditRole from './../roles/EditRole';
 import ProgressBar from './../../components/common/ProgressBar'; // eslint-disable-line
-import { updateProfile, deleteUser, searchUsersDispatcher } from './../../actions/userActions';
+import { updateProfile, deleteUser, getSearchedUsers } from './../../actions/userActions';
 import SearchForm from './../common/SearchForm';
 import AllUsers from './../users/AllUsers';
 import AllRoles from './../roles/AllRoles';
@@ -563,7 +563,7 @@ class Dashboard extends Component {
    * @return {object} sets the state based on user
    */
   searchForUsers(query) {
-    this.props.actions.searchUsersDispatcher(query);
+    this.props.actions.getSearchedUsers(query);
     this.setState({
       pageTitle: 'Search Results',
       search: true,
@@ -807,7 +807,7 @@ Dashboard.propTypes = {
     publicDocumentsDispatcher: PropTypes.func.isRequired,
     roleDocumentsDispatcher: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
-    searchUsersDispatcher: PropTypes.func.isRequired,
+    getSearchedUsers: PropTypes.func.isRequired,
     loginByToken: PropTypes.func,
   }),
   pagination: PropTypes.shape({
@@ -884,7 +884,7 @@ function mapDispatchToProps(dispatch) {
       publicDocumentsDispatcher,
       roleDocumentsDispatcher,
       searchDocumentsDispatcher,
-      searchUsersDispatcher,
+      getSearchedUsers,
     }, dispatch)
   };
 }
