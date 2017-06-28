@@ -49,7 +49,7 @@ const DocumentSingle = (props) => {
       <div className={accessClass}>
         <div className="card-content">
           <div className="document__access white-text">
-            {access} - {document.userId}
+            {access}
             <div className="right">
               {userDocument &&
                 <Link
