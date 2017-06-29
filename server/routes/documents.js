@@ -38,15 +38,18 @@ module.exports = (app) => {
    *         type: integer
    */
 
+
   // Security Schema definition
   /**
    * @swagger
    * securityDefinitions:
    *  x-auth:
    *    type: apiKey
+   *    description: JWT Authentication
    *    in: header
-   *    name: JWT-TOKEN
+   *    name: x-auth
    */
+
 
   /**
    * @swagger
@@ -59,21 +62,40 @@ module.exports = (app) => {
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: document
-   *         description: Document object
-   *         in: body
+   *       - name: title
+   *         description: title of document
+   *         in: formData
    *         required: true
-   *         schema:
-   *           $ref: '#/definitions/Documents'
+   *         type: string
+   *       - name: content
+   *         description: document content
+   *         in: formData
+   *         required: true
+   *         type: string
+   *       - name: access
+   *         description: access type (Public = `-1`, Private = `0`, Role = RoleID)
+   *         in: formData
+   *         required: true
+   *         type: string
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully created
+   *       403:
+   *         description: Forbidden
    *       412:
    *         description: Document cannot be created
+   *     security:
+   *     - x-auth: []
    */
   app.post('/documents', authenticate.verify, documents.create);
 
-  // Get all Documents Routes
+
+// Get all Documents Routes
   /**
    * @swagger
    * /documents:
@@ -84,37 +106,29 @@ module.exports = (app) => {
    *     summary: Get All Documents
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
+   *       - name: limit
+   *         description: The limit of documents to retrieve
+   *         in: query
+   *         required: false
+   *         type: integer
+   *       - name: offset
+   *         description: The offset of documents to retrieve
+   *         in: query
+   *         required: false
+   *         type: integer
    *     responses:
    *       200:
    *         description: An array of all documents
    *         schema:
    *           $ref: '#/definitions/Documents'
-   *       404:
-   *         description: Documents not found
-   *       412:
-   *         description: Exception Error
-   *     security:
-   *     - x-auth: []
-   */
-  app.get('/documents', authenticate.verify, authenticate.isAdmin, documents.getAll);
-
-
-  // Get all Documents Pagination
-  /**
-   * @swagger
-   * /documents:
-   *   get:
-   *     tags:
-   *       - Documents
-   *     description: Returns all documents in a pagination format
-   *     summary: Get all Documents Pagination
-   *     produces:
-   *       - application/json
-   *     responses:
-   *       200:
-   *         description: An array of all documents (data) with pagination
-   *         schema:
-   *           $ref: '#/definitions/Pagination'
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Documents not found
    *       412:
@@ -135,6 +149,12 @@ module.exports = (app) => {
    *     summary: Get All Private Documents
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all private documents
@@ -144,8 +164,11 @@ module.exports = (app) => {
    *         description: Documents not found
    *       412:
    *         description: Exception Error
+   *     security:
+   *     - x-auth: []
    */
   app.get('/documents/private', authenticate.verify, documents.private);
+
 
 // Get all public documents
   /**
@@ -158,6 +181,12 @@ module.exports = (app) => {
    *     summary: Get All Public Documents
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all public documents
@@ -183,6 +212,12 @@ module.exports = (app) => {
    *     summary: Get all Role Documents
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all roles documents
@@ -208,6 +243,11 @@ module.exports = (app) => {
    *     produces:
    *       - application/json
    *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *       - name: id
    *         description: Documents's id
    *         in: path
@@ -225,6 +265,7 @@ module.exports = (app) => {
    */
   app.get('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.getOne);
 
+
   /**
    * @swagger
    * /documents/{id}:
@@ -241,17 +282,38 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: title
+   *         description: updated Title
+   *         in: formData
+   *         required: true
+   *         type: string
+   *       - name: content
+   *         description: updated content
+   *         in: formData
+   *         required: true
+   *         type: string
+   *       - name: access
+   *         description: updated access (Public = `-1`, Private = `0`, Role = RoleID)
+   *         in: formData
+   *         required: true
+   *         type: string
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully updated
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Document cannot be found
    *     security:
    *     - x-auth: []
    */
   app.put('/documents/:id', authenticate.verify, authenticate.ownsDocument, documents.update);
-
-  /**
+/**
    * @swagger
    * /documents/{id}:
    *   delete:
@@ -267,9 +329,16 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully deleted
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Document cannot be found
    *     security:
@@ -293,9 +362,16 @@ module.exports = (app) => {
    *         in: query
    *         required: true
    *         type: string
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all documents
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: No document found
    *     security:

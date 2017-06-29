@@ -49,7 +49,7 @@ The application contains 3 roles by default
   - User
 
 #### API Documentation
-The API has been documented with swagger. You can view the online doucumention via [https://haruna-dms.herokuapp.com/api-docs/](https://haruna-dms.herokuapp.com/api-docs/)
+The API has been documented with swagger. You can view the online doucumention via [http://haruna-dms.herokuapp.com/api-docs/](http://haruna-dms.herokuapp.com/api-docs/)
 
 #### Authentication
 The api endpoints are protected from authorized access. The unprotected endpoint are the signup and login endpoint. JWT token is used to protect the application against unauthorized access. Some of the endpoints are also protected by roles.

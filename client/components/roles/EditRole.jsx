@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Sidebar from './../layout/Sidebar';
 import { getRole } from './../../actions/roleActions';
 import ProgressBar from './../../components/common/ProgressBar';
 
@@ -32,7 +33,7 @@ export class EditRole extends Component {
    * @return {void} returns nothing
    */
   componentDidMount() {
-    this.props.actions.getRole(this.state.id);
+    this.props.actions.getRole(this.props.params.id);
   }
 
   /**
@@ -65,45 +66,53 @@ export class EditRole extends Component {
   render() {
     const { currentRole } = this.props;
     return (
-      <div className="row">
-        <div className="card col s12">
-          <div className="card-content">
-            <span className="card-title">EditRole</span><br />
+      <div className="main-container">
+        <div className="row">
+          <Sidebar />
+
+          <div className="col l9 top__space">
             <div className="row">
-              <form className="col s12" onSubmit={this.updateExistingRole}>
+              <div className="card col s12">
+                <div className="card-content">
+                  <span className="card-title">EditRole</span><br />
+                  <div className="row">
+                    <form className="col s12" onSubmit={this.updateExistingRole}>
 
-                <h4 className="role__title">{currentRole.title}</h4>
+                      <h4 className="role__title">{currentRole.title}</h4>
 
-                {/* Title */}
-                <div className="row">
-                  <div className="input-field col s12">
-                    <input
-                      id="title"
-                      name="title"
-                      type="text"
-                      className="validate"
-                      value={this.state.form.title || currentRole.title}
-                      required="required"
-                      onChange={this.handleFormChange}
-                      pattern=".{3,}"
-                      title="3 characters minimum"
-                    />
-                    <label htmlFor="title" className="active">Title</label>
+                      {/* Title */}
+                      <div className="row">
+                        <div className="input-field col s12">
+                          <input
+                            id="title"
+                            name="title"
+                            type="text"
+                            className="validate"
+                            value={this.state.form.title || currentRole.title}
+                            required="required"
+                            onChange={this.handleFormChange}
+                            pattern=".{3,}"
+                            title="3 characters minimum"
+                          />
+                          <label htmlFor="title" className="active">Title</label>
+                        </div>
+                      </div>
+
+                      <ProgressBar />
+
+                      {/* Submit Button */}
+                      <button
+                        className="btn waves-effect waves-light"
+                        type="submit"
+                        name="submit"
+                      >
+                        Update Role
+                      </button>
+
+                    </form>
                   </div>
                 </div>
-
-                <ProgressBar />
-
-                {/* Submit Button */}
-                <button
-                  className="btn waves-effect waves-light"
-                  type="submit"
-                  name="submit"
-                >
-                  Update Role
-                </button>
-
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -125,6 +134,9 @@ EditRole.propTypes = {
     id: PropTypes.number,
     title: PropTypes.string,
   }),
+  params: PropTypes.shape({
+    id: PropTypes.string,
+  }),
 };
 
 /**
@@ -132,7 +144,10 @@ EditRole.propTypes = {
  */
 EditRole.defaultProps = {
   actions: {},
-  currentRole: {}
+  currentRole: {},
+  params: PropTypes.shape({
+    id: PropTypes.string,
+  }),
 };
 
 /**

@@ -8,6 +8,8 @@ module.exports = (app) => {
    * definitions:
    *   Users:
    *     properties:
+   *       id:
+   *         type: integer
    *       name:
    *         type: string
    *       password:
@@ -27,8 +29,8 @@ module.exports = (app) => {
    *         type: string
    *       roleId:
    *         type: integer
-   *       documents:
-   *         type: array
+   *       role:
+   *         type: string
    *
    *   Documents:
    *     properties:
@@ -68,8 +70,9 @@ module.exports = (app) => {
    * securityDefinitions:
    *  x-auth:
    *    type: apiKey
+   *    description: JWT Authentication
    *    in: header
-   *    name: JWT-TOKEN
+   *    name: x-auth
    */
 
   /**
@@ -83,9 +86,17 @@ module.exports = (app) => {
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: user
-   *         description: User object
-   *         in: body
+   *       - name: name
+   *         description: Name of user to register
+   *         in: formData
+   *         required: true
+   *       - name: email
+   *         description: Email of user to register
+   *         in: formData
+   *         required: true
+   *       - name: password
+   *         description: Password of user to register
+   *         in: formData
    *         required: true
    *         schema:
    *           $ref: '#/definitions/Users'
@@ -110,12 +121,16 @@ module.exports = (app) => {
    *     consumes:
    *       - application/x-www-form-data-urlencoded
    *     parameters:
-   *       - name: users
-   *         description: contains email and password
-   *         in: body
+   *       - name: email
+   *         description: the registered email address
+   *         in: formData
    *         required: true
-   *         schema:
-   *           $ref: '#/definitions/Users'
+   *         type: string
+   *       - name: password
+   *         description: the associated password
+   *         in: formData
+   *         required: true
+   *         type: string
    *     responses:
    *       200:
    *         description: Login Successful
@@ -138,9 +153,19 @@ module.exports = (app) => {
    *     summary: Logs a user out
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Logout Successful
+   *       403:
+   *         description: Forbidden
+   *     security:
+   *     - x-auth: []
    */
   app.get('/users/logout', users.logout);
 
@@ -156,11 +181,29 @@ module.exports = (app) => {
    *     summary: Get all users
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
+   *       - name: limit
+   *         description: The limit of users to get
+   *         in: query
+   *         required: false
+   *         type: integer
+   *       - name: offset
+   *         description: The offset of users to get
+   *         in: query
+   *         required: false
+   *         type: integer
    *     responses:
    *       200:
    *         description: An array of all users
    *         schema:
    *           $ref: '#/definitions/Users'
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Users not found
    *       412:
@@ -186,11 +229,18 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: A single user
    *         schema:
    *           $ref: '#/definitions/Users'
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: User not found
    *     security:
@@ -214,9 +264,28 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: name
+   *         description: Updated Name
+   *         in: formData
+   *         required: true
+   *       - name: email
+   *         description: Updated Email Address
+   *         in: formData
+   *         required: true
+   *       - name: password
+   *         description: Updated Password
+   *         in: formData
+   *         required: true
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully updated
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: User cannot be found
    *     security:
@@ -239,9 +308,16 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully deleted
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: User cannot be found
    *     security:
@@ -265,9 +341,16 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all users document
+   *       403:
+   *         description: Forbidden
    *     security:
    *     - x-auth: []
    */
@@ -275,7 +358,7 @@ module.exports = (app) => {
 
   /**
    * @swagger
-   * /users/search:
+   * /search/users:
    *   get:
    *     tags:
    *       - Users
@@ -289,13 +372,20 @@ module.exports = (app) => {
    *         in: query
    *         required: true
    *         type: string
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all users
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: No user found
    *     security:
    *     - x-auth: []
    */
-  app.get('/search/users/?q={q}', authenticate.verify, authenticate.isAdmin, users.getAll);
+  app.get('/search/users/', authenticate.verify, authenticate.isAdmin, users.getAll);
 };

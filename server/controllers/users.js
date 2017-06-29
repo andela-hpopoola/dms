@@ -148,7 +148,6 @@ module.exports = {
       const password = req.body.password;
       Users.findOne({
         where: { email },
-        include: [{ model: Documents, as: 'Documents' }]
       }).then((user) => {
         if (!user) {
           return res.status(401).json({ msg: 'Invalid email or password' });
@@ -162,7 +161,6 @@ module.exports = {
             email: user.email,
             token: user.token,
             roleId: user.roleId,
-            documents: user.Documents
           });
         }
         return res.status(401).json({ msg: 'Invalid email or password' });

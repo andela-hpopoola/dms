@@ -74,6 +74,7 @@ export class NewDocument extends Component {
               <div className="card col s12">
                 <div className="card-content">
                   <div className="row">
+                    <h4 className="card-title new__document">New Document</h4>
                     <form className="col s12" onSubmit={this.createNewDocument}>
 
                       {/* Title */}
@@ -126,6 +127,7 @@ export class NewDocument extends Component {
                         className="btn waves-effect waves-light"
                         type="submit"
                         name="submit"
+                        id="createNewDocument"
                       >
                         Submit
                       </button>

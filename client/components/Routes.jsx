@@ -12,6 +12,7 @@ import NewDocument from './documents/NewDocument';
 import EditDocument from './documents/EditDocument';
 import ViewDocuments from './documents/ViewDocuments';
 import NewRole from './roles/NewRole';
+import EditRole from './roles/EditRole';
 import AllRoles from './roles/AllRoles';
 import EditProfile from './users/EditProfile';
 import AllUsers from './users/AllUsers';
@@ -76,6 +77,10 @@ class Routes extends Component {
           <Route
             path="document/edit/:id"
             component={EditDocument}
+          />
+          <Route
+            path="role/edit/:id"
+            component={EditRole}
           />
           <Route
             path="/document/:access"
