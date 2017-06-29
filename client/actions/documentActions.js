@@ -188,7 +188,6 @@ export function getAllPrivateDocuments(offset = null) {
         const documents = result.data;
         if (paginate) {
           dispatch(getPrivateDocuments(documents.data));
-          // dispatch(setPagination(documents.pagination));
         } else {
           dispatch(getPrivateDocuments(documents));
         }

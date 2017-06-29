@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const winston = require('winston');
 const bodyParser = require('body-parser');
 const routes = require('./server/routes');
 
@@ -27,7 +28,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Started up at port port ${port}`); // eslint-disable-line
+  winston.info(`Started up at port port ${port}`);
 });
 
 module.exports = app;

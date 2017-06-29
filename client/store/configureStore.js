@@ -7,6 +7,23 @@ import rootReducer from '../reducers';
 /* eslint-disable no-underscore-dangle */
 const composeEnhancers = global.window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
+let middleware;
+
+if (process.env.NODE_ENV !== 'production') {
+  middleware = composeEnhancers(
+    applyMiddleware(
+      thunk,
+      reduxImmutableStateInvariant()
+    ),
+    autoRehydrate()
+  );
+} else {
+  middleware = compose(
+    applyMiddleware(thunk),
+    autoRehydrate()
+  );
+}
+
 /**
  * Store
  * @desc Stores all states in the application
@@ -17,13 +34,8 @@ const configureStore = initialState =>
   createStore(
     rootReducer,
     initialState,
-    composeEnhancers(
-      applyMiddleware(
-        thunk,
-        reduxImmutableStateInvariant()
-      ),
-      autoRehydrate()
-    )
+    middleware
   );
 
 export default configureStore();
+
