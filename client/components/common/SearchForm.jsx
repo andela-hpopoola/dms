@@ -47,7 +47,10 @@ class SearchForm extends Component {
               pattern=".{3,}"
               title="3 characters minimum"
             />
-            <label htmlFor="search">Search for Documents</label>
+            <div className="help-text">
+              3 characters minimum
+            </div>
+            <label htmlFor="search" className="active">Search for Documents</label>
           </div>
           <div className="col s12">
             <button

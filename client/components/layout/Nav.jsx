@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 // list to show when user is logged in
 const loggedInList = (
   <li>
-    <Link to="/logout">
+    <Link to="/logout" id="logout">
       Logout &nbsp;
       <i className="fa fa-sign-out" />
     </Link>

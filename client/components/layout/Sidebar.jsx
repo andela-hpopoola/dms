@@ -77,7 +77,7 @@ class Sidebar extends Component {
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/sign-out">
+              <Link to="/logout">
                 <i className="fa fa-sign-out" />
                 &nbsp; Log Out
               </Link>

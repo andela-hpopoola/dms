@@ -110,13 +110,6 @@ class EditProfile extends Component {
                           <label htmlFor="email" className="active">Email</label>
                         </div>
                       </div>
-                      <div className="row">
-                        <div className="col s12">
-                          <h5 className="password__field">
-                            Leave password field blank to retain current password
-                          </h5>
-                        </div>
-                      </div>
                       {/* New Password */}
                       <div className="row">
                         <div className="input-field col s12">
@@ -129,6 +122,9 @@ class EditProfile extends Component {
                             pattern=".{0}|.{6,}"
                             title="Either 0 OR (6 chars minimum)"
                           />
+                          <div className="help-text">
+                            Leave password field blank to retain current password
+                          </div>
                           <label htmlFor="password">New Password</label>
                         </div>
                       </div>

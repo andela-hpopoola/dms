@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Sidebar from './../layout/Sidebar';
-import ProgressBar from './../../components/common/ProgressBar'; // eslint-disable-line
+import ProgressBar from './../../components/common/ProgressBar';
 import DashboardCard from './DashboardCard';
 import {
   getDocuments,
