@@ -112,7 +112,9 @@ class EditProfile extends Component {
                       </div>
                       <div className="row">
                         <div className="col s12">
-                          <h5>Leave password field blank to retain current password</h5>
+                          <h5 className="password__field">
+                            Leave password field blank to retain current password
+                          </h5>
                         </div>
                       </div>
                       {/* New Password */}

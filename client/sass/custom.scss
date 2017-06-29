@@ -77,10 +77,17 @@ body {
     color: black;
   }
 
+  .dashboard__title {
+    color: #666;
+  }
+
   .card-content {
-    color: gray;
     font-size: 13px;
     overflow: hidden;
+  }
+
+  .password__field {
+    font-size: 16px;
   }
 
   .card-action {
