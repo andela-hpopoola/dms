@@ -30,9 +30,27 @@ body {
   padding: 0;
 }
 
+.top-cards {
+  margin-top: -20px;
+}
+
 .dashboard__icon {
   margin-top: -40px;
-  font-size: 4em;
+  font-size: 3.8em;
+}
+
+.sidebar__link {
+  transition: 0.5s all ease-out;
+}
+
+.sidebar__link:hover, .sidebar__link:hover span {
+  color: #a00 !important;
+}
+
+.dashboard__quick-links {
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .collection-header h4{
@@ -51,6 +69,14 @@ body {
   border: 1px solid #e0e0e0;
 }
 
+
+.help-text {
+  font-size: 10px;
+  color: #999;
+  margin: -15px 0 15px;
+}
+
+
 .card {
   display: block;
   &.card__top {
@@ -67,10 +93,17 @@ body {
     color: black;
   }
 
+  .dashboard__title {
+    color: #666;
+  }
+
   .card-content {
-    color: gray;
     font-size: 13px;
     overflow: hidden;
+  }
+
+  .password__field {
+    font-size: 16px;
   }
 
   .card-action {

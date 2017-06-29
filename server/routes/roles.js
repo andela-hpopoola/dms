@@ -64,6 +64,8 @@ module.exports = (app) => {
    *       - Roles
    *     description: Create a New Role
    *     summary: Create a New Role
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     produces:
    *       - application/json
    *     parameters:
@@ -135,6 +137,8 @@ module.exports = (app) => {
    *       - Roles
    *     description: Edit a single role
    *     summary: Edit Role
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     produces:
    *       - application/json
    *     parameters:

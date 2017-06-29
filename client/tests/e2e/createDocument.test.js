@@ -22,7 +22,8 @@ module.exports = {
       .waitForElementVisible('input[id="title"]', 2000)
       .waitForElementVisible('#createNewDocument', 2000)
       .click('#createNewDocument')
-      .assert.containsText('h4.new__document', 'New Document');
+      .assert.containsText('h4.new__document', 'New Document')
+      .end();
   },
   'Create document with valid information': (browser) => {
     browser
@@ -43,7 +44,8 @@ module.exports = {
       .waitForElementVisible('input[id="title"]', 2000)
       .waitForElementVisible('#createNewDocument', 2000)
       .click('#createNewDocument')
-      .waitForElementVisible('.toast-success', 5000);
+      .waitForElementVisible('.toast-success', 5000)
+      .end();
   },
   'Cannot create document with existing information': (browser) => {
     browser

@@ -22,6 +22,12 @@ const RoleList = (props) => {
     <div className="row card">
       <div className="card-content">
         <table className="bordered highlight responsive-table">
+          <tr>
+            <th>S/N</th>
+            <th>Role Title</th>
+            <th className="center-align">No of Users</th>
+            <th>&nbsp;</th>
+          </tr>
           { roleList }
         </table>
       </div>

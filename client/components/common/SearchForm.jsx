@@ -46,8 +46,12 @@ class SearchForm extends Component {
               required="required"
               pattern=".{3,}"
               title="3 characters minimum"
+              defaultValue={this.props.searchTerm}
             />
-            <label htmlFor="search">Search for Documents</label>
+            <div className="help-text">
+              Search term must be more than 2 characters
+            </div>
+            <label htmlFor="search" className="active">Search for Documents</label>
           </div>
           <div className="col s12">
             <button
@@ -68,6 +72,11 @@ class SearchForm extends Component {
  */
 SearchForm.propTypes = {
   onChange: PropTypes.func.isRequired,
+  searchTerm: PropTypes.string
+};
+
+SearchForm.defaultProps = {
+  searchTerm: '',
 };
 
 export default SearchForm;

@@ -71,11 +71,10 @@ class EditProfile extends Component {
             <div className="row">
               <div className="card col s12">
                 <div className="card-content">
-                  <span className="card-title">EditProfile</span><br />
                   <div className="row">
                     <form className="col s12" onSubmit={this.updateProfile}>
 
-                      <h4>{user.name}</h4>
+                      <h4>Edit Profile</h4>
 
                       {/* Name */}
                       <div className="row">
@@ -111,7 +110,6 @@ class EditProfile extends Component {
                           <label htmlFor="email" className="active">Email</label>
                         </div>
                       </div>
-
                       {/* New Password */}
                       <div className="row">
                         <div className="input-field col s12">
@@ -124,6 +122,9 @@ class EditProfile extends Component {
                             pattern=".{0}|.{6,}"
                             title="Either 0 OR (6 chars minimum)"
                           />
+                          <div className="help-text">
+                            Leave password field blank to retain current password
+                          </div>
                           <label htmlFor="password">New Password</label>
                         </div>
                       </div>

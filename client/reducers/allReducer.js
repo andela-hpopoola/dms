@@ -55,6 +55,19 @@ export default function all(state = initialState.all, action) {
         { roles: [action.role, ...state.roles] }
       );
 
+    case types.DELETE_EXISTING_ROLE: {
+      const filteredRoles = state.roles.filter(
+        role => role.id !== parseInt(action.id, 10)
+      );
+      return Object.assign(
+        {},
+        state,
+        {
+          roles: filteredRoles
+        }
+      );
+    }
+
     default:
       return state;
   }

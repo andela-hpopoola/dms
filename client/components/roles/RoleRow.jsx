@@ -21,7 +21,7 @@ const RoleRow = (props) => {
       <tr className="role__list">
         <td>{index}</td>
         <td>{role.title}</td>
-        <td>{usersCount}</td>
+        <td className="center-align">{usersCount}</td>
         <td>
           {usersCount < 1 ?
             <Link

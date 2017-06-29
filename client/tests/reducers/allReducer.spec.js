@@ -54,6 +54,17 @@ describe('All Reducer', () => {
     expect(actual).toEqual(expected);
   });
 
+  it('should get all roles for DELETE_EXISTING_ROLE', () => {
+    const allRoles = {
+      roles: [{ id: 1, name: 'First Role' }, { id: 2, name: 'Second Role' }]
+    };
+    const actionType = roleActions.deleteExistingRole(2);
+    const newState = allReducer(allRoles, actionType);
+    const expected = 1;
+    const actual = newState.roles.length;
+    expect(actual).toEqual(expected);
+  });
+
   it('should get all search result for SEARCH_FOR_USERS', () => {
     const searchResults = [{ id: 1, name: 'First User' }, { id: 2, name: 'Second User' }];
     const actionType = userActions.searchForUsers(searchResults);

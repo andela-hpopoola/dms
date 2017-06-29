@@ -38,7 +38,6 @@ module.exports = {
       .setValue('input[name=password]', '123456')
       .click('#loginbutton')
       .waitForElementVisible('h3[id="dashboard"]', 5000)
-      .waitForElementVisible('.toast', 5000)
       .assert.urlEquals(`${'http://localhost:8000/dashboard'}`)
       .end();
   },

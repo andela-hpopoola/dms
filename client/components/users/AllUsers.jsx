@@ -156,7 +156,7 @@ export class AllUsers extends Component {
     const backToAllUsers = (
       <button
         onClick={this.viewAllUsers}
-        className="btn red darken-2 waves-effect waves-light"
+        className="btn blue waves-effect waves-light"
         type="submit"
       >
         Back to Users

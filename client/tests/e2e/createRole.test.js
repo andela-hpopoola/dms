@@ -36,6 +36,7 @@ module.exports = {
       .setValue('input[name="title"]', title)
       .waitForElementVisible('#createNewRole', 2000)
       .click('#createNewRole')
-      .waitForElementVisible('.toast-success', 5000);
+      .waitForElementVisible('.toast-success', 5000)
+      .end();
   },
 };

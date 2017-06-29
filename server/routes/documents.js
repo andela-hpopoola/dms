@@ -59,6 +59,8 @@ module.exports = (app) => {
    *       - Documents
    *     description: Create a New Document
    *     summary: Create a New Document
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     produces:
    *       - application/json
    *     parameters:
@@ -274,6 +276,8 @@ module.exports = (app) => {
    *       - Documents
    *     description: Edit a single document
    *     summary: Edit Document
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     produces:
    *       - application/json
    *     parameters:

@@ -54,7 +54,7 @@ describe('Dashboard Component', () => {
 
   it('should have the DashboardCard Component', () => {
     const actual = wrapper.find('DashboardCard').length;
-    const expected = 8;
+    const expected = 7;
     expect(actual).toEqual(expected);
   });
 });

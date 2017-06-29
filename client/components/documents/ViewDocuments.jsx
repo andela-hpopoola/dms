@@ -139,7 +139,7 @@ export class ViewDocuments extends Component {
       <div className="main-container">
         <div className="row">
 
-          <Sidebar />
+          <Sidebar searchTerm={this.searchQuery} />
           {/* main content */}
           <div className="col l9 top__space">
             <div className="row">
