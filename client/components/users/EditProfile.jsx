@@ -71,11 +71,10 @@ class EditProfile extends Component {
             <div className="row">
               <div className="card col s12">
                 <div className="card-content">
-                  <span className="card-title">EditProfile</span><br />
                   <div className="row">
                     <form className="col s12" onSubmit={this.updateProfile}>
 
-                      <h4>{user.name}</h4>
+                      <h4>Edit Profile</h4>
 
                       {/* Name */}
                       <div className="row">
@@ -111,7 +110,11 @@ class EditProfile extends Component {
                           <label htmlFor="email" className="active">Email</label>
                         </div>
                       </div>
-
+                      <div className="row">
+                        <div className="col s12">
+                          <h5>Leave password field blank to retain current password</h5>
+                        </div>
+                      </div>
                       {/* New Password */}
                       <div className="row">
                         <div className="input-field col s12">

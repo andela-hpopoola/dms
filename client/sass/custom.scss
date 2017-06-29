@@ -30,9 +30,19 @@ body {
   padding: 0;
 }
 
+.top-cards {
+  margin-top: -20px;
+}
+
 .dashboard__icon {
   margin-top: -40px;
-  font-size: 4em;
+  font-size: 3.8em;
+}
+
+.dashboard__quick-links {
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .collection-header h4{

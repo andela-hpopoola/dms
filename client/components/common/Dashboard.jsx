@@ -82,7 +82,7 @@ export class Dashboard extends Component {
             </div>
             <div className="row">
               <ProgressBar />
-              <div>
+              <div className="top-cards">
                 <DashboardCard
                   title="Private"
                   details={`${this.state.documents.private} Document(s)`}
@@ -104,49 +104,47 @@ export class Dashboard extends Component {
                   icon="file"
                   link="document/role"
                 />
-                <DashboardCard
-                  title="Documents"
-                  details="Create New"
-                  color="black"
-                  icon="file-text"
-                  link="/new-document"
-                />
-                <DashboardCard
-                  title="Profile"
-                  details="Edit Details"
-                  color="deep-purple"
-                  icon="user"
-                  link="/edit-profile"
-                />
-
-                { this.props.user.roleId !== ROLES.USER ?
-                  <DashboardCard
-                    title="Users"
-                    details="View All"
-                    color="blue"
-                    icon="users"
-                    link="/all-users"
-                  /> : ''
-                }
-
-                { this.props.user.roleId === ROLES.SUPERADMIN ?
-                  <DashboardCard
-                    title="Roles"
-                    details="All Roles"
-                    color="red"
-                    icon="tasks"
-                    link="/all-roles"
-                  /> : ''
-                }
-
-                <DashboardCard
-                  title="Exit"
-                  details="Log Out"
-                  color="blue-grey"
-                  icon="sign-out"
-                  link="/logout"
-                />
               </div>
+            </div>
+            <div className="row">
+              <div className="col s12">
+                <h4 className="dashboard__quick-links">Quick Links</h4>
+              </div>
+              <DashboardCard
+                title="Documents"
+                details="Create New"
+                color="green"
+                icon="file-text"
+                link="/new-document"
+              />
+              <DashboardCard
+                title="Profile"
+                details="Edit Details"
+                color="deep-purple"
+                icon="user"
+                link="/edit-profile"
+              />
+
+              { this.props.user.roleId !== ROLES.USER ?
+                <DashboardCard
+                  title="Users"
+                  details="View All"
+                  color="blue"
+                  icon="users"
+                  link="/all-users"
+                /> : ''
+              }
+
+              { this.props.user.roleId === ROLES.SUPERADMIN ?
+                <DashboardCard
+                  title="Roles"
+                  details="All Roles"
+                  color="red"
+                  icon="tasks"
+                  link="/all-roles"
+                /> : ''
+              }
+
             </div>
           </div>
         </div>

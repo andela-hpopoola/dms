@@ -113,7 +113,6 @@ export function deleteRole(id) {
     const roleId = id;
     return api.delete(`/roles/${roleId}`).then(() => {
       dispatch(deleteExistingRole(id));
-      browserHistory.push('/dashboard');
       toastr.success('Role deleted successfully');
     }).catch((error) => {
       toastr.error(error.response || error);

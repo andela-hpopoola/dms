@@ -83,6 +83,8 @@ module.exports = (app) => {
    *       - Users
    *     description: Create a New User
    *     summary: Create a New User
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     produces:
    *       - application/json
    *     parameters:
@@ -258,6 +260,8 @@ module.exports = (app) => {
    *     summary: Edit User
    *     produces:
    *       - application/json
+   *     consumes:
+   *       - application/x-www-form-urlencoded
    *     parameters:
    *       - name: id
    *         description: User's id

@@ -18,6 +18,12 @@ const RoleRow = (props) => {
   };
   return (
     <tbody>
+      <th>
+        <td><strong>S/N</strong></td>
+        <td><strong>Role Title</strong></td>
+        <td><strong>No of Users</strong></td>
+        <td><strong>Delete</strong></td>
+      </th>
       <tr className="role__list">
         <td>{index}</td>
         <td>{role.title}</td>
