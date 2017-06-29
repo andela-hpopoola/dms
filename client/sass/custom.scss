@@ -39,6 +39,14 @@ body {
   font-size: 3.8em;
 }
 
+.sidebar__link {
+  transition: 0.5s all ease-out;
+}
+
+.sidebar__link:hover, .sidebar__link:hover span {
+  color: #a00 !important;
+}
+
 .dashboard__quick-links {
   margin-top: 30px;
   font-size: 16px;

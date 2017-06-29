@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
 import SearchForm from './../common/SearchForm';
 
@@ -44,40 +45,43 @@ class Sidebar extends Component {
           <ul className="collection with-header">
             <li className="collection-header"><h4>Quick Links</h4></li>
             <li className="collection-item">
-              <Link to="/dashboard"> <i className="fa fa-dashboard" /> &nbsp; Dashboard </Link>
-            </li>
-            <li className="collection-item">
-              <Link to="/new-document">
-                <i className="fa fa-file-text" />
-                &nbsp; New Documents
+              <Link to="/dashboard" className="sidebar__link">
+                <i className="fa fa-dashboard" />
+                  &nbsp; Dashboard
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/private">
+              <Link to="/new-document" className="sidebar__link">
+                <i className="fa fa-file-text" />
+                &nbsp; Create New Document
+              </Link>
+            </li>
+            <li className="collection-item">
+              <Link to="/document/private" className="sidebar__link">
                 <i className="fa fa-file" />
                 &nbsp; Personal Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/public">
+              <Link to="/document/public" className="sidebar__link">
                 <i className="fa fa-file" />
                 &nbsp; Public Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/role">
+              <Link to="/document/role" className="sidebar__link">
                 <i className="fa fa-file" />
                 &nbsp; Role Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/edit-profile">
+              <Link to="/edit-profile" className="sidebar__link">
                 <i className="fa fa-user" />
                 &nbsp;  Edit Profile
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/logout">
+              <Link to="/logout" className="sidebar__link">
                 <i className="fa fa-sign-out" />
                 &nbsp; Log Out
               </Link>
@@ -90,6 +94,7 @@ class Sidebar extends Component {
               <div>
                 <SearchForm
                   onChange={this.searchForDocuments}
+                  searchTerm={this.props.searchTerm}
                 />
               </div>
             </li>
@@ -99,5 +104,13 @@ class Sidebar extends Component {
     );
   }
 }
+
+Sidebar.propTypes = {
+  searchTerm: PropTypes.string,
+};
+
+Sidebar.defaultProps = {
+  searchTerm: '',
+};
 
 export default Sidebar;
