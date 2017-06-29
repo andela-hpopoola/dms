@@ -65,7 +65,7 @@ export class Signup extends Component {
           <div><br /><br /></div>
           <div className="card col s12 offset-l3 l6 offset-m2 m8">
             <div className="card-content">
-              <span className="card-title">Signup</span><br />
+              <h4 className="card-title">Signup</h4>
               <div className="row">
                 <form className="col s12" onSubmit={this.createUser}>
                   <ProgressBar />
@@ -127,13 +127,14 @@ export class Signup extends Component {
                         pattern=".{6,}"
                         title="6 characters minimum"
                       />
-                      <label htmlFor="password">Confirm Password</label>
+                      <label htmlFor="confirmPassword">Confirm Password</label>
                     </div>
                   </div>
 
                   {/* Submit Button */}
                   <button
                     className="btn waves-effect waves-light"
+                    id="signUpButton"
                     type="submit"
                     name="submit"
                   >

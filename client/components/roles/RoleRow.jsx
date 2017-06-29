@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 
 /**
  * Role Single
@@ -23,14 +24,13 @@ const RoleRow = (props) => {
         <td>{usersCount}</td>
         <td>
           {usersCount < 1 ?
-            <a
-              href="/#!"
+            <Link
               id={role.id}
               className="waves-effect waves-light btn-flat"
               onClick={handleDelete}
             >
               Delete
-            </a>
+            </Link>
           : '' }
         </td>
       </tr>

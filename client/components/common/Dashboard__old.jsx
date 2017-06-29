@@ -22,8 +22,8 @@ import {
   createDocument,
   updateDocument,
   deleteDocument,
-  publicDocumentsDispatcher,
-  roleDocumentsDispatcher,
+  getAllPublicDocuments,
+  getAllRoleDocuments,
   searchDocumentsDispatcher
  } from './../../actions/documentActions';
 import { createRole, updateRole } from './../../actions/roleActions';
@@ -116,10 +116,10 @@ class Dashboard extends Component {
         this.props.actions.getUsers((page - 1) * LIMIT.USERS);
         break;
       case 'public_documents':
-        this.props.actions.publicDocumentsDispatcher((page - 1) * LIMIT.DOCUMENTS);
+        this.props.actions.getAllPublicDocuments((page - 1) * LIMIT.DOCUMENTS);
         break;
       case 'role_documents':
-        this.props.actions.roleDocumentsDispatcher((page - 1) * LIMIT.DOCUMENTS);
+        this.props.actions.getAllRoleDocuments((page - 1) * LIMIT.DOCUMENTS);
         break;
       default:
         // do nothing
@@ -350,8 +350,8 @@ class Dashboard extends Component {
    */
   getDashboard(event) {
     event.preventDefault();
-    this.props.actions.publicDocumentsDispatcher();
-    this.props.actions.roleDocumentsDispatcher();
+    this.props.actions.getAllPublicDocuments();
+    this.props.actions.getAllRoleDocuments();
     this.setState({
       search: false,
       page: 'dashboard'
@@ -394,7 +394,7 @@ class Dashboard extends Component {
    */
   getPublicDocuments(event) {
     event.preventDefault();
-    this.props.actions.publicDocumentsDispatcher(0);
+    this.props.actions.getAllPublicDocuments(0);
     this.setState({
       pageTitle: 'Public Document',
       search: false,
@@ -409,7 +409,7 @@ class Dashboard extends Component {
    */
   getRoleDocuments(event) {
     event.preventDefault();
-    this.props.actions.roleDocumentsDispatcher(0);
+    this.props.actions.getAllRoleDocuments(0);
     this.setState({
       pageTitle: 'Role Document',
       search: false,
@@ -804,8 +804,8 @@ Dashboard.propTypes = {
     deleteUser: PropTypes.func,
     updateRole: PropTypes.func,
     getRoles: PropTypes.func,
-    publicDocumentsDispatcher: PropTypes.func.isRequired,
-    roleDocumentsDispatcher: PropTypes.func.isRequired,
+    getAllPublicDocuments: PropTypes.func.isRequired,
+    getAllRoleDocuments: PropTypes.func.isRequired,
     searchDocumentsDispatcher: PropTypes.func.isRequired,
     getSearchedUsers: PropTypes.func.isRequired,
     loginByToken: PropTypes.func,
@@ -881,8 +881,8 @@ function mapDispatchToProps(dispatch) {
       updateProfile,
       deleteUser,
       getRoles,
-      publicDocumentsDispatcher,
-      roleDocumentsDispatcher,
+      getAllPublicDocuments,
+      getAllRoleDocuments,
       searchDocumentsDispatcher,
       getSearchedUsers,
     }, dispatch)

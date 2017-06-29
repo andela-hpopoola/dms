@@ -167,12 +167,12 @@ export function getPrivateDocuments(documents) {
 
 
 /**
- * Private Documents Dispatcher
+ * Get all private documents
  * @desc Get all private documents
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function privateDocumentsDispatcher(offset = null) {
+export function getAllPrivateDocuments(offset = null) {
   let paginate = false;
   const limit = LIMIT.DOCUMENTS;
   let privateURL = '/documents/private';
@@ -252,7 +252,7 @@ export function getCurrentDocuments(documents) {
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function getDocuments(access, query = '', offset = 0) {
+export function getDocuments(access = 'private', query = '', offset = 0) {
   const limit = LIMIT.DOCUMENTS;
   let URL = `/documents/private/?limit=${limit}&offset=${offset}`;
 
@@ -281,12 +281,12 @@ export function getDocuments(access, query = '', offset = 0) {
 }
 
 /**
- * Public Documents Dispatcher
+ * Get All Public Documents
  * @desc Get all public documents
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function publicDocumentsDispatcher(offset = null) {
+export function getAllPublicDocuments(offset = null) {
   let paginate = false;
   const limit = LIMIT.DOCUMENTS;
   let publicURL = '/documents/public';
@@ -317,12 +317,12 @@ export function publicDocumentsDispatcher(offset = null) {
 }
 
 /**
- * Role Documents Dispatcher
+ * Get All Role Documents
  * @desc Get all role documents
  * @param {number} offset - the starting point for pagination
  * @returns {object} action
  */
-export function roleDocumentsDispatcher(offset = null) {
+export function getAllRoleDocuments(offset = null) {
   let paginate = false;
   const limit = LIMIT.DOCUMENTS;
   let roleURL = '/documents/role';

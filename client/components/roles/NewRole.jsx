@@ -63,6 +63,7 @@ class NewRole extends Component {
                     className="btn waves-effect waves-light"
                     type="submit"
                     name="submit"
+                    id="createNewRole"
                   >
                     Submit
                   </button>

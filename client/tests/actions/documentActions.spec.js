@@ -197,7 +197,7 @@ describe('Document Actions', () => {
 
       const store = mockStore(initialState);
 
-      store.dispatch(documentActions.privateDocumentsDispatcher()).then(() => {
+      store.dispatch(documentActions.getAllPrivateDocuments()).then(() => {
         const actual = store.getActions();
         expect(actual).toEqual(expected);
         done();
@@ -235,7 +235,7 @@ describe('Document Actions', () => {
 
       const store = mockStore(initialState);
 
-      store.dispatch(documentActions.publicDocumentsDispatcher()).then(() => {
+      store.dispatch(documentActions.getAllPublicDocuments()).then(() => {
         const actual = store.getActions();
         expect(actual).toEqual(expected);
         done();
@@ -272,7 +272,7 @@ describe('Document Actions', () => {
 
       const store = mockStore(initialState);
 
-      store.dispatch(documentActions.roleDocumentsDispatcher(documents)).then(() => {
+      store.dispatch(documentActions.getAllRoleDocuments(documents)).then(() => {
         const actual = store.getActions();
         expect(actual).toEqual(expected);
         done();

@@ -6,9 +6,10 @@ import Sidebar from './../layout/Sidebar';
 import ProgressBar from './../../components/common/ProgressBar'; // eslint-disable-line
 import DashboardCard from './DashboardCard';
 import {
-  publicDocumentsDispatcher,
-  roleDocumentsDispatcher,
-  privateDocumentsDispatcher
+  getDocuments,
+  getAllPublicDocuments,
+  getAllRoleDocuments,
+  getAllPrivateDocuments
  } from './../../actions/documentActions';
 import { ROLES } from './../../../constants';
 /**
@@ -34,9 +35,10 @@ export class Dashboard extends Component {
       }
     };
 
-    this.props.actions.publicDocumentsDispatcher();
-    this.props.actions.privateDocumentsDispatcher();
-    this.props.actions.roleDocumentsDispatcher();
+    this.props.actions.getAllPublicDocuments();
+    this.props.actions.getAllPrivateDocuments();
+    this.props.actions.getAllRoleDocuments();
+    this.props.actions.getDocuments();
   }
 
   /**
@@ -161,7 +163,6 @@ Dashboard.propTypes = {
     name: PropTypes.string,
     token: PropTypes.string,
     email: PropTypes.string,
-    documents: PropTypes.array,
     roleId: PropTypes.number
   }),
   documents: PropTypes.shape({
@@ -170,9 +171,10 @@ Dashboard.propTypes = {
     role: PropTypes.array
   }),
   actions: PropTypes.shape({
-    publicDocumentsDispatcher: PropTypes.func.isRequired,
-    roleDocumentsDispatcher: PropTypes.func.isRequired,
-    privateDocumentsDispatcher: PropTypes.func.isRequired,
+    getDocuments: PropTypes.func.isRequired,
+    getAllPublicDocuments: PropTypes.func.isRequired,
+    getAllRoleDocuments: PropTypes.func.isRequired,
+    getAllPrivateDocuments: PropTypes.func.isRequired,
   }),
 };
 
@@ -205,9 +207,10 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({
-      privateDocumentsDispatcher,
-      publicDocumentsDispatcher,
-      roleDocumentsDispatcher,
+      getAllPrivateDocuments,
+      getAllPublicDocuments,
+      getAllRoleDocuments,
+      getDocuments
     }, dispatch)
   };
 }

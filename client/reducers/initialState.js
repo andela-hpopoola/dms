@@ -11,7 +11,6 @@ export default {
     currentDocument: {}
   },
   user: {
-    documents: [],
     roleName: 'Unknown'
   },
   pagination: {},

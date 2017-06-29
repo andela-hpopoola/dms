@@ -12,6 +12,17 @@ module.exports = (app) => {
    *         type: string
    */
 
+  // Security Schema definition
+  /**
+   * @swagger
+   * securityDefinitions:
+   *  x-auth:
+   *    type: apiKey
+   *    description: JWT Authentication
+   *    in: header
+   *    name: x-auth
+   */
+
   // Get all Roles
   /**
    * @swagger
@@ -23,11 +34,19 @@ module.exports = (app) => {
    *     summary: Get all roles
    *     produces:
    *       - application/json
+   *     parameters:
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: An array of all roles
    *         schema:
    *           $ref: '#/definitions/Roles'
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Roles not found
    *       412:
@@ -48,17 +67,27 @@ module.exports = (app) => {
    *     produces:
    *       - application/json
    *     parameters:
-   *       - name: role
-   *         description: Role object
-   *         in: body
+   *       - name: title
+   *         description: role title
+   *         in: formData
    *         required: true
+   *         type: string
    *         schema:
    *           $ref: '#/definitions/Roles'
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully created
+   *       403:
+   *         description: Forbidden
    *       412:
    *         description: Role cannot be created
+   *     security:
+   *     - x-auth: []
    */
   app.post('/roles', authenticate.verify, authenticate.isSuperAdmin, roles.create);
 
@@ -79,13 +108,22 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: A single document
    *         schema:
    *           $ref: '#/definitions/Roles'
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Role not found
+   *     security:
+   *     - x-auth: []
    */
   app.get('/roles/:id', roles.getOne);
 
@@ -105,6 +143,18 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: title
+   *         description: updated role title
+   *         in: formData
+   *         required: true
+   *         type: string
+   *         schema:
+   *           $ref: '#/definitions/Roles'
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully updated
@@ -129,9 +179,16 @@ module.exports = (app) => {
    *         in: path
    *         required: true
    *         type: integer
+   *       - name: x-auth
+   *         in: header
+   *         description: JWT Authentication
+   *         required: false
+   *         type: string
    *     responses:
    *       200:
    *         description: Successfully deleted
+   *       403:
+   *         description: Forbidden
    *       404:
    *         description: Role cannot be found
    */

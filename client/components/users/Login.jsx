@@ -69,7 +69,7 @@ export class Login extends Component {
             <div className="card-content">
               <h4 className="card-title">Login</h4>
               <div className="row">
-                <form className="col s12" onSubmit={this.authenticateUser}>
+                <form className="col s12 login__form" onSubmit={this.authenticateUser}>
                   <ProgressBar />
 
                   {/* Email */}

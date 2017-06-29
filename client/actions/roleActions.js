@@ -91,8 +91,8 @@ export function getAllRoles(role) {
 export function updateRole(updatedRole, currentRole) {
   return (dispatch) => {
     const id = currentRole.id;
+    updatedRole = { ...currentRole, ...updatedRole };
     return api.put(`/roles/${id}`, updatedRole).then(() => {
-      updatedRole = { ...currentRole, ...updatedRole };
       dispatch(updateExistingRole(updatedRole));
       browserHistory.push('/dashboard');
       toastr.success('Role updated successfully');

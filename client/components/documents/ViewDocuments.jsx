@@ -11,9 +11,9 @@ import { LIMIT } from './../../../constants';
 import {
   getDocuments,
   deleteDocument,
-  publicDocumentsDispatcher,
-  roleDocumentsDispatcher,
-  privateDocumentsDispatcher
+  getAllPublicDocuments,
+  getAllRoleDocuments,
+  getAllPrivateDocuments
  } from './../../actions/documentActions';
 /**
  * @class ViewDocuments
@@ -233,9 +233,9 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators({
       getDocuments,
       deleteDocument,
-      privateDocumentsDispatcher,
-      publicDocumentsDispatcher,
-      roleDocumentsDispatcher,
+      getAllPrivateDocuments,
+      getAllPublicDocuments,
+      getAllRoleDocuments,
     }, dispatch)
   };
 }
