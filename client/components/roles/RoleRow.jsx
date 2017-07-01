@@ -20,13 +20,13 @@ const RoleRow = (props) => {
     <tbody>
       <tr className="role__list">
         <td>{index}</td>
-        <td>{role.title}</td>
+        <td className="role__title">{role.title}</td>
         <td className="center-align">{usersCount}</td>
         <td>
           {usersCount < 1 ?
             <Link
               id={role.id}
-              className="waves-effect waves-light btn-flat"
+              className="waves-effect waves-light btn-flat role__delete"
               onClick={handleDelete}
             >
               Delete

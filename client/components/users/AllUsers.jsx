@@ -155,6 +155,7 @@ export class AllUsers extends Component {
     : '';
     const backToAllUsers = (
       <button
+        id="back-to-users"
         onClick={this.viewAllUsers}
         className="btn blue waves-effect waves-light"
         type="submit"
@@ -174,11 +175,11 @@ export class AllUsers extends Component {
                   {userCount} User(s) Found
                 </h3>
               </div>
+              {!this.state.search && pagination}
             </div>
             <div className="row">
               <ProgressBar />
               <div>
-                {!this.state.search && pagination}
                 <UserList
                   users={userList}
                   count={offset}

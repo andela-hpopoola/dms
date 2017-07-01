@@ -42,7 +42,7 @@ class SearchForm extends Component {
             <input
               name="search"
               type="text"
-              className="validate white"
+              className="validate white input__search"
               required="required"
               pattern=".{3,}"
               title="3 characters minimum"

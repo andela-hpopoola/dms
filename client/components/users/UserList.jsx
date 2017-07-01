@@ -53,6 +53,7 @@ class AllUsers extends Component {
             <div className="col s12">
               <div className="input-field col s9">
                 <input
+                  id="search-users"
                   name="search"
                   type="text"
                   className="validate white search__user"
@@ -64,6 +65,7 @@ class AllUsers extends Component {
               </div>
               <div className="input-field col s3">
                 <button
+                  id="btn-search-users"
                   className="btn red darken-2 waves-effect waves-light"
                   type="submit"
                 >

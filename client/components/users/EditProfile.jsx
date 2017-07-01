@@ -148,6 +148,7 @@ class EditProfile extends Component {
 
                       {/* Submit Button */}
                       <button
+                        id="editProfile"
                         className="btn waves-effect waves-light"
                         type="submit"
                         name="submit"
