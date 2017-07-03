@@ -106,7 +106,6 @@ class Routes extends Component {
             <Route
               path="logout"
               component={Logout}
-              onEnter={this.requireAuth}
             />
           </Route>
         </Route>
