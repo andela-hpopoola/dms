@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router';
 import { ROLES } from './../../../constants';
 
 /**
@@ -29,14 +30,13 @@ const UserRow = (props) => {
       <td>
         {
           superAccess &&
-          <a
-            href="/#!"
+          <Link
             id={user.id}
-            className="waves-effect waves-light btn-flat"
+            className="waves-effect waves-light btn-flat btn-delete-user"
             onClick={handleDelete}
           >
             Delete
-          </a>
+          </Link>
         }
       </td>
     </tr>

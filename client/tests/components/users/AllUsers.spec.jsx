@@ -3,6 +3,7 @@ import 'jsdom-global/register';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
+import { MOCK_USER } from './../../../../constants';
 import { AllUsers } from './../../../components/users/AllUsers';
 
 const spySearchUsers = sinon.spy(AllUsers.prototype, 'searchForUsers');
@@ -34,31 +35,13 @@ const setup = (all) => {
 describe('AllUsers Component', () => {
   const all = {
     users: [
-      {
-        id: 1,
-        name: 'Haruna',
-        roleId: 3,
-        email: 'haruna@me.com',
-      },
-      {
-        id: 2,
-        name: 'Haruna',
-        roleId: 3,
-        email: 'haruna@you.com',
-      }
+      MOCK_USER.SUPERADMIN,
+      MOCK_USER.ADMIN
     ],
     search: {
       data: [
-        {
-          id: 1,
-          name: 'Haruna',
-          email: 'haruna@me.com',
-        },
-        {
-          id: 2,
-          name: 'Haruna',
-          email: 'haruna@you.com',
-        }
+        MOCK_USER.USER,
+        MOCK_USER.ADMIN
       ],
     }
   };

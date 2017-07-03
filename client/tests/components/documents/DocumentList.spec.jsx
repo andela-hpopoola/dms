@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import DocumentList from './../../../components/documents/DocumentList';
+import { MOCK_DOCUMENTS } from './../../../../constants';
 
 const setup = (documents) => {
   const props = {
@@ -16,9 +17,9 @@ const setup = (documents) => {
 
 describe('DocumentList Component', () => {
   const documents = [
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
+    MOCK_DOCUMENTS.PRIVATE,
+    MOCK_DOCUMENTS.PUBLIC,
+    MOCK_DOCUMENTS.ROLE,
   ];
   const emptyDocuments = [];
 

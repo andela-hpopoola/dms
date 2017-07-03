@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import { MOCK_USER } from './../../../../constants';
 import UserList from './../../../components/users/UserList';
 
 const setup = (users) => {
@@ -16,9 +17,9 @@ const setup = (users) => {
 
 describe('UserList Component', () => {
   const users = [
-    { id: 1, name: 'Haruna' },
-    { id: 2, name: 'Popoola' },
-    { id: 3, name: 'Humaidah' },
+    MOCK_USER.SUPERADMIN,
+    MOCK_USER.ADMIN,
+    MOCK_USER.USER,
   ];
   const emptyUsers = [];
 

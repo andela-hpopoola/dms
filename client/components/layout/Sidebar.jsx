@@ -45,43 +45,43 @@ class Sidebar extends Component {
           <ul className="collection with-header">
             <li className="collection-header"><h4>Quick Links</h4></li>
             <li className="collection-item">
-              <Link to="/dashboard" className="sidebar__link">
+              <Link to="/dashboard" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-dashboard" />
                   &nbsp; Dashboard
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/new-document" className="sidebar__link">
+              <Link to="/new-document" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-file-text" />
                 &nbsp; Create New Document
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/private" className="sidebar__link">
+              <Link to="/document/private" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-file" />
                 &nbsp; Personal Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/public" className="sidebar__link">
+              <Link to="/document/public" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-file" />
                 &nbsp; Public Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/document/role" className="sidebar__link">
+              <Link to="/document/role" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-file" />
                 &nbsp; Role Documents
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/edit-profile" className="sidebar__link">
+              <Link to="/edit-profile" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-user" />
                 &nbsp;  Edit Profile
               </Link>
             </li>
             <li className="collection-item">
-              <Link to="/logout" className="sidebar__link">
+              <Link to="/logout" className="sidebar__link" activeClassName="sidebar__link-active">
                 <i className="fa fa-sign-out" />
                 &nbsp; Log Out
               </Link>

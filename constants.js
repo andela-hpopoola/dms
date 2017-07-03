@@ -59,6 +59,24 @@ export const MOCK_DOCUMENTS = {
   },
 };
 
+export const MOCK_ROLES = {
+  SUPERADMIN: {
+    id: 1,
+    title: 'SuperAdmin',
+    createdAt: '2017-12-30'
+  },
+  ADMIN: {
+    id: 2,
+    title: 'Administrator',
+    createdAt: '2017-12-30'
+  },
+  USER: {
+    id: 3,
+    title: 'User',
+    createdAt: '2017-12-30'
+  }
+};
+
 export const MOCK_USER = {
   SUPERADMIN: {
     id: 1,

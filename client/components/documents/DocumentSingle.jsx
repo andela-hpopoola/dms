@@ -89,10 +89,10 @@ const DocumentSingle = (props) => {
               </Link>
             }
           </div>
-          <div className="right-align">
+          <div className="right-align document__actions">
             <Modal
               header={document.title}
-              trigger={<Button waves="light">Read</Button>}
+              trigger={<Button className="document__read" waves="light">Read</Button>}
             >
               <div
                 className="document__content"

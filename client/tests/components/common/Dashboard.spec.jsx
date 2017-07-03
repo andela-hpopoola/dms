@@ -3,15 +3,12 @@ import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
 import { Dashboard } from './../../../components/common/Dashboard';
+import { MOCK_USER } from './../../../../constants';
 
 const spyComponentProps = sinon.spy(Dashboard.prototype, 'componentWillReceiveProps');
 const setup = () => {
   const props = {
-    user: {
-      name: 'Haruna',
-      email: 'haruna@dms.com',
-      roleId: 1,
-    },
+    user: MOCK_USER.SUPERADMIN,
     documents: {
       private: [],
       public: [],

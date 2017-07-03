@@ -1,5 +1,5 @@
 import { roles } from '../controllers';
-import authenticate from './../utils/authenticate';
+import authenticate from './../middleware/authenticate';
 
 module.exports = (app) => {
   // Roles Schema definition

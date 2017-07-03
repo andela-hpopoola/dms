@@ -1,5 +1,5 @@
 import { documents } from '../controllers';
-import authenticate from './../utils/authenticate';
+import authenticate from './../middleware/authenticate';
 
 module.exports = (app) => {
   // Document Schema definition

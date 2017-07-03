@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import configureMockStore from 'redux-mock-store';
 import initialState from './../../reducers/initialState';
-
+import { MOCK_USER } from './../../../constants';
 import * as userActions from './../../actions/userActions';
 import * as types from './../../actions/actionTypes';
 import api from './../../utils/api';
@@ -13,8 +13,8 @@ import api from './../../utils/api';
 // Test an async action
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-const user = { email: 'haruna@me.com', password: '123456' };
-const users = ['user1', 'user2'];
+const user = MOCK_USER.SUPERADMIN;
+const users = [MOCK_USER.ADMIN, MOCK_USER.USER];
 
 describe('User Actions', () => {
   beforeEach(() => {

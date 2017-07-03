@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import configureMockStore from 'redux-mock-store';
 import initialState from './../../reducers/initialState';
-
+import { MOCK_DOCUMENTS } from './../../../constants';
 import * as documentActions from './../../actions/documentActions';
 import * as types from './../../actions/actionTypes';
 import api from './../../utils/api';
@@ -13,8 +13,8 @@ import api from './../../utils/api';
 // Test an async action
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-const document = { id: 1, title: 'Sample Document' };
-const documents = ['document1', 'document2'];
+const document = MOCK_DOCUMENTS.PRIVATE;
+const documents = [MOCK_DOCUMENTS.PUBLIC, MOCK_DOCUMENTS.ROLE];
 
 describe('Document Actions', () => {
   beforeEach(() => {

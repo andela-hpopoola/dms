@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
+import { MOCK_ROLES } from './../../../../constants';
 import { EditRole } from './../../../components/roles/EditRole';
 
 const spyForm = sinon.spy(EditRole.prototype, 'handleFormChange');
@@ -30,10 +31,7 @@ const fakeEvent = {
 };
 
 describe('EditRole Component', () => {
-  const currentRole = {
-    id: 1,
-    title: 'SuperAdmin',
-  };
+  const currentRole = MOCK_ROLES.SUPERADMIN;
   it('should exists', () => {
     const wrapper = setup(currentRole);
     expect(wrapper).toExist();

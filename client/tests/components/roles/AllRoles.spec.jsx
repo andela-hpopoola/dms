@@ -3,6 +3,7 @@ import 'jsdom-global/register';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
+import { MOCK_ROLES } from './../../../../constants';
 import { AllRoles } from './../../../components/roles/AllRoles';
 
 const spyNewRole = sinon.spy(AllRoles.prototype, 'createNewRole');
@@ -23,7 +24,7 @@ const setup = (all) => {
 
 describe('AllRoles Component', () => {
   const all = {
-    roles: [{ id: 1, title: 'SuperAdmin' }, { id: 2, title: 'Admin' }]
+    roles: [MOCK_ROLES.SUPERADMIN, MOCK_ROLES.ADMIN]
   };
 
   it('should exists', () => {

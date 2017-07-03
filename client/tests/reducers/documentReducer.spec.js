@@ -1,4 +1,5 @@
 import expect from 'expect';
+import { MOCK_DOCUMENTS } from './../../../constants';
 import documentReducer from './../../reducers/documentReducer';
 import * as documentActions from './../../actions/documentActions';
 import initialState from './../../reducers/initialState';
@@ -16,10 +17,7 @@ describe('Document Reducer', () => {
   it('should update an existing document on UPDATE_EXISTING_DOCUMENT', () => {
     const initialDocument = {
       current: {
-        data: [
-          { id: 1, name: 'Initial Document' },
-          { id: 2, name: 'Document to Update' }
-        ],
+        data: [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC],
         pagination: '123'
       }
     };
@@ -34,10 +32,7 @@ describe('Document Reducer', () => {
   it('should delete an existing document on DELETE_EXISTING_DOCUMENT', () => {
     const currentDocument = {
       current: {
-        data: [
-          { id: 1, name: 'Initial Document' },
-          { id: 2, name: 'Document to Update' }
-        ],
+        data: [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC],
         pagination: '123'
       }
     };
@@ -50,7 +45,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get current documents with GET_CURRENT_DOCUMENTS', () => {
-    const allDocuments = ['First Document', 'Second Document'];
+    const allDocuments = [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC];
     const actionType = documentActions.getCurrentDocuments(allDocuments);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = 2;
@@ -59,7 +54,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get document details with GET_DOCUMENT_DETAILS', () => {
-    const document = { name: 'Sample Document' };
+    const document = MOCK_DOCUMENTS.PRIVATE;
     const actionType = documentActions.getDocumentDetails(document);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = document.name;
@@ -68,7 +63,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get searched documents with SEARCH_FOR_DOCUMENTS', () => {
-    const searchedDocuments = ['First Document', 'Second Document'];
+    const searchedDocuments = [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC];
     const actionType = documentActions.getCurrentDocuments(searchedDocuments);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = 2;
@@ -77,7 +72,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get public documents with GET_PUBLIC_DOCUMENTS', () => {
-    const publicDocuments = ['First Document', 'Second Document'];
+    const publicDocuments = [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC];
     const actionType = documentActions.getPublicDocuments(publicDocuments);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = 2;
@@ -86,7 +81,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get private documents with GET_PRIVATE_DOCUMENTS', () => {
-    const privateDocuments = ['First Document', 'Second Document'];
+    const privateDocuments = [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC];
     const actionType = documentActions.getPrivateDocuments(privateDocuments);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = 2;
@@ -95,7 +90,7 @@ describe('Document Reducer', () => {
   });
 
   it('should get role documents with GET_ROLE_DOCUMENTS', () => {
-    const roleDocuments = ['First Document', 'Second Document'];
+    const roleDocuments = [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC];
     const actionType = documentActions.getRoleDocuments(roleDocuments);
     const newState = documentReducer(initialState.documents, actionType);
     const expected = 2;

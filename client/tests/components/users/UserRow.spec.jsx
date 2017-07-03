@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import { MOCK_USER } from './../../../../constants';
 import UserRow from './../../../components/users/UserRow';
 
 const setup = (user) => {
@@ -14,7 +15,7 @@ const setup = (user) => {
 };
 
 describe('UserList Component', () => {
-  const user = { id: 1, name: 'Haruna', createdAt: '2017-05-05' };
+  const user = MOCK_USER.SUPERADMIN;
 
   it('should exists', () => {
     const wrapper = setup(user);

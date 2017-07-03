@@ -3,6 +3,7 @@ import 'jsdom-global/register';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
+import { MOCK_DOCUMENTS } from './../../../../constants';
 import { ViewDocuments } from './../../../components/documents/ViewDocuments';
 
 const spyDelete = sinon.spy(ViewDocuments.prototype, 'deleteDocument');
@@ -39,27 +40,7 @@ describe('ViewDocuments Component', () => {
         currentPage: 1,
         total: 200,
       },
-
-      data: [
-        {
-          id: 1,
-          userId: 1,
-          title: 'the title',
-          content: 'the content',
-          access: 0,
-          createdAt: '2017-05-05',
-          updatedAt: '2017-05-05',
-        },
-        {
-          id: 2,
-          userId: 1,
-          title: 'the second title',
-          content: 'the second content',
-          access: 0,
-          createdAt: '2017-05-05',
-          updatedAt: '2017-05-05',
-        }
-      ],
+      data: [MOCK_DOCUMENTS.PRIVATE, MOCK_DOCUMENTS.PUBLIC],
     }
   };
 

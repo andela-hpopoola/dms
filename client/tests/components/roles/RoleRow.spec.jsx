@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import { MOCK_ROLES } from './../../../../constants';
 import RoleRow from './../../../components/roles/RoleRow';
 
 const setup = (role) => {
@@ -12,7 +13,7 @@ const setup = (role) => {
 };
 
 describe('RoleRow Component', () => {
-  const role = { title: 'SuperAdmin' };
+  const role = MOCK_ROLES.SUPERADMIN;
 
   it('should exists', () => {
     const wrapper = setup(role);

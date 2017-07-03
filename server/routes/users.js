@@ -1,5 +1,5 @@
 import { users } from '../controllers';
-import authenticate from './../utils/authenticate';
+import authenticate from './../middleware/authenticate';
 
 module.exports = (app) => {
   // Users Schema definition

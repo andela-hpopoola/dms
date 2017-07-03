@@ -2,6 +2,7 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
 import sinon from 'sinon';
+import { MOCK_DOCUMENTS } from './../../../../constants';
 import { EditDocument } from './../../../components/documents/EditDocument';
 
 const spyForm = sinon.spy(EditDocument.prototype, 'handleFormChange');
@@ -33,15 +34,7 @@ const fakeEvent = {
 };
 
 describe('EditDocument Component', () => {
-  const currentDocument = {
-    id: '1',
-    userId: 1,
-    title: 'the title',
-    content: 'the content',
-    access: 0,
-    createdAt: '2017-05-05',
-    updatedAt: '2017-05-05',
-  };
+  const currentDocument = MOCK_DOCUMENTS.PRIVATE;
   it('should exists', () => {
     const wrapper = setup(currentDocument);
     expect(wrapper).toExist();

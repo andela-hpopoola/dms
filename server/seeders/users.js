@@ -37,6 +37,14 @@ module.exports = {
     createdAt: new Date(),
     updatedAt: new Date()
   },
+  NormalUser2: {
+    name: 'user',
+    email: 'user2@dms.com',
+    password: bcrypt.hashSync('password', salt),
+    roleId: ROLES.USER,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  },
   InvalidUser: {
     name: 'invalid',
     email: 'invalid@dms.com',

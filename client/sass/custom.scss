@@ -43,10 +43,16 @@ body {
   transition: 0.5s all ease-out;
 }
 
-.sidebar__link:hover, .sidebar__link:hover span {
+.sidebar__link:hover,
+.sidebar__link:hover span,
+.sidebar__link-active,
+.sidebar__link-active span {
   color: #a00 !important;
 }
 
+.sidebar__link-active {
+  font-weight: bold;
+}
 .dashboard__quick-links {
   margin-top: 30px;
   font-size: 16px;

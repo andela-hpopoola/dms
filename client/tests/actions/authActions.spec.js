@@ -1,6 +1,4 @@
 import expect from 'expect';
-import thunk from 'redux-thunk';
-import configureMockStore from 'redux-mock-store';
 import * as authActions from '../../actions/authActions';
 import * as types from './../../actions/actionTypes';
 

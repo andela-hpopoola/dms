@@ -1,11 +1,12 @@
 import expect from 'expect';
+import { MOCK_USER } from './../../../constants';
 import userReducer from './../../reducers/userReducer';
 import * as userActions from './../../actions/userActions';
 import initialState from './../../reducers/initialState';
 
 describe('User Reducer', () => {
   it('should set current user with SET_CURRENT_USER', () => {
-    const user = { id: 1, name: 'New User' };
+    const user = MOCK_USER.SUPERADMIN;
     const actionType = userActions.setCurrentUser(user);
     const newState = userReducer(initialState.user, actionType);
     const expected = newState.id;
@@ -14,9 +15,7 @@ describe('User Reducer', () => {
   });
 
   it('should update an existing user on UPDATE_USER_PROFILE', () => {
-    const initialUser = {
-      id: 1, name: 'Initial User'
-    };
+    const initialUser = MOCK_USER.SUPERADMIN;
     const updateUser = { name: 'Updated Name' };
     const actionType = userActions.updateUserProfile(updateUser);
     const newState = userReducer(initialUser, actionType);
@@ -26,9 +25,7 @@ describe('User Reducer', () => {
   });
 
   it('should remove user information with LOGOUT_CURRENT_USER', () => {
-    const initialUser = {
-      id: 1, name: 'Initial User'
-    };
+    const initialUser = MOCK_USER.SUPERADMIN;
     const actionType = userActions.logoutCurrentUser();
     const newState = userReducer(initialUser, actionType);
     const expected = {};

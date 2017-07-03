@@ -8,13 +8,15 @@ import initialState from './../../reducers/initialState';
 import * as allActions from './../../actions/allActions';
 import * as types from './../../actions/actionTypes';
 import api from './../../utils/api';
+import { MOCK_USER, MOCK_ROLES } from './../../../constants';
 
 
 // Test an async action
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-const users = ['user1', 'user2'];
-const roles = ['roles1', 'roles2'];
+const users = [MOCK_USER.SUPERADMIN, MOCK_USER.ADMIN];
+const roles = [MOCK_ROLES.SUPERADMIN, MOCK_ROLES.ADMIN];
+
 describe('All Actions', () => {
   beforeEach(() => {
     moxios.install(api);

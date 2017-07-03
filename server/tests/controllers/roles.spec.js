@@ -5,62 +5,50 @@ const app = require('./../../../server');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const request = supertest(app);
-const Documents = require('./../../models').Documents;
+const model = require('./../../models');
 const Users = require('./../../models').Users;
 const Roles = require('./../../models').Roles;
-const InputDocuments = require('./../../seeders/documents');
 const InputUsers = require('./../../seeders/users');
 const InputRoles = require('./../../seeders/roles');
 
 let roleId = '';
-let adminToken = '';
 
+const payload = { email: InputUsers.SuperAdmin.email };
+const adminToken = jwt.sign(payload, JWT_SECRET_KEY);
 
-before((done) => {
-  Users
-    .destroy({ where: {} })
-    .then(() => {
-      Users.create(InputUsers.SuperAdmin2).then((user) => {
-        const payload = { email: user.email };
-        user.token = jwt.sign(payload, JWT_SECRET_KEY);
-        adminToken = user.token;
-        Documents
-        .destroy({ where: {} })
-        .then(() => {
-          Documents.bulkCreate([
-            InputDocuments.Other,
-            InputDocuments.Private,
-            InputDocuments.Role
-          ]);
-          Roles
+describe('Roles Controller', () => {
+  before((done) => {
+    Roles
+      .destroy({ where: {} })
+      .then(() => {
+        Roles.bulkCreate([
+          InputRoles.SuperAdmin,
+          InputRoles.Admin,
+          InputRoles.NormalUser
+        ], { returning: true }).then((createdRoles) => {
+          InputUsers.SuperAdmin.roleId = createdRoles[0].id;
+          InputUsers.Admin.roleId = createdRoles[1].id;
+          InputUsers.NormalUser.roleId = createdRoles[2].id;
+          Users
             .destroy({ where: {} })
             .then(() => {
-              Roles.bulkCreate([
-                InputRoles.SuperAdmin,
-                InputRoles.Admin,
+              Users.bulkCreate([
+                InputUsers.SuperAdmin,
+                InputUsers.Admin,
+                InputUsers.NormalUser
               ]);
               done();
             });
         });
       });
+  });
+  after((done) => {
+    model.sequelize.sync({ force: true }).then(() => {
+      done();
     });
-});
-after((done) => {
-  Users
-    .destroy({ where: {} })
-    .then(() => {
-      Documents
-        .destroy({ where: {} })
-        .then(() => {
-          Roles
-            .destroy({ where: {} })
-            .then(() => done());
-        });
-    });
-});
+  });
 
-describe('Roles Admin', () => {
-  describe('POST /roles/', () => {
+  describe('Create Method', () => {
     it('should create a new role', (done) => {
       request.post('/roles')
         .send(InputRoles.NewRole)
@@ -74,9 +62,7 @@ describe('Roles Admin', () => {
           done(err);
         });
     });
-  });
 
-  describe('POST /roles/', () => {
     it('should create not create an existing role', (done) => {
       request.post('/roles')
         .send(InputRoles.NewRole)
@@ -86,21 +72,21 @@ describe('Roles Admin', () => {
   });
 
 
-  describe('GET /roles', () => {
-    it('should be able to get all users', (done) => {
+  describe('Get All Methods', () => {
+    it('should be able to get all roles', (done) => {
       request.get('/roles')
         .set('x-auth', adminToken)
         .expect(200)
         .end((err, res) => {
           const expected = res.body.length;
-          const actual = 3;
+          const actual = 4;
           expect(expected).toEqual(actual);
           done();
         });
     });
   });
 
-  describe('PUT /roles/', () => {
+  describe('Update Method', () => {
     it('should be able to change roles title', (done) => {
       const updatedDetails = {
         title: 'Updated Role',
@@ -118,7 +104,7 @@ describe('Roles Admin', () => {
     });
   });
 
-  describe('GET /roles/:id', () => {
+  describe('Get One Method', () => {
     it('should be able to retrieve roles', (done) => {
       request.get(`/roles/${roleId}`)
         .set('x-auth', adminToken)
@@ -128,7 +114,7 @@ describe('Roles Admin', () => {
         });
     });
   });
-  describe('DELETE /roles/:id', () => {
+  describe('Delete Method', () => {
     it('should be able to delete roles', (done) => {
       request.delete(`/roles/${roleId}`)
         .set('x-auth', adminToken)

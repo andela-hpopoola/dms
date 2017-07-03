@@ -148,6 +148,7 @@ class EditProfile extends Component {
 
                       {/* Submit Button */}
                       <button
+                        id="editProfile"
                         className="btn waves-effect waves-light"
                         type="submit"
                         name="submit"
@@ -178,7 +179,7 @@ EditProfile.propTypes = {
     updatedAt: PropTypes.string,
   }),
   actions: PropTypes.shape({
-    updateProfile: PropTypes.func.isRequired, 
+    updateProfile: PropTypes.func.isRequired,
   }),
 
 };

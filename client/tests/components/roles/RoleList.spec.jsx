@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import expect from 'expect';
+import { MOCK_ROLES } from './../../../../constants';
 import RoleList from './../../../components/roles/RoleList';
 
 const setup = (roles) => {
@@ -16,9 +17,9 @@ const setup = (roles) => {
 
 describe('RoleList Component', () => {
   const roles = [
-    { id: 1, title: 'SuperAdmin' },
-    { id: 2, title: 'Admin' },
-    { id: 3, title: 'User' },
+    MOCK_ROLES.SUPERADMIN,
+    MOCK_ROLES.ADMIN,
+    MOCK_ROLES.USER
   ];
   const emptyRoles = [];
 
