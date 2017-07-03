@@ -4,6 +4,7 @@ const adminPassword = '123456';
 module.exports = {
   'Documents Pagination': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/')
       .waitForElementVisible('body', 5000)
       .setValue('input[name=email]', adminEmail)

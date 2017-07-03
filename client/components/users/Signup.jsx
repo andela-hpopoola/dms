@@ -111,6 +111,9 @@ export class Signup extends Component {
                         pattern=".{6,}"
                         title="6 characters minimum"
                       />
+                      <div className="help-text">
+                        Password must have a minimum of 6 characters
+                      </div>
                       <label htmlFor="password">Password</label>
                     </div>
                   </div>
@@ -127,6 +130,9 @@ export class Signup extends Component {
                         pattern=".{6,}"
                         title="6 characters minimum"
                       />
+                      <div className="help-text">
+                        Password must match the password given above
+                      </div>
                       <label htmlFor="confirmPassword">Confirm Password</label>
                     </div>
                   </div>

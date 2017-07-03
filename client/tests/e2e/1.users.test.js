@@ -12,6 +12,7 @@ const adminPassword = '123456';
 module.exports = {
   'User cannot sign up with no credentials': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/signup')
       .waitForElementVisible('body', 5000)
       .setValue('input[name=name]', '')
@@ -100,6 +101,7 @@ module.exports = {
   // Login
   'User cannot log in without email and password': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/')
       .waitForElementVisible('body', 5000)
       .setValue('input[name=email]', '')
@@ -198,6 +200,7 @@ module.exports = {
 
   'Admin should be able to sign in': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/')
       .waitForElementVisible('body', 5000)
       .pause(1000)
@@ -236,12 +239,12 @@ module.exports = {
       .waitForElementVisible('#search-users', 5000)
       .setValue('#search-users', userEmail)
       .pause(1000)
-      .clearValue('#search-users')
       .waitForElementVisible('#btn-search-users', 2000)
       .click('#btn-search-users')
       .waitForElementVisible('#back-to-users', 5000)
       .pause(2000)
       .click('#back-to-users')
+      .clearValue('#search-users')
       .waitForElementVisible('h3.user__number', 5000)
       .pause(2000);
   },

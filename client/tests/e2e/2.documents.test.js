@@ -8,6 +8,7 @@ const adminPassword = '123456';
 module.exports = {
   'User cannot create document with no information': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/')
       .waitForElementVisible('body', 5000)
       .setValue('input[name=email]', adminEmail)

@@ -61,6 +61,9 @@ class AllUsers extends Component {
                   pattern=".{3,}"
                   title="3 characters minimum"
                 />
+                <div className="help-text">
+                  Search term must have a minimum of 3 characters
+                </div>
                 <label htmlFor="search">Search for Users</label>
               </div>
               <div className="input-field col s3">

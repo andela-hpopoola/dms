@@ -1,9 +1,10 @@
 const faker = require('faker');
 
-const title = faker.lorem.word();
+const title = faker.company.companyName();
 module.exports = {
   'User cannot create role without title': (browser) => {
     browser
+      .maximizeWindow()
       .url('http://localhost:8000/')
       .waitForElementVisible('body', 5000)
       .setValue('input[name=email]', 'mark@mark.com')

@@ -4,12 +4,22 @@
   "description": "DMS is a full stack document management system, complete with roles and privileges.",
   "main": "index.js",
   "scripts": {
+    "build": "npm run db:migrate & npm run db:seed",
+    "build:watch": "npm run build --watch",
     "test": "NODE_ENV=test nyc mocha  -r mock-local-storage --timeout 5000 --compilers js:babel-core/register ./server/tests/**/*.spec.js ./client/tests/**/*.spec.{js,jsx}",
+    "test:watch": "NODE_ENV=test nodemon --exec 'npm test'",
     "test:client": "NODE_ENV=test nyc mocha -r mock-local-storage --compilers js:babel-core/register ./client/tests/**/*.spec.{js,jsx}",
+    "test:client:watch": "NODE_ENV=test nodemon --exec 'npm run test:client'",
     "test:server": "NODE_ENV=test nyc mocha --timeout 15000 --compilers js:babel-core/register ./server/tests/**/*.spec.js",
+    "test:server:watch": "NODE_ENV=test nodemon --exec 'npm run test:server'",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test-watch": "nodemon --exec 'npm test'",
-    "start": "webpack && babel-node server.js"
+    "start": "webpack && babel-node server.js",
+    "start:watch": "nodemon --exec 'npm start'",
+    "start:dev": "NODE_ENV=development nodemon --exec 'webpack && babel-node server.js'",
+    "db:migrate": "sequelize db:migrate:undo:all && sequelize db:migrate",
+    "db:seed": "sequelize db:seed:all",
+    "e2e:setup": "selenium-standalone install",
+    "e2e": "nightwatch"
   },
   "nyc": {
     "require": [

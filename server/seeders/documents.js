@@ -21,7 +21,7 @@ module.exports = {
     updatedAt: new Date()
   },
   Role: {
-    userId: 100,
+    userId: ROLES.ADMIN,
     title: 'Roles',
     content: 'another users document',
     access: Users.NormalUser.roleId,

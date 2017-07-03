@@ -179,7 +179,7 @@ EditProfile.propTypes = {
     updatedAt: PropTypes.string,
   }),
   actions: PropTypes.shape({
-    updateProfile: PropTypes.func.isRequired, 
+    updateProfile: PropTypes.func.isRequired,
   }),
 
 };

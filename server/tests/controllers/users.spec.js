@@ -1,14 +1,11 @@
-const jwt = require('jsonwebtoken');
 const supertest = require('supertest');
 const expect = require('expect');
 const app = require('./../../../server');
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 const request = supertest(app);
-const Documents = require('./../../models').Documents;
+const model = require('./../../models');
 const Users = require('./../../models').Users;
 const Roles = require('./../../models').Roles;
-const InputDocuments = require('./../../seeders/documents');
 const InputUsers = require('./../../seeders/users');
 const InputRoles = require('./../../seeders/roles');
 
@@ -17,54 +14,39 @@ let id = '';
 let adminId = '';
 let adminToken = '';
 
-
-before((done) => {
-  Users
-    .destroy({ where: {} })
-    .then(() => {
-      Users.create(InputUsers.SuperAdmin2).then((user) => {
-        const payload = { email: user.email };
-        user.token = jwt.sign(payload, JWT_SECRET_KEY);
-        adminToken = user.token;
-        adminId = user.id;
-        Documents
-        .destroy({ where: {} })
-        .then(() => {
-          Documents.bulkCreate([
-            InputDocuments.Other,
-            InputDocuments.Private,
-            InputDocuments.Role
-          ]);
-          Roles
+describe('Users Controller', () => {
+  before((done) => {
+    Roles
+      .destroy({ where: {} })
+      .then(() => {
+        Roles.bulkCreate([
+          InputRoles.SuperAdmin,
+          InputRoles.Admin,
+          InputRoles.NormalUser
+        ], { returning: true }).then((createdRoles) => {
+          InputUsers.SuperAdmin.roleId = createdRoles[0].id;
+          InputUsers.Admin.roleId = createdRoles[1].id;
+          InputUsers.NormalUser.roleId = createdRoles[2].id;
+          Users
             .destroy({ where: {} })
             .then(() => {
-              Roles.bulkCreate([
-                InputRoles.SuperAdmin,
-                InputRoles.Admin,
+              Users.bulkCreate([
+                InputUsers.SuperAdmin,
+                InputUsers.Admin,
               ]);
               done();
             });
         });
       });
+  });
+  after((done) => {
+    model.sequelize.sync({ force: true }).then(() => {
+      done();
     });
-});
-after((done) => {
-  Users
-    .destroy({ where: {} })
-    .then(() => {
-      Documents
-        .destroy({ where: {} })
-        .then(() => {
-          Roles
-            .destroy({ where: {} })
-            .then(() => done());
-        });
-    });
-});
+  });
 
-describe('Users Routes', () => {
-  describe('Normal User', () => {
-    describe('POST /users/', () => {
+  describe('Normal Users', () => {
+    describe('Create Method', () => {
       it('should signup a valid user', (done) => {
         request.post('/users')
           .send(InputUsers.NormalUser)
@@ -79,7 +61,7 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('POST /users/login', () => {
+    describe('Login Method', () => {
       it('should sign in a valid user', (done) => {
         const loginDetails = {
           email: InputUsers.NormalUser.email,
@@ -98,9 +80,7 @@ describe('Users Routes', () => {
             done(err);
           });
       });
-    });
 
-    describe('POST /users/login', () => {
       it('should not login invalid user', (done) => {
         const loginDetails = {
           email: InputUsers.InvalidUser.email,
@@ -112,7 +92,7 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('GET /users/:id', () => {
+    describe('Get One Method', () => {
       it('should allow user view his profile', (done) => {
         request.get(`/users/${id}`)
           .set('x-auth', token)
@@ -127,7 +107,7 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('PUT /users/', () => {
+    describe('Update Method', () => {
       it('should be able to update his details', (done) => {
         const updatedDetails = {
           updatedName: 'Updated Name',
@@ -144,9 +124,7 @@ describe('Users Routes', () => {
             done(err);
           });
       });
-    });
 
-    describe('PUT /users/', () => {
       it('should not be able to update another users details', (done) => {
         const updatedDetails = {
           updatedName: 'Updated Name',
@@ -165,7 +143,7 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('DELETE /users/:id', () => {
+    describe('Delete Method', () => {
       it('should not be able to delete his account', (done) => {
         request.delete(`/users/${id}`)
           .set('x-auth', token)
@@ -176,7 +154,7 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('GET /users/:id/documents', () => {
+    describe('Get Documents Method', () => {
       it('should be able to retrieve documents', (done) => {
         request.get(`/users/${id}/documents`)
           .set('x-auth', token)
@@ -185,9 +163,7 @@ describe('Users Routes', () => {
             done(err);
           });
       });
-    });
 
-    describe('GET /users/:id/documents', () => {
       it('should not retrieve invalid documents', (done) => {
         request.get('/users/invalid/documents')
           .set('x-auth', token)
@@ -198,14 +174,14 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('GET /users/logout', () => {
+    describe('Logout Method', () => {
       it('successfully logout a user', (done) => {
         request.get('/users/logout')
           .expect(200, done);
       });
     });
 
-    describe('DELETE /users/:id', () => {
+    describe('Delete Method', () => {
       it('should be unable to delete user', (done) => {
         request.delete(`/users/${id}`)
           .set('x-auth', token)
@@ -217,19 +193,28 @@ describe('Users Routes', () => {
     });
   });
 
-  describe('SEARCH search/users/', () => {
-    it('should be able to search for users', (done) => {
-      request.get('/search/users/?q=admin')
-        .set('x-auth', adminToken)
-        .expect(200)
-        .end((err) => {
-          done(err);
-        });
-    });
-  });
-
   describe('Super Admin', () => {
-    describe('PUT /users/', () => {
+    describe('Login Method', () => {
+      it('should sign in a valid user', (done) => {
+        const loginDetails = {
+          email: InputUsers.SuperAdmin.email,
+          password: InputUsers.SuperAdmin.password
+        };
+        request.post('/users/login')
+          .send(loginDetails)
+          .expect(200)
+          .end((err, res) => {
+            adminToken = res.body.token;
+            adminId = res.body.id;
+            const expected = res.body;
+            const actual = InputUsers.SuperAdmin;
+            expect(expected.name).toEqual(actual.name);
+            expect(expected.email).toEqual(actual.email);
+            done(err);
+          });
+      });
+    });
+    describe('Update Method', () => {
       it('should be able to update his details', (done) => {
         const updatedDetails = {
           name: 'Updated Name',
@@ -248,14 +233,25 @@ describe('Users Routes', () => {
       });
     });
 
-    describe('GET /users/logout', () => {
+    describe('Logout Method', () => {
       it('successfully logout a user', (done) => {
         request.get('/users/logout')
           .expect(200, done);
       });
     });
 
-    describe('DELETE /users/:id', () => {
+    describe('Search Method', () => {
+      it('should be able to search for users', (done) => {
+        request.get('/search/users/?q=admin')
+          .set('x-auth', adminToken)
+          .expect(200)
+          .end((err) => {
+            done(err);
+          });
+      });
+    });
+
+    describe('Delete Method', () => {
       it('should be able to delete user', (done) => {
         request.delete(`/users/${id}`)
           .set('x-auth', adminToken)
