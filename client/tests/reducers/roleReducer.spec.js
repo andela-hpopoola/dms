@@ -1,7 +1,5 @@
 import expect from 'expect';
 import roleReducer from '../../reducers/roleReducer';
-import * as actions from '../../actions/roleActions';
-import * as userActions from '../../actions/userActions';
 import * as roleActions from '../../actions/roleActions';
 import initialState from '../../reducers/initialState';
 
@@ -21,17 +19,4 @@ describe('Role Reducer', () => {
     const actual = role.title;
     expect(actual).toEqual(expected);
   });
-
-  // it('should update an existing role on UPDATE_EXISTING_ROLE', () => {
-  //   const initialRole = [
-  //     { id: 1, name: 'Super Admin' },
-  //     { id: 2, name: 'Admin' }
-  //   ];
-  //   const updateRole = { id: 2, name: 'User' };
-  //   const actionType = roleActions.updateExistingRole(updateRole);
-  //   const newState = roleReducer(initialRole, actionType);
-  //   const expected = newState.length;
-  //   const actual = initialRole.length;
-  //   expect(actual).toEqual(expected);
-  // });
 });

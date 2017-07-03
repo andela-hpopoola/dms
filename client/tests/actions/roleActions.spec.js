@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import moxios from 'moxios';
 import configureMockStore from 'redux-mock-store';
 import initialState from './../../reducers/initialState';
-
+import { MOCK_ROLES } from './../../../constants';
 import * as roleActions from './../../actions/roleActions';
 import * as types from './../../actions/actionTypes';
 import api from './../../utils/api';
@@ -13,7 +13,7 @@ import api from './../../utils/api';
 // Test an async action
 const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
-const role = 'SuperAdmin';
+const role = MOCK_ROLES.SUPERADMIN;
 
 describe('User Actions', () => {
   beforeEach(() => {
