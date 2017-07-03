@@ -14,7 +14,7 @@ const setup = (user) => {
   return shallow(<UserRow {...props} />);
 };
 
-describe('UserList Component', () => {
+describe('UserRow Component', () => {
   const user = MOCK_USER.SUPERADMIN;
 
   it('should exists', () => {
