@@ -108,7 +108,7 @@ export class Dashboard extends Component {
             </div>
             <div className="row">
               <div className="col s12">
-                <h4 className="dashboard__quick-links">Quick Links</h4>
+                <h4 className="dashboard__quick-links">Actions</h4>
               </div>
               <DashboardCard
                 title="Documents"
